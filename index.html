@@ -202,6 +202,41 @@
             animation: tabFadeIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
+        @keyframes tabSlideInRight {
+            0% { opacity: 0; transform: translateX(48px) scale(0.985); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        @keyframes tabSlideInLeft {
+            0% { opacity: 0; transform: translateX(-48px) scale(0.985); }
+            100% { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        .tab-slide-in-right {
+            animation: tabSlideInRight 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        .tab-slide-in-left {
+            animation: tabSlideInLeft 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        /* Hold-to-slide edge handles */
+        .slide-edge-handle {
+            transition: opacity 0.25s ease, transform 0.25s ease, background 0.25s ease;
+        }
+        .slide-edge-handle.is-holding {
+            background: rgba(236, 72, 153, 0.28);
+            border-color: rgba(244, 114, 182, 0.75);
+            box-shadow: 0 0 22px rgba(236, 72, 153, 0.45);
+        }
+
+        /* Synced Lyrics Styling */
+        .lyric-line {
+            transition: all 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .lyric-line.is-active {
+            color: #ffffff;
+            transform: scale(1.03);
+            text-shadow: 0 0 18px rgba(244, 114, 182, 0.85);
+        }
+
         .story-spotlight {
             border-color: rgba(244, 114, 182, 0.85) !important;
             box-shadow: 0 0 26px rgba(236, 72, 153, 0.42), inset 0 1px 2px rgba(255, 255, 255, 0.38) !important;
@@ -520,6 +555,10 @@
                         <i data-lucide="heart" class="w-4 h-4 text-pink-400"></i>
                         <span>3D Heart Glow</span>
                     </button>
+                    <button onclick="switchTab('music')" id="tabBtn-music" class="tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
+                        <i data-lucide="music" class="w-4 h-4 text-pink-400"></i>
+                        <span>Our Music</span>
+                    </button>
                     <button onclick="switchTab('games')" id="tabBtn-games" class="tab-btn liquid-glass-subtle hover:border-pink-400 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/90 hover:text-white flex items-center gap-2 transition box-glow">
                         <i data-lucide="gamepad-2" class="w-4 h-4 text-pink-400"></i>
                         <span>Couple Games</span>
@@ -554,6 +593,36 @@
                 </div>
             </div>
 
+            <!-- SLIDABLE TAB VIEWPORT (Hold left/right edge or drag left/right to slide tabs) -->
+            <div id="tabSlideViewport" class="relative group/slide">
+                <!-- Left Hold-to-Slide Edge Handle -->
+                <button type="button" id="tabSlideHoldLeft" aria-label="Hold or tap to slide to previous tab" title="Hold or tap for previous tab"
+                    class="slide-edge-handle hidden sm:flex absolute -left-3 md:-left-5 top-1/2 -translate-y-1/2 z-20 w-9 h-20 rounded-full liquid-glass-subtle border border-pink-400/30 items-center justify-center text-pink-200 hover:text-white hover:border-pink-400/70 opacity-75 hover:opacity-100 select-none touch-none cursor-pointer">
+                    <div class="flex flex-col items-center gap-1 pointer-events-none">
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                        <div class="w-4 h-1 rounded-full bg-pink-950/80 overflow-hidden">
+                            <div id="tabHoldProgressLeft" class="h-full w-0 bg-pink-400 rounded-full transition-none"></div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Right Hold-to-Slide Edge Handle -->
+                <button type="button" id="tabSlideHoldRight" aria-label="Hold or tap to slide to next tab" title="Hold or tap for next tab"
+                    class="slide-edge-handle hidden sm:flex absolute -right-3 md:-right-5 top-1/2 -translate-y-1/2 z-20 w-9 h-20 rounded-full liquid-glass-subtle border border-pink-400/30 items-center justify-center text-pink-200 hover:text-white hover:border-pink-400/70 opacity-75 hover:opacity-100 select-none touch-none cursor-pointer">
+                    <div class="flex flex-col items-center gap-1 pointer-events-none">
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                        <div class="w-4 h-1 rounded-full bg-pink-950/80 overflow-hidden">
+                            <div id="tabHoldProgressRight" class="h-full w-0 bg-pink-400 rounded-full transition-none"></div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Floating Drag/Hold Direction Indicator -->
+                <div id="tabDragIndicator" class="hidden pointer-events-none fixed sm:absolute top-4 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full liquid-glass border border-pink-400/60 text-xs font-medium text-white shadow-lg shadow-pink-500/20 whitespace-nowrap">
+                    Slide Tab
+                </div>
+
+                <div id="tabSlideStage" class="transition-transform duration-150 ease-out will-change-transform">
             <!-- TAB 1: A LETTER FOR YOU (Dreamy Liquid Glass Stationery) -->
             <div id="tabContent-letter" class="liquid-glass rounded-3xl p-6 sm:p-10">
                 <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-pink-300/15">
@@ -641,6 +710,163 @@
                     </div>
                 </div>
             </div>
+
+            <!-- TAB 5: OUR MUSIC (Synced Lyrics & Pacific Time Auto-Start) -->
+            <div id="tabContent-music" class="hidden liquid-glass rounded-3xl p-6 sm:p-8 space-y-6">
+                <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-pink-300/15">
+                    <div>
+                        <h3 class="text-base sm:text-lg font-serif italic font-bold text-white flex items-center gap-2">
+                            <i data-lucide="music" class="w-4 h-4 text-pink-400"></i>
+                            <span>Our Song &amp; Synced Lyrics</span>
+                        </h3>
+                        <p class="text-xs text-pink-200/75">Press play anytime, or schedule it to start at your favorite Pacific Time ♥</p>
+                    </div>
+
+                    <!-- Live Pacific Time Badge -->
+                    <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full liquid-glass-subtle border border-pink-400/30 text-xs">
+                        <span class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
+                        <span class="text-pink-300/85">Pacific Time:</span>
+                        <span id="pacificClockDisplay" class="font-mono font-semibold text-white">--:--:-- -- PT</span>
+                    </div>
+                </div>
+
+                <!-- Unmute prompt if browser blocked autoplay before a gesture -->
+                <div id="musicAutoplayBanner" class="hidden p-3.5 rounded-2xl bg-gradient-to-r from-pink-600/35 to-fuchsia-600/35 border border-pink-400/60 flex flex-wrap items-center justify-between gap-2 animate-pulse">
+                    <span class="text-xs sm:text-sm text-white font-medium flex items-center gap-2">
+                        <i data-lucide="volume-2" class="w-4 h-4 text-pink-300"></i>
+                        <span>It's Pacific Time! Tap to hear our song with full sound ♥</span>
+                    </span>
+                    <button type="button" onclick="resumeMusicAfterAutoplayBlock()" class="px-4 py-1.5 rounded-full bg-pink-500 hover:bg-pink-400 text-white text-xs font-semibold transition">
+                        Play Sound ♥
+                    </button>
+                </div>
+
+                <!-- Scheduled PT Trigger Toast -->
+                <div id="pacificTriggerToast" class="hidden p-3 rounded-2xl bg-pink-500/20 border border-pink-400/50 text-xs sm:text-sm text-pink-100 flex items-center justify-between gap-2">
+                    <span id="pacificTriggerToastText">✨ Pacific Time reached — Playing our song ♥</span>
+                    <button type="button" onclick="document.getElementById('pacificTriggerToast').classList.add('hidden')" class="text-pink-300 hover:text-white text-xs">Dismiss</button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                    <!-- Left: Player Controls & Pacific Time Scheduler -->
+                    <div class="lg:col-span-5 space-y-4" data-no-slide="true">
+                        <!-- Track Info & Controls Card -->
+                        <div class="liquid-glass-subtle rounded-2xl p-5 border border-pink-400/25 space-y-4">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="min-w-0">
+                                    <div id="musicTrackBadge" class="text-[10px] uppercase tracking-widest text-pink-300/80 mb-0.5">Track 1 of 2</div>
+                                    <h4 id="musicTrackTitle" class="text-base sm:text-lg font-serif italic font-bold text-white truncate">Midnight In Your Arms</h4>
+                                    <p id="musicTrackArtist" class="text-xs text-pink-200/75 truncate">Built-in Dreamy Synth ♥</p>
+                                </div>
+                                <div id="musicEqualizerBars" class="flex items-end gap-1 h-7 shrink-0 opacity-50">
+                                    <span class="w-1 bg-pink-400 rounded-full h-2 transition-all duration-150"></span>
+                                    <span class="w-1 bg-rose-400 rounded-full h-4 transition-all duration-150"></span>
+                                    <span class="w-1 bg-fuchsia-400 rounded-full h-3 transition-all duration-150"></span>
+                                    <span class="w-1 bg-pink-300 rounded-full h-5 transition-all duration-150"></span>
+                                </div>
+                            </div>
+
+                            <!-- Track Selector Pills -->
+                            <div id="musicTrackSelector" class="flex flex-wrap gap-1.5"></div>
+
+                            <!-- Progress / Seek Bar -->
+                            <div class="space-y-1.5">
+                                <input type="range" id="musicSeekSlider" min="0" max="100" value="0" step="0.1"
+                                    class="w-full accent-pink-500 cursor-pointer h-1.5 rounded-lg bg-pink-950/80" />
+                                <div class="flex justify-between text-[11px] font-mono text-pink-300/80">
+                                    <span id="musicCurrentTime">0:00</span>
+                                    <span id="musicTotalDuration">0:00</span>
+                                </div>
+                            </div>
+
+                            <!-- Playback Buttons -->
+                            <div class="flex items-center justify-center gap-3 pt-1">
+                                <button type="button" onclick="prevMusicTrack()" class="w-9 h-9 rounded-full liquid-glass-subtle border border-pink-400/30 hover:border-pink-400 flex items-center justify-center text-pink-200 hover:text-white transition" title="Previous Track">
+                                    <i data-lucide="skip-back" class="w-4 h-4"></i>
+                                </button>
+                                <button type="button" onclick="toggleMusicPlayback()" id="musicPlayPauseBtn" class="w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-400 hover:to-fuchsia-500 text-white shadow-lg shadow-pink-500/40 flex items-center justify-center transition transform active:scale-95" title="Play / Pause">
+                                    <i data-lucide="play" id="musicPlayIcon" class="w-5 h-5 ml-0.5"></i>
+                                </button>
+                                <button type="button" onclick="nextMusicTrack()" class="w-9 h-9 rounded-full liquid-glass-subtle border border-pink-400/30 hover:border-pink-400 flex items-center justify-center text-pink-200 hover:text-white transition" title="Next Track">
+                                    <i data-lucide="skip-forward" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+
+                            <!-- Volume & Custom Audio Upload -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-pink-400/15">
+                                <div class="flex items-center gap-2 flex-1 min-w-[120px]">
+                                    <i data-lucide="volume-2" class="w-3.5 h-3.5 text-pink-300 shrink-0"></i>
+                                    <input type="range" id="musicVolumeSlider" min="0" max="1" step="0.02" value="0.7"
+                                        class="w-full accent-pink-400 cursor-pointer h-1 bg-pink-950/80 rounded-lg" />
+                                </div>
+                                <label class="cursor-pointer text-[11px] px-3 py-1.5 rounded-full bg-pink-500/20 hover:bg-pink-500/35 border border-pink-400/30 text-pink-100 transition flex items-center gap-1.5">
+                                    <i data-lucide="upload" class="w-3 h-3"></i>
+                                    <span>Load MP3/Audio</span>
+                                    <input type="file" id="musicCustomFileInput" accept="audio/*" class="hidden" onchange="handleCustomAudioFile(event)" />
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Pacific Time Auto-Start Scheduler Card -->
+                        <div class="liquid-glass-subtle rounded-2xl p-5 border border-pink-400/25 space-y-3">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="clock" class="w-4 h-4 text-pink-400"></i>
+                                    <span class="text-xs sm:text-sm font-semibold text-white">Pacific Time Auto-Start</span>
+                                </div>
+                                <button type="button" onclick="togglePacificAutoStart()" id="pacificAutoToggleBtn"
+                                    class="px-3 py-1 rounded-full text-[11px] font-medium border transition bg-pink-500/30 border-pink-400/60 text-white">
+                                    On
+                                </button>
+                            </div>
+                            <p class="text-[11px] text-pink-200/75 leading-relaxed">
+                                Pick the exact Pacific Time (PT) you want the music &amp; lyrics to start automatically:
+                            </p>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <input type="time" id="pacificStartTimeInput" value="21:00"
+                                    class="px-3 py-2 rounded-xl bg-thermal-900/90 border border-pink-400/40 text-white text-xs sm:text-sm font-mono focus:outline-none focus:border-pink-400" />
+                                <span id="pacificCountdownLabel" class="text-[11px] text-pink-300 font-mono flex-1 text-right">
+                                    Calculating PT...
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Synced Lyrics Stage -->
+                    <div class="lg:col-span-7 liquid-glass-subtle rounded-2xl p-5 border border-pink-400/25 flex flex-col">
+                        <div class="flex items-center justify-between pb-3 mb-3 border-b border-pink-400/15">
+                            <span class="text-xs font-serif italic text-pink-200 flex items-center gap-1.5">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-400"></i>
+                                <span>Live Synced Lyrics (Tap any line to jump)</span>
+                            </span>
+                            <span id="musicLyricStatusPill" class="text-[11px] px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-200 border border-pink-400/30">
+                                Ready ♥
+                            </span>
+                        </div>
+                        <div id="musicLyricsContainer" class="flex-1 min-h-[260px] max-h-[340px] overflow-y-auto pr-2 space-y-3 py-4 text-center scroll-smooth">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+                </div> <!-- end #tabSlideStage -->
+
+                <!-- Subtle Slide Navigation Dots & Hint -->
+                <div class="mt-3 flex flex-wrap items-center justify-between gap-2 px-2">
+                    <div id="tabSlideDots" class="flex items-center gap-2">
+                        <button type="button" onclick="switchTab('letter')" data-slide-dot="letter" class="w-5 h-1.5 rounded-full bg-pink-400 transition-all" title="A Letter For You"></button>
+                        <button type="button" onclick="switchTab('commits')" data-slide-dot="commits" class="w-2 h-1.5 rounded-full bg-pink-300/35 hover:bg-pink-300/60 transition-all" title="Our Story &amp; Memories"></button>
+                        <button type="button" onclick="switchTab('reasons')" data-slide-dot="reasons" class="w-2 h-1.5 rounded-full bg-pink-300/35 hover:bg-pink-300/60 transition-all" title="Why I Love You"></button>
+                        <button type="button" onclick="switchTab('lab')" data-slide-dot="lab" class="w-2 h-1.5 rounded-full bg-pink-300/35 hover:bg-pink-300/60 transition-all" title="3D Heart Glow"></button>
+                        <button type="button" onclick="switchTab('music')" data-slide-dot="music" class="w-2 h-1.5 rounded-full bg-pink-300/35 hover:bg-pink-300/60 transition-all" title="Our Music"></button>
+                    </div>
+                    <div class="flex items-center gap-2 text-[11px] text-pink-300/70">
+                        <button type="button" onclick="slideToAdjacentTab(-1)" class="sm:hidden px-2 py-0.5 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-200">‹ Prev</button>
+                        <span>Hold left/right edge or swipe to slide tabs ♥</span>
+                        <button type="button" onclick="slideToAdjacentTab(1)" class="sm:hidden px-2 py-0.5 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-200">Next ›</button>
+                    </div>
+                </div>
+            </div> <!-- end #tabSlideViewport -->
 
             <!-- GENTLE SCROLL DIVIDER INTO COUPLE GAMES -->
             <div class="pt-4 pb-1 flex flex-col items-center justify-center text-center">
@@ -980,6 +1206,62 @@ No matter where life takes us next, my heart will always choose you—today, tom
                         question: 'Who is more likely to plan a surprise just to make the other smile?',
                         yourPick: 'him',
                         yourNote: 'Seeing your eyes light up is genuinely my favorite superpower ✨'
+                    }
+                ]
+            },
+
+            // Music Player & Pacific Time Auto-Start Configuration
+            MUSIC: {
+                DEFAULT_PACIFIC_START_TIME: '21:00', // 24h HH:MM in America/Los_Angeles (Pacific Time)
+                TRACKS: [
+                    {
+                        id: 'midnight-in-your-arms',
+                        title: 'Midnight In Your Arms',
+                        artist: 'Our Song · Dreamy Music Box ♥',
+                        duration: 48,
+                        audioUrl: '', // Optional: paste an MP3 URL or load a local file in the player
+                        chords: [
+                            [261.63, 329.63, 392.00, 493.88], // Cmaj7
+                            [220.00, 261.63, 329.63, 392.00], // Am7
+                            [174.61, 220.00, 261.63, 329.63], // Fmaj7
+                            [196.00, 246.94, 293.66, 392.00]  // G6
+                        ],
+                        melody: [523.25, 659.25, 587.33, 523.25, 493.88, 523.25, 440.00, 392.00],
+                        lyrics: [
+                            { time: 0, text: '♪ Softly, the stars begin to glow tonight ♪' },
+                            { time: 5, text: 'Every quiet second feels so right' },
+                            { time: 10, text: 'When your hand is resting here in mine,' },
+                            { time: 15, text: 'Even time slows down and turns divine ♥' },
+                            { time: 21, text: 'You are every wish I ever made,' },
+                            { time: 26, text: 'The warmest light that never fades' },
+                            { time: 32, text: 'No matter how far the miles may be,' },
+                            { time: 37, text: 'My heart is always where you’ll be ✨' },
+                            { time: 43, text: 'Forever yours, under this same sky ♥' }
+                        ]
+                    },
+                    {
+                        id: 'golden-hour-promise',
+                        title: 'Golden Hour Promise',
+                        artist: 'For My Favorite Person ✨',
+                        duration: 44,
+                        audioUrl: '',
+                        chords: [
+                            [293.66, 369.99, 440.00, 523.25], // Dmaj7/9
+                            [246.94, 293.66, 369.99, 440.00], // Bm7
+                            [196.00, 246.94, 293.66, 369.99], // Gmaj7
+                            [220.00, 277.18, 329.63, 440.00]  // A6
+                        ],
+                        melody: [587.33, 659.25, 739.99, 659.25, 587.33, 554.37, 493.88, 440.00],
+                        lyrics: [
+                            { time: 0, text: '♪ Sunlight dancing in your eyes ♪' },
+                            { time: 5, text: 'Painting pink across the evening skies' },
+                            { time: 11, text: 'Every laugh you share becomes my song,' },
+                            { time: 17, text: 'Right beside you is where I belong 💕' },
+                            { time: 23, text: 'Hold me close and never let me go,' },
+                            { time: 29, text: 'You’re my favorite chapter that I know' },
+                            { time: 35, text: 'Today, tomorrow, and all of time,' },
+                            { time: 40, text: 'So grateful that I get to call you mine ♥' }
+                        ]
                     }
                 ]
             }
@@ -2049,6 +2331,15 @@ No matter where life takes us next, my heart will always choose you—today, tom
             startTypewriterEffect();
         }
 
+        const SLIDABLE_TOP_TABS = ['letter', 'commits', 'reasons', 'lab', 'music'];
+        const TAB_DISPLAY_NAMES = {
+            letter: 'A Letter For You',
+            commits: 'Our Story & Memories',
+            reasons: 'Why I Love You',
+            lab: '3D Heart Glow',
+            music: 'Our Music'
+        };
+
         function scheduleAutoFlowForTab(tabName) {
             if (!autoSwitchEnabled || finaleActive) return;
 
@@ -2092,8 +2383,8 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 const modeLabel = document.getElementById('asciiModeLabel');
                 if (modeLabel) modeLabel.textContent = asciiModes[0];
 
-                startTabAutoBar(totalMs, 'Enjoying 3D Heart Glow — next up: Couple Games ♥', () => {
-                    switchTab('games', { fromAuto: true });
+                startTabAutoBar(totalMs, 'Enjoying 3D Heart Glow — next up: Our Music ♪', () => {
+                    switchTab('music', { fromAuto: true });
                 });
 
                 for (let m = 1; m < asciiModes.length; m++) {
@@ -2104,11 +2395,18 @@ No matter where life takes us next, my heart will always choose you—today, tom
                     }, m * stepMs);
                     tabSequenceStepTimers.push(tid);
                 }
+            } else if (tabName === 'music') {
+                if (typeof musicState !== 'undefined' && musicState.isPlaying) {
+                    return; // Don't auto-advance away while a song is actively playing
+                }
+                startTabAutoBar(8500, 'Listening to Our Music — next up: Couple Games ♥', () => {
+                    switchTab('games', { fromAuto: true });
+                });
             }
         }
 
         function highlightDashboardTabButtons(activeName) {
-            const allTabs = ['letter', 'commits', 'reasons', 'lab', 'games'];
+            const allTabs = ['letter', 'commits', 'reasons', 'lab', 'music', 'games'];
             allTabs.forEach((t) => {
                 const btn = document.getElementById(`tabBtn-${t}`);
                 if (!btn) return;
@@ -2117,6 +2415,13 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 } else {
                     btn.className = 'tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition';
                 }
+            });
+
+            document.querySelectorAll('[data-slide-dot]').forEach((dot) => {
+                const isCurrent = dot.getAttribute('data-slide-dot') === activeName;
+                dot.className = isCurrent
+                    ? 'w-5 h-1.5 rounded-full bg-pink-400 transition-all'
+                    : 'w-2 h-1.5 rounded-full bg-pink-300/35 hover:bg-pink-300/60 transition-all';
             });
         }
 
@@ -2134,6 +2439,17 @@ No matter where life takes us next, my heart will always choose you—today, tom
             cancelAllTabAutoTimers();
             stopTypewriterEffect();
 
+            const prevIdx = SLIDABLE_TOP_TABS.indexOf(activeDashboardTab);
+            const nextIdx = SLIDABLE_TOP_TABS.indexOf(tabName);
+            let slideAnimClass = 'tab-fade-in';
+            if (opts.slideDir === 1) {
+                slideAnimClass = 'tab-slide-in-right';
+            } else if (opts.slideDir === -1) {
+                slideAnimClass = 'tab-slide-in-left';
+            } else if (prevIdx !== -1 && nextIdx !== -1 && prevIdx !== nextIdx) {
+                slideAnimClass = nextIdx > prevIdx ? 'tab-slide-in-right' : 'tab-slide-in-left';
+            }
+
             activeDashboardTab = tabName;
             highlightDashboardTabButtons(tabName);
 
@@ -2145,14 +2461,13 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 return;
             }
 
-            const topTabs = ['letter', 'commits', 'reasons', 'lab'];
-            topTabs.forEach((t) => {
+            SLIDABLE_TOP_TABS.forEach((t) => {
                 const content = document.getElementById(`tabContent-${t}`);
                 if (!content) return;
                 if (t === tabName) {
-                    content.classList.remove('hidden', 'tab-fade-in');
+                    content.classList.remove('hidden', 'tab-fade-in', 'tab-slide-in-right', 'tab-slide-in-left');
                     void content.offsetWidth;
-                    content.classList.add('tab-fade-in');
+                    content.classList.add(slideAnimClass);
                 } else {
                     content.classList.add('hidden');
                 }
@@ -2172,6 +2487,658 @@ No matter where life takes us next, my heart will always choose you—today, tom
             } else {
                 scheduleAutoFlowForTab(tabName);
             }
+        }
+
+        function slideToAdjacentTab(direction) {
+            const currentIdx = SLIDABLE_TOP_TABS.indexOf(activeDashboardTab);
+            const baseIdx = currentIdx === -1 ? 0 : currentIdx;
+            const targetIdx = (baseIdx + direction + SLIDABLE_TOP_TABS.length) % SLIDABLE_TOP_TABS.length;
+            const targetTab = SLIDABLE_TOP_TABS[targetIdx];
+            switchTab(targetTab, { slideDir: direction >= 0 ? 1 : -1 });
+        }
+
+        function initTabSlideInteractions() {
+            const viewport = document.getElementById('tabSlideViewport');
+            const stage = document.getElementById('tabSlideStage');
+            const dragIndicator = document.getElementById('tabDragIndicator');
+            const leftBtn = document.getElementById('tabSlideHoldLeft');
+            const rightBtn = document.getElementById('tabSlideHoldRight');
+            const leftProgress = document.getElementById('tabHoldProgressLeft');
+            const rightProgress = document.getElementById('tabHoldProgressRight');
+            if (!viewport || !stage) return;
+
+            // 1. Edge Button Hold-to-Slide (and quick tap)
+            function attachEdgeHold(btn, progressEl, direction) {
+                if (!btn) return;
+                let holdRaf = null;
+                let repeatTimer = null;
+                let holdTriggered = false;
+                let isDown = false;
+                const HOLD_MS = 420;
+                const REPEAT_MS = 950;
+
+                const clearHold = () => {
+                    isDown = false;
+                    if (holdRaf) { cancelAnimationFrame(holdRaf); holdRaf = null; }
+                    if (repeatTimer) { clearInterval(repeatTimer); repeatTimer = null; }
+                    btn.classList.remove('is-holding');
+                    if (progressEl) progressEl.style.width = '0%';
+                    if (dragIndicator) dragIndicator.classList.add('hidden');
+                };
+
+                btn.addEventListener('pointerdown', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    isDown = true;
+                    holdTriggered = false;
+                    btn.classList.add('is-holding');
+                    const start = performance.now();
+
+                    const step = (now) => {
+                        if (!isDown) return;
+                        const pct = Math.min(100, ((now - start) / HOLD_MS) * 100);
+                        if (progressEl) progressEl.style.width = `${pct}%`;
+                        if (pct >= 100 && !holdTriggered) {
+                            holdTriggered = true;
+                            slideToAdjacentTab(direction);
+                            if (progressEl) progressEl.style.width = '0%';
+                            repeatTimer = setInterval(() => {
+                                if (isDown) slideToAdjacentTab(direction);
+                            }, REPEAT_MS);
+                            return;
+                        }
+                        if (!holdTriggered) {
+                            holdRaf = requestAnimationFrame(step);
+                        }
+                    };
+                    holdRaf = requestAnimationFrame(step);
+                });
+
+                btn.addEventListener('pointerup', () => {
+                    if (isDown && !holdTriggered) {
+                        slideToAdjacentTab(direction);
+                    }
+                    clearHold();
+                });
+                btn.addEventListener('pointercancel', clearHold);
+                btn.addEventListener('pointerleave', clearHold);
+            }
+
+            attachEdgeHold(leftBtn, leftProgress, -1);
+            attachEdgeHold(rightBtn, rightProgress, 1);
+
+            // 2. Hold Left/Right Side OR Drag Left/Right Anywhere on the Tab Stage
+            let ptrActive = false;
+            let startX = 0;
+            let startY = 0;
+            let currentDx = 0;
+            let isHorizontalDrag = false;
+            let edgeHoldTimer = null;
+            let edgeHoldFired = false;
+
+            const showDirectionPill = (dir) => {
+                if (!dragIndicator) return;
+                const curIdx = Math.max(0, SLIDABLE_TOP_TABS.indexOf(activeDashboardTab));
+                const nextIdx = (curIdx + dir + SLIDABLE_TOP_TABS.length) % SLIDABLE_TOP_TABS.length;
+                const label = TAB_DISPLAY_NAMES[SLIDABLE_TOP_TABS[nextIdx]] || 'Next';
+                dragIndicator.textContent = dir < 0 ? `← ${label}` : `${label} →`;
+                dragIndicator.classList.remove('hidden');
+            };
+
+            const resetDragState = () => {
+                ptrActive = false;
+                isHorizontalDrag = false;
+                currentDx = 0;
+                if (edgeHoldTimer) { clearTimeout(edgeHoldTimer); edgeHoldTimer = null; }
+                stage.style.transform = '';
+                if (dragIndicator) dragIndicator.classList.add('hidden');
+            };
+
+            viewport.addEventListener('pointerdown', (e) => {
+                if (e.button !== undefined && e.button !== 0) return;
+                if (e.target.closest('button, input, textarea, select, a, label, [data-no-slide]')) return;
+
+                ptrActive = true;
+                edgeHoldFired = false;
+                isHorizontalDrag = false;
+                startX = e.clientX;
+                startY = e.clientY;
+                currentDx = 0;
+
+                // If user presses and holds on the left 14% or right 14% edge of the card, slide after 460ms hold
+                const rect = viewport.getBoundingClientRect();
+                const relX = (e.clientX - rect.left) / Math.max(1, rect.width);
+                if (relX <= 0.14 || relX >= 0.86) {
+                    const holdDir = relX <= 0.14 ? -1 : 1;
+                    edgeHoldTimer = setTimeout(() => {
+                        if (!ptrActive || isHorizontalDrag) return;
+                        edgeHoldFired = true;
+                        slideToAdjacentTab(holdDir);
+                        resetDragState();
+                    }, 460);
+                }
+            });
+
+            viewport.addEventListener('pointermove', (e) => {
+                if (!ptrActive) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+
+                if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+                    if (edgeHoldTimer) { clearTimeout(edgeHoldTimer); edgeHoldTimer = null; }
+                }
+
+                if (!isHorizontalDrag) {
+                    if (Math.abs(dx) > 22 && Math.abs(dx) > Math.abs(dy) * 1.35) {
+                        // Respect active text selection inside letters
+                        const sel = window.getSelection ? window.getSelection().toString() : '';
+                        if (sel && sel.length > 0) {
+                            resetDragState();
+                            return;
+                        }
+                        isHorizontalDrag = true;
+                    } else if (Math.abs(dy) > 24) {
+                        resetDragState();
+                        return;
+                    }
+                }
+
+                if (isHorizontalDrag) {
+                    currentDx = dx;
+                    const damped = Math.max(-110, Math.min(110, dx * 0.42));
+                    stage.style.transform = `translateX(${damped}px)`;
+                    showDirectionPill(dx > 0 ? -1 : 1);
+                }
+            });
+
+            const finishPointer = () => {
+                if (!ptrActive) return;
+                if (isHorizontalDrag && Math.abs(currentDx) >= 60 && !edgeHoldFired) {
+                    // Dragging right reveals previous tab (-1); dragging left reveals next tab (+1)
+                    slideToAdjacentTab(currentDx > 0 ? -1 : 1);
+                }
+                resetDragState();
+            };
+
+            viewport.addEventListener('pointerup', finishPointer);
+            viewport.addEventListener('pointercancel', resetDragState);
+        }
+
+        /* =====================================================================
+         * 9B. OUR MUSIC PLAYER, SYNCED LYRICS & PACIFIC TIME SCHEDULER
+         * ===================================================================== */
+        const musicState = {
+            trackIdx: 0,
+            isPlaying: false,
+            currentTime: 0,
+            volume: 0.7,
+            customAudioUrl: null,
+            customTitle: null,
+            audioEl: null,
+            synthTimer: null,
+            synthStep: 0,
+            rafId: null,
+            lastTickAt: 0,
+            lastActiveLyricIdx: -1,
+            pacificAutoEnabled: true,
+            pacificTargetTime: '21:00',
+            lastTriggeredPtKey: ''
+        };
+
+        function formatTrackTime(sec) {
+            const s = Math.max(0, Math.floor(sec || 0));
+            const m = Math.floor(s / 60);
+            const r = String(s % 60).padStart(2, '0');
+            return `${m}:${r}`;
+        }
+
+        function getActiveMusicTrack() {
+            const tracks = (CONFIG.MUSIC && CONFIG.MUSIC.TRACKS) ? CONFIG.MUSIC.TRACKS : [];
+            return tracks[musicState.trackIdx] || tracks[0];
+        }
+
+        function renderMusicTrackSelector() {
+            const container = document.getElementById('musicTrackSelector');
+            if (!container || !CONFIG.MUSIC) return;
+            container.innerHTML = CONFIG.MUSIC.TRACKS.map((tr, idx) => {
+                const active = idx === musicState.trackIdx;
+                return `<button type="button" onclick="selectMusicTrack(${idx})" class="px-3 py-1 rounded-full text-[11px] border transition ${
+                    active
+                        ? 'bg-pink-500/35 border-pink-400 text-white font-semibold'
+                        : 'bg-pink-500/10 border-pink-400/25 text-pink-200/80 hover:text-white hover:border-pink-400/50'
+                }">${escapeHtml(tr.title)}</button>`;
+            }).join('');
+        }
+
+        function renderMusicLyrics() {
+            const container = document.getElementById('musicLyricsContainer');
+            const track = getActiveMusicTrack();
+            if (!container || !track) return;
+
+            container.innerHTML = track.lyrics.map((line, idx) => `
+                <button type="button" onclick="seekMusicTo(${line.time})" data-lyric-idx="${idx}"
+                    class="lyric-line block w-full text-center px-3 py-1.5 rounded-xl text-xs sm:text-sm text-pink-200/55 hover:text-pink-100 hover:bg-pink-500/10 cursor-pointer">
+                    ${escapeHtml(line.text)}
+                </button>
+            `).join('');
+            musicState.lastActiveLyricIdx = -1;
+            updateMusicLyricsHighlight(musicState.currentTime);
+        }
+
+        function updateMusicLyricsHighlight(timeSec) {
+            const track = getActiveMusicTrack();
+            const container = document.getElementById('musicLyricsContainer');
+            if (!track || !container) return;
+
+            let activeIdx = 0;
+            for (let i = 0; i < track.lyrics.length; i++) {
+                if (timeSec >= track.lyrics[i].time) {
+                    activeIdx = i;
+                } else {
+                    break;
+                }
+            }
+
+            if (activeIdx === musicState.lastActiveLyricIdx) return;
+            musicState.lastActiveLyricIdx = activeIdx;
+
+            const nodes = container.querySelectorAll('[data-lyric-idx]');
+            nodes.forEach((node, idx) => {
+                if (idx === activeIdx) {
+                    node.classList.add('is-active', 'font-semibold', 'text-base', 'sm:text-lg', 'bg-pink-500/15');
+                    node.classList.remove('text-pink-200/55', 'text-pink-300/35');
+                    const offsetTop = node.offsetTop - container.offsetTop - (container.clientHeight * 0.36);
+                    container.scrollTo({ top: Math.max(0, offsetTop), behavior: 'smooth' });
+                } else if (idx < activeIdx) {
+                    node.classList.remove('is-active', 'font-semibold', 'text-base', 'sm:text-lg', 'bg-pink-500/15', 'text-pink-200/55');
+                    node.classList.add('text-pink-300/35');
+                } else {
+                    node.classList.remove('is-active', 'font-semibold', 'text-base', 'sm:text-lg', 'bg-pink-500/15', 'text-pink-300/35');
+                    node.classList.add('text-pink-200/55');
+                }
+            });
+        }
+
+        function updateMusicUI() {
+            const track = getActiveMusicTrack();
+            if (!track) return;
+            const totalDur = (musicState.audioEl && isFinite(musicState.audioEl.duration) && musicState.audioEl.duration > 0)
+                ? musicState.audioEl.duration
+                : track.duration;
+
+            const badge = document.getElementById('musicTrackBadge');
+            const titleEl = document.getElementById('musicTrackTitle');
+            const artistEl = document.getElementById('musicTrackArtist');
+            const curEl = document.getElementById('musicCurrentTime');
+            const durEl = document.getElementById('musicTotalDuration');
+            const slider = document.getElementById('musicSeekSlider');
+            const playIcon = document.getElementById('musicPlayIcon');
+            const eq = document.getElementById('musicEqualizerBars');
+            const statusPill = document.getElementById('musicLyricStatusPill');
+
+            if (badge) badge.textContent = `Track ${musicState.trackIdx + 1} of ${CONFIG.MUSIC.TRACKS.length}`;
+            if (titleEl) titleEl.textContent = musicState.customTitle || track.title;
+            if (artistEl) artistEl.textContent = musicState.customTitle ? 'Custom Audio ♥' : track.artist;
+            if (curEl) curEl.textContent = formatTrackTime(musicState.currentTime);
+            if (durEl) durEl.textContent = formatTrackTime(totalDur);
+            if (slider) {
+                slider.max = String(totalDur);
+                slider.value = String(Math.min(totalDur, musicState.currentTime));
+            }
+            if (playIcon) {
+                playIcon.setAttribute('data-lucide', musicState.isPlaying ? 'pause' : 'play');
+                if (window.lucide) lucide.createIcons();
+            }
+            if (eq) eq.style.opacity = musicState.isPlaying ? '1' : '0.45';
+            if (statusPill) statusPill.textContent = musicState.isPlaying ? 'Playing ♪' : 'Paused ♥';
+        }
+
+        function playRomanticSynthStep() {
+            if (!musicState.isPlaying || !soundEnabled) return;
+            const track = getActiveMusicTrack();
+            if (!track || musicState.audioEl) return;
+
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                if (ctx.state === 'suspended') {
+                    const banner = document.getElementById('musicAutoplayBanner');
+                    if (banner) banner.classList.remove('hidden');
+                    return;
+                }
+                const banner = document.getElementById('musicAutoplayBanner');
+                if (banner) banner.classList.add('hidden');
+
+                const now = ctx.currentTime;
+                const vol = Math.max(0.02, musicState.volume * 0.14);
+                const step = musicState.synthStep++;
+                const chords = track.chords || [[261.63, 329.63, 392.00, 493.88]];
+                const melody = track.melody || [523.25, 659.25, 587.33, 523.25];
+
+                // Play warm pad chord on every 4th beat
+                if (step % 4 === 0) {
+                    const chord = chords[Math.floor(step / 4) % chords.length];
+                    chord.forEach((freq) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now);
+                        gain.gain.setValueAtTime(0.001, now);
+                        gain.gain.linearRampToValueAtTime(vol * 0.42, now + 0.18);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + 2.3);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now);
+                        osc.stop(now + 2.35);
+                    });
+                }
+
+                // Gentle music-box melody note each beat
+                const melFreq = melody[step % melody.length];
+                const mOsc = ctx.createOscillator();
+                const mGain = ctx.createGain();
+                mOsc.type = 'triangle';
+                mOsc.frequency.setValueAtTime(melFreq, now);
+                mGain.gain.setValueAtTime(0.001, now);
+                mGain.gain.linearRampToValueAtTime(vol * 0.65, now + 0.03);
+                mGain.gain.exponentialRampToValueAtTime(0.001, now + 0.72);
+                mOsc.connect(mGain);
+                mGain.connect(ctx.destination);
+                mOsc.start(now);
+                mOsc.stop(now + 0.75);
+
+                // Animate equalizer bars
+                const eqBars = document.querySelectorAll('#musicEqualizerBars span');
+                eqBars.forEach((b) => {
+                    b.style.height = `${6 + Math.floor(Math.random() * 18)}px`;
+                });
+            } catch (e) {}
+        }
+
+        function stopMusicEngineTimers() {
+            if (musicState.synthTimer) {
+                clearInterval(musicState.synthTimer);
+                musicState.synthTimer = null;
+            }
+            if (musicState.rafId) {
+                cancelAnimationFrame(musicState.rafId);
+                musicState.rafId = null;
+            }
+        }
+
+        function startMusicPlayback() {
+            const track = getActiveMusicTrack();
+            if (!track) return;
+            stopMusicEngineTimers();
+            musicState.isPlaying = true;
+            musicState.lastTickAt = performance.now();
+
+            const sourceUrl = musicState.customAudioUrl || track.audioUrl;
+            if (sourceUrl) {
+                if (!musicState.audioEl || musicState.audioEl.dataset.src !== sourceUrl) {
+                    if (musicState.audioEl) musicState.audioEl.pause();
+                    musicState.audioEl = new Audio(sourceUrl);
+                    musicState.audioEl.dataset.src = sourceUrl;
+                }
+                musicState.audioEl.volume = musicState.volume;
+                musicState.audioEl.currentTime = musicState.currentTime;
+                musicState.audioEl.play().catch(() => {
+                    const banner = document.getElementById('musicAutoplayBanner');
+                    if (banner) banner.classList.remove('hidden');
+                });
+            } else {
+                if (musicState.audioEl) {
+                    musicState.audioEl.pause();
+                    musicState.audioEl = null;
+                }
+                playRomanticSynthStep();
+                musicState.synthTimer = setInterval(playRomanticSynthStep, 600);
+            }
+
+            function tickMusic(now) {
+                if (!musicState.isPlaying) return;
+                const dt = (now - musicState.lastTickAt) / 1000;
+                musicState.lastTickAt = now;
+
+                if (musicState.audioEl) {
+                    musicState.currentTime = musicState.audioEl.currentTime;
+                    if (musicState.audioEl.ended) {
+                        nextMusicTrack(true);
+                        return;
+                    }
+                } else {
+                    musicState.currentTime += dt;
+                    if (musicState.currentTime >= track.duration) {
+                        nextMusicTrack(true);
+                        return;
+                    }
+                }
+
+                updateMusicLyricsHighlight(musicState.currentTime);
+                const curEl = document.getElementById('musicCurrentTime');
+                const slider = document.getElementById('musicSeekSlider');
+                if (curEl) curEl.textContent = formatTrackTime(musicState.currentTime);
+                if (slider) slider.value = String(musicState.currentTime);
+
+                musicState.rafId = requestAnimationFrame(tickMusic);
+            }
+            musicState.rafId = requestAnimationFrame(tickMusic);
+            updateMusicUI();
+        }
+
+        function pauseMusicPlayback() {
+            musicState.isPlaying = false;
+            stopMusicEngineTimers();
+            if (musicState.audioEl) musicState.audioEl.pause();
+            updateMusicUI();
+        }
+
+        function toggleMusicPlayback() {
+            if (musicState.isPlaying) {
+                pauseMusicPlayback();
+            } else {
+                startMusicPlayback();
+            }
+        }
+
+        function seekMusicTo(timeSec) {
+            const track = getActiveMusicTrack();
+            const maxDur = (musicState.audioEl && isFinite(musicState.audioEl.duration)) ? musicState.audioEl.duration : (track ? track.duration : 45);
+            musicState.currentTime = Math.max(0, Math.min(maxDur, Number(timeSec) || 0));
+            if (musicState.audioEl) musicState.audioEl.currentTime = musicState.currentTime;
+            updateMusicLyricsHighlight(musicState.currentTime);
+            updateMusicUI();
+        }
+
+        function selectMusicTrack(idx, autoPlay = false) {
+            const wasPlaying = musicState.isPlaying || autoPlay;
+            pauseMusicPlayback();
+            musicState.trackIdx = idx;
+            musicState.currentTime = 0;
+            musicState.customAudioUrl = null;
+            musicState.customTitle = null;
+            musicState.synthStep = 0;
+            renderMusicTrackSelector();
+            renderMusicLyrics();
+            updateMusicUI();
+            if (wasPlaying) startMusicPlayback();
+        }
+
+        function prevMusicTrack() {
+            const total = CONFIG.MUSIC.TRACKS.length;
+            selectMusicTrack((musicState.trackIdx - 1 + total) % total, musicState.isPlaying);
+        }
+
+        function nextMusicTrack(autoPlay = false) {
+            const total = CONFIG.MUSIC.TRACKS.length;
+            selectMusicTrack((musicState.trackIdx + 1) % total, autoPlay || musicState.isPlaying);
+        }
+
+        function handleCustomAudioFile(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            if (musicState.customAudioUrl) URL.revokeObjectURL(musicState.customAudioUrl);
+            musicState.customAudioUrl = URL.createObjectURL(file);
+            musicState.customTitle = file.name.replace(/\.[^.]+$/, '');
+            musicState.currentTime = 0;
+            startMusicPlayback();
+        }
+
+        function resumeMusicAfterAutoplayBlock() {
+            const ctx = getAudioContext();
+            if (ctx && ctx.state === 'suspended') ctx.resume();
+            if (musicState.audioEl && musicState.isPlaying) {
+                musicState.audioEl.play().catch(() => {});
+            }
+            const banner = document.getElementById('musicAutoplayBanner');
+            if (banner) banner.classList.add('hidden');
+        }
+
+        function getPacificTimeParts(date = new Date()) {
+            const parts = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'America/Los_Angeles',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }).formatToParts(date);
+            const map = {};
+            parts.forEach((p) => { map[p.type] = p.value; });
+            const h24 = parseInt(map.hour, 10) % 24;
+            const min = parseInt(map.minute, 10);
+            const sec = parseInt(map.second, 10);
+            const display = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'America/Los_Angeles',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            }).format(date);
+
+            return {
+                dateKey: `${map.year}-${map.month}-${map.day}`,
+                hour24: h24,
+                minute: min,
+                second: sec,
+                hhmm: `${String(h24).padStart(2, '0')}:${String(min).padStart(2, '0')}`,
+                display: `${display} PT`
+            };
+        }
+
+        function togglePacificAutoStart() {
+            musicState.pacificAutoEnabled = !musicState.pacificAutoEnabled;
+            try { localStorage.setItem('forMyLove_ptAutoEnabled', String(musicState.pacificAutoEnabled)); } catch (e) {}
+            const btn = document.getElementById('pacificAutoToggleBtn');
+            if (btn) {
+                btn.textContent = musicState.pacificAutoEnabled ? 'On' : 'Off';
+                btn.className = musicState.pacificAutoEnabled
+                    ? 'px-3 py-1 rounded-full text-[11px] font-medium border transition bg-pink-500/30 border-pink-400/60 text-white'
+                    : 'px-3 py-1 rounded-full text-[11px] font-medium border transition bg-pink-950/50 border-pink-400/25 text-pink-300/70';
+            }
+            updatePacificClockAndScheduler();
+        }
+
+        function updatePacificClockAndScheduler() {
+            const pt = getPacificTimeParts(new Date());
+            const clockEl = document.getElementById('pacificClockDisplay');
+            if (clockEl) clockEl.textContent = pt.display;
+
+            const countdownEl = document.getElementById('pacificCountdownLabel');
+            if (!musicState.pacificAutoEnabled) {
+                if (countdownEl) countdownEl.textContent = 'Auto-start paused';
+                return;
+            }
+
+            const [targetH, targetM] = (musicState.pacificTargetTime || '21:00').split(':').map((n) => parseInt(n, 10));
+            if (isNaN(targetH) || isNaN(targetM)) return;
+
+            const nowSec = pt.hour24 * 3600 + pt.minute * 60 + pt.second;
+            const targetSec = targetH * 3600 + targetM * 60;
+            let diffSec = targetSec - nowSec;
+            if (diffSec < 0) diffSec += 86400;
+
+            if (countdownEl) {
+                const ch = Math.floor(diffSec / 3600);
+                const cm = Math.floor((diffSec % 3600) / 60);
+                const cs = diffSec % 60;
+                countdownEl.textContent = diffSec === 0
+                    ? 'Starting now! ♥'
+                    : `Starts in ${ch}h ${String(cm).padStart(2, '0')}m ${String(cs).padStart(2, '0')}s`;
+            }
+
+            // Trigger automatically when Pacific Time reaches the user's chosen HH:MM
+            const triggerKey = `${pt.dateKey} ${pt.hhmm}`;
+            if (pt.hour24 === targetH && pt.minute === targetM && musicState.lastTriggeredPtKey !== triggerKey) {
+                musicState.lastTriggeredPtKey = triggerKey;
+                musicState.currentTime = 0;
+
+                const dashboard = document.getElementById('dashboardContainer');
+                if (dashboard && !dashboard.classList.contains('hidden')) {
+                    switchTab('music', { silent: true });
+                }
+                startMusicPlayback();
+                if (typeof triggerHeartShower === 'function') {
+                    triggerHeartShower(window.innerWidth / 2, window.innerHeight / 2);
+                }
+                const toast = document.getElementById('pacificTriggerToast');
+                const toastText = document.getElementById('pacificTriggerToastText');
+                if (toastText) toastText.textContent = `✨ It's ${pt.display} — Playing our song ♥`;
+                if (toast) toast.classList.remove('hidden');
+            }
+        }
+
+        function initMusicPlayerAndScheduler() {
+            try {
+                const savedTime = localStorage.getItem('forMyLove_ptStartTime');
+                const savedEnabled = localStorage.getItem('forMyLove_ptAutoEnabled');
+                if (savedTime) musicState.pacificTargetTime = savedTime;
+                else if (CONFIG.MUSIC && CONFIG.MUSIC.DEFAULT_PACIFIC_START_TIME) {
+                    musicState.pacificTargetTime = CONFIG.MUSIC.DEFAULT_PACIFIC_START_TIME;
+                }
+                if (savedEnabled !== null) musicState.pacificAutoEnabled = savedEnabled === 'true';
+            } catch (e) {}
+
+            const timeInput = document.getElementById('pacificStartTimeInput');
+            if (timeInput) {
+                timeInput.value = musicState.pacificTargetTime;
+                timeInput.addEventListener('change', (e) => {
+                    if (e.target.value) {
+                        musicState.pacificTargetTime = e.target.value;
+                        musicState.lastTriggeredPtKey = '';
+                        try { localStorage.setItem('forMyLove_ptStartTime', musicState.pacificTargetTime); } catch (err) {}
+                        updatePacificClockAndScheduler();
+                    }
+                });
+            }
+
+            const autoBtn = document.getElementById('pacificAutoToggleBtn');
+            if (autoBtn) {
+                autoBtn.textContent = musicState.pacificAutoEnabled ? 'On' : 'Off';
+                autoBtn.className = musicState.pacificAutoEnabled
+                    ? 'px-3 py-1 rounded-full text-[11px] font-medium border transition bg-pink-500/30 border-pink-400/60 text-white'
+                    : 'px-3 py-1 rounded-full text-[11px] font-medium border transition bg-pink-950/50 border-pink-400/25 text-pink-300/70';
+            }
+
+            const seekSlider = document.getElementById('musicSeekSlider');
+            if (seekSlider) {
+                seekSlider.addEventListener('input', (e) => seekMusicTo(e.target.value));
+            }
+            const volSlider = document.getElementById('musicVolumeSlider');
+            if (volSlider) {
+                volSlider.addEventListener('input', (e) => {
+                    musicState.volume = parseFloat(e.target.value);
+                    if (musicState.audioEl) musicState.audioEl.volume = musicState.volume;
+                });
+            }
+
+            renderMusicTrackSelector();
+            renderMusicLyrics();
+            updateMusicUI();
+            updatePacificClockAndScheduler();
+            setInterval(updatePacificClockAndScheduler, 1000);
         }
 
         const lastUptimeVals = { d: '', h: '', m: '', s: '' };
@@ -3106,6 +4073,8 @@ No matter where life takes us next, my heart will always choose you—today, tom
             syncDataToUI();
             initLoveQuestionInteractions();
             initScrollTopBlur();
+            initTabSlideInteractions();
+            initMusicPlayerAndScheduler();
             updateUptimeCounter();
             setInterval(updateUptimeCounter, 1000);
 
