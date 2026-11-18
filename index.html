@@ -1,0 +1,3158 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Your Eyes Only ♥ A Special Gift</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: JetBrains Mono (for ASCII art), Plus Jakarta Sans & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        thermal: {
+                            900: '#160512',
+                            800: '#2d0824',
+                            600: '#831843',
+                            500: '#ec4899',
+                            400: '#f472b6',
+                            300: '#f9a8d4',
+                            100: '#fce7f3',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+        
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            scroll-behavior: smooth;
+            background-color: #0d020a;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: clip;
+            overflow-y: auto;
+            background-color: #0d020a;
+            color: #fce7f3;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Allow text selection inside letters */
+        .selectable {
+            user-select: text;
+        }
+
+        /* Liquid Glassmorphism Core Styling */
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255, 110, 199, 0.14) 0%, rgba(45, 8, 36, 0.45) 50%, rgba(236, 72, 153, 0.1) 100%);
+            backdrop-filter: blur(24px) saturate(190%);
+            -webkit-backdrop-filter: blur(24px) saturate(190%);
+            border: 1px solid rgba(255, 182, 225, 0.28);
+            box-shadow: 
+                0 25px 60px -15px rgba(236, 72, 153, 0.3),
+                inset 0 1px 2px 0 rgba(255, 255, 255, 0.45),
+                inset 0 -1px 3px 0 rgba(236, 72, 153, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Specular Liquid Sheen */
+        .liquid-glass::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.12), transparent 45%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .liquid-glass-subtle {
+            background: rgba(35, 6, 26, 0.55);
+            backdrop-filter: blur(16px) saturate(160%);
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
+            border: 1px solid rgba(244, 114, 182, 0.22);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Thermal SVG Noise Texture Overlay */
+        .noise-overlay {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.055'/%3E%3C/svg%3E");
+        }
+
+        /* Neon Pink Glow Utilities */
+        .text-glow {
+            text-shadow: 0 0 12px rgba(244, 114, 182, 0.7), 0 0 24px rgba(236, 72, 153, 0.4);
+        }
+
+        .box-glow:hover {
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Shake Animation for Wrong Password */
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px) rotate(-1deg); }
+            40%, 80% { transform: translateX(10px) rotate(1deg); }
+        }
+        .shake {
+            animation: shakeError 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+            border-color: rgba(251, 113, 133, 0.8) !important;
+        }
+
+        /* Blinking Cursor */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        /* Dodging No Button Smooth Glide */
+        .no-btn-floating {
+            position: fixed !important;
+            z-index: 35 !important;
+            margin: 0 !important;
+            transition: left 0.18s cubic-bezier(0.22, 1, 0.36, 1), top 0.18s cubic-bezier(0.22, 1, 0.36, 1), transform 0.18s ease;
+            will-change: left, top, transform;
+        }
+
+        /* Noticeable Top Scroll-Only Blur Veil (Active ONLY while scrolling; no effect when paused) */
+        .top-scroll-blur {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 220px;
+            z-index: 25;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            backdrop-filter: blur(26px) saturate(175%) brightness(0.9);
+            -webkit-backdrop-filter: blur(26px) saturate(175%) brightness(0.9);
+            background: linear-gradient(
+                to bottom,
+                rgba(14, 2, 11, 0.62) 0%,
+                rgba(35, 6, 26, 0.36) 42%,
+                rgba(45, 8, 36, 0.14) 72%,
+                rgba(22, 5, 18, 0) 100%
+            );
+            mask-image: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 0.96) 44%,
+                rgba(0, 0, 0, 0.58) 72%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            -webkit-mask-image: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 0.96) 44%,
+                rgba(0, 0, 0, 0.58) 72%,
+                rgba(0, 0, 0, 0) 100%
+            );
+            transition: opacity 0.28s ease-out, visibility 0.28s ease-out;
+            will-change: opacity;
+        }
+
+        .top-scroll-blur.is-scrolling {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.14s ease-out, visibility 0.14s ease-out;
+        }
+
+        /* Smooth Tab Transition & Guided Card Spotlight */
+        @keyframes tabFadeIn {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .tab-fade-in {
+            animation: tabFadeIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .story-spotlight {
+            border-color: rgba(244, 114, 182, 0.85) !important;
+            box-shadow: 0 0 26px rgba(236, 72, 153, 0.42), inset 0 1px 2px rgba(255, 255, 255, 0.38) !important;
+            transform: translateY(-2px);
+        }
+
+        /* Game Match Pop & Pulse Animations */
+        @keyframes matchPop {
+            0% { transform: scale(0.72); opacity: 0; }
+            55% { transform: scale(1.08); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .match-pop {
+            animation: matchPop 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes matchPulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(244, 114, 182, 0.75); }
+            70% { box-shadow: 0 0 28px 10px rgba(236, 72, 153, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
+        }
+        .match-card-glow {
+            animation: matchPulseGlow 0.9s ease-out;
+            border-color: rgba(244, 114, 182, 0.85) !important;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.28), rgba(217, 70, 239, 0.18)) !important;
+        }
+
+        @keyframes floatSoft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .float-soft {
+            animation: floatSoft 2.8s ease-in-out infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(22, 5, 18, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(236, 72, 153, 0.45);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(244, 114, 182, 0.8);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between selection:bg-pink-500 selection:text-white">
+
+    <!-- 1. BACKGROUND CANVAS: Pink Thermal Plasma + Reactive ASCII Matrix -->
+    <canvas id="thermalAsciiCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0 transform-gpu"></canvas>
+
+    <!-- Subtle SVG Grain Overlay -->
+    <div class="fixed inset-0 pointer-events-none z-[1] noise-overlay transform-gpu"></div>
+
+    <!-- 2. FOREGROUND CANVAS: Thanos Snap Disintegration & Interactive Heart Bursts -->
+    <canvas id="snapParticleCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-40 transform-gpu"></canvas>
+
+    <!-- 3. TOP SCROLL-ONLY BLUR VEIL (Visible only while actively scrolling; no effect when paused) -->
+    <div id="topScrollBlur" class="top-scroll-blur transform-gpu" aria-hidden="true"></div>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-30 w-full px-4 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-3 border-b border-pink-500/20 bg-thermal-900/40 backdrop-blur-md">
+        <div class="flex items-center gap-2.5">
+            <div class="w-2.5 h-2.5 rounded-full bg-pink-400 animate-ping"></div>
+            <span class="text-xs sm:text-sm font-medium tracking-wider text-pink-200">
+                Made With Love ♥ <span id="headerStatusBadge" class="text-pink-400 font-semibold">A Little Question</span>
+            </span>
+        </div>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Sound Toggle -->
+            <button id="soundToggleBtn" onclick="toggleAudio()" class="liquid-glass-subtle px-3 py-1.5 rounded-full text-xs text-pink-200 hover:text-white hover:border-pink-400 transition flex items-center gap-1.5" title="Toggle Chime Sound">
+                <i data-lucide="volume-2" id="soundIcon" class="w-3.5 h-3.5 text-pink-400"></i>
+                <span class="hidden sm:inline" id="soundLabel">Sound: On</span>
+            </button>
+
+            <!-- Re-lock / Replay Snap Button (Visible when unlocked) -->
+            <button id="replayLockBtn" onclick="resetToLockScreen()" class="hidden liquid-glass-subtle px-3 py-1.5 rounded-full text-xs text-pink-200 hover:text-white hover:border-pink-400 transition items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-400"></i>
+                <span>Replay Unlock Snap</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-6 md:p-10 w-full max-w-5xl mx-auto">
+
+        <!-- ==========================================
+             VIEW 0: DO YOU LOVE ME QUESTION CARD
+             ========================================== -->
+        <section id="loveQuestionContainer" class="w-full max-w-md transition-all duration-500">
+            <div id="loveQuestionCard" class="liquid-glass rounded-3xl p-6 sm:p-9 text-center relative">
+                
+                <!-- Top Decorative Pill -->
+                <div class="flex items-center justify-center mb-5 relative z-10">
+                    <span class="text-[11px] uppercase tracking-widest px-3.5 py-1 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-200 flex items-center gap-1.5">
+                        <i data-lucide="heart" class="w-3 h-3 text-pink-300 fill-pink-300"></i>
+                        <span>One Quick Question</span>
+                    </span>
+                </div>
+
+                <!-- ASCII Art Heart Header -->
+                <pre class="relative z-10 text-[10px] sm:text-xs leading-[1.15] font-mono text-pink-300 text-glow mx-auto inline-block text-left mb-4 select-none"> .:::.   .:::. 
+:::::::.:::::::
+:::::( <span class="inline-block w-[1ch] text-center">♥</span> ):::::
+ ':::::::::::' 
+   ':::::::'   
+     ':::'     
+      ':'      </pre>
+
+                <h1 class="relative z-10 text-2xl sm:text-3xl font-bold font-serif italic tracking-wide text-white text-glow mb-2">
+                    Do You Love Me?
+                </h1>
+                <p class="relative z-10 text-xs sm:text-sm text-pink-200/85 mb-7">
+                    Before you open your gift, <span id="questionRecipientName" class="text-pink-300 font-semibold underline decoration-pink-400/50">My Favorite Person</span>, I have to ask ♥
+                </p>
+
+                <!-- Yes / Dodging No Buttons -->
+                <div id="questionButtonsRow" class="relative z-10 flex items-center justify-center gap-4">
+                    <button
+                        type="button"
+                        id="yesLoveBtn"
+                        onclick="handleLoveYes(event)"
+                        class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-pink-600 via-rose-500 to-fuchsia-600 hover:from-pink-500 hover:to-fuchsia-500 text-white font-semibold text-sm tracking-wide shadow-lg shadow-pink-600/30 box-glow transition-all duration-200 flex items-center justify-center gap-2 group"
+                    >
+                        <i data-lucide="heart" class="w-4 h-4 fill-white/90 group-hover:scale-110 transition-transform"></i>
+                        <span>Yes, I Do! ♥</span>
+                    </button>
+
+                    <div id="noBtnSlot" class="inline-flex">
+                        <button
+                            type="button"
+                            id="noLoveBtn"
+                            tabindex="-1"
+                            aria-label="No"
+                            class="liquid-glass-subtle px-7 py-3.5 rounded-2xl text-pink-200 font-semibold text-sm tracking-wide border border-pink-400/30 hover:border-pink-400/50 flex items-center justify-center gap-1.5 cursor-pointer"
+                        >
+                            <span>No</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Playful Teasing Hint -->
+                <p id="noDodgeMessage" class="relative z-10 mt-5 min-h-[20px] text-xs text-pink-300/85 italic transition-opacity duration-200"></p>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 1: LOCKED SECRET KEEPSAKE CARD
+             ========================================== -->
+        <section id="lockScreenContainer" class="hidden opacity-0 w-full max-w-md transition-all duration-500">
+            <div id="lockCard" class="liquid-glass rounded-3xl p-6 sm:p-9 text-center relative">
+                
+                <!-- Top Decorative Pill -->
+                <div class="flex items-center justify-center mb-5">
+                    <span class="text-[11px] uppercase tracking-widest px-3.5 py-1 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-200 flex items-center gap-1.5">
+                        <i data-lucide="lock" class="w-3 h-3 text-pink-300"></i>
+                        <span>For Your Eyes Only</span>
+                    </span>
+                </div>
+
+                <!-- ASCII Art Heart Lock Header -->
+                <pre class="text-[10px] sm:text-xs leading-[1.15] font-mono text-pink-300 text-glow mx-auto inline-block text-left mb-4 select-none"> .:::.   .:::. 
+:::::::.:::::::
+:::::[ <span class="inline-block w-[1ch] text-center">♥</span> ]:::::
+ ':::::::::::' 
+   ':::::::'   
+     ':::'     
+      ':'      </pre>
+
+                <h1 class="text-2xl sm:text-3xl font-bold font-serif italic tracking-wide text-white text-glow mb-1.5">
+                    A Secret Gift For You
+                </h1>
+                <p class="text-xs sm:text-sm text-pink-200/85 mb-6">
+                    Specially prepared for <span id="lockRecipientName" class="text-pink-300 font-semibold underline decoration-pink-400/50">My Favorite Person</span>
+                </p>
+
+                <!-- Password Input Form -->
+                <form id="unlockForm" onsubmit="handleUnlockAttempt(event)" class="space-y-4 text-left">
+                    <div>
+                        <label for="keywordInput" class="block text-xs tracking-wide text-pink-200/90 mb-2 flex items-center justify-between">
+                            <span>Enter our secret word to unlock:</span>
+                            <span id="authAttemptStatus" class="text-rose-300 font-medium text-[11px] hidden">Try another sweet word ♥</span>
+                        </label>
+                        <div class="relative flex items-center">
+                            <i data-lucide="heart" class="w-4 h-4 text-pink-400 absolute left-4 pointer-events-none"></i>
+                            <input 
+                                type="text" 
+                                id="keywordInput" 
+                                autocomplete="off"
+                                spellcheck="false"
+                                placeholder="Type secret word (e.g. forever)..."
+                                class="w-full pl-10 pr-10 py-3.5 rounded-2xl liquid-glass-subtle text-pink-100 placeholder-pink-300/40 text-sm focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-500/30 transition selectable"
+                            />
+                            <i data-lucide="key-round" class="w-4 h-4 text-pink-400/60 absolute right-4 pointer-events-none"></i>
+                        </div>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-pink-600 via-rose-500 to-fuchsia-600 hover:from-pink-500 hover:to-fuchsia-500 text-white font-semibold text-sm tracking-wide shadow-lg shadow-pink-600/30 box-glow transition-all duration-200 flex items-center justify-center gap-2 group"
+                    >
+                        <i data-lucide="sparkles" class="w-4 h-4 group-hover:rotate-12 transition-transform"></i>
+                        <span>Unlock With Magic</span>
+                    </button>
+                </form>
+
+                <!-- Gentle Hint Section -->
+                <div class="mt-6 pt-4 border-t border-pink-300/15 flex flex-col items-center gap-2">
+                    <button 
+                        type="button"
+                        onclick="toggleHintBox()" 
+                        class="text-xs text-pink-300/80 hover:text-pink-100 transition flex items-center gap-1.5"
+                    >
+                        <i data-lucide="help-circle" class="w-3.5 h-3.5 text-pink-400"></i>
+                        <span>Need a little hint? Tap here</span>
+                    </button>
+
+                    <div id="hintRevealBox" class="hidden w-full mt-2 p-3.5 rounded-2xl bg-pink-950/60 border border-pink-400/30 text-xs text-pink-200 text-center space-y-2">
+                        <div>Try typing one of these magic words:</div>
+                        <div id="hintKeywordsList" class="text-white font-semibold tracking-wide text-sm"></div>
+                        <button 
+                            type="button" 
+                            onclick="autoFillAndSnap()" 
+                            class="mt-1 inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-pink-500/30 hover:bg-pink-500/50 text-pink-100 border border-pink-400/40 transition"
+                        >
+                            <i data-lucide="wand-2" class="w-3.5 h-3.5"></i> Tap to Unlock Automatically
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 2: UNLOCKED ROMANTIC GIFT EXPERIENCE
+             ========================================== -->
+        <section id="dashboardContainer" class="hidden w-full opacity-0 transition-opacity duration-700 space-y-6">
+            
+            <!-- Top Romantic Banner: Greeting + Time Together Counter -->
+            <div class="liquid-glass rounded-3xl p-5 sm:p-7">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                    
+                    <!-- Left: Greeting & Glowing ASCII Heart -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <pre class="text-[9px] leading-[1.05] text-pink-300 text-glow font-mono text-left hidden sm:block select-none bg-pink-950/40 p-3.5 rounded-2xl border border-pink-400/25">,d88b.d88b,
+88888888888
+`Y8888888Y'
+  `Y888Y'  
+    `Y'    </pre>
+                        <div>
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-200 text-xs mb-2">
+                                <i data-lucide="heart" class="w-3 h-3 text-pink-400 fill-pink-400"></i>
+                                <span>Unlocked Forever</span>
+                            </div>
+                            <h2 class="text-2xl sm:text-3xl font-bold font-serif italic text-white text-glow">
+                                For You, <span id="dashboardGirlfriendName" class="text-pink-300">My Love</span> ♥
+                            </h2>
+                            <p id="rotatingQuoteDisplay" class="text-xs sm:text-sm text-pink-200/85 mt-1 italic">
+                                "Every moment with you feels like my favorite daydream come true."
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Ticking Time Together Counter -->
+                    <div class="liquid-glass-subtle rounded-2xl p-4 border border-pink-400/30 min-w-[270px]">
+                        <div class="text-[11px] uppercase tracking-wider text-pink-200/80 mb-2 flex items-center justify-between">
+                            <span>Every Second With You</span>
+                            <span class="text-pink-300 font-semibold">♥ Counting Live</span>
+                        </div>
+                        <div class="grid grid-cols-4 gap-2 text-center">
+                            <div class="bg-pink-950/50 rounded-xl p-2 border border-pink-500/20">
+                                <div id="uptimeDays" class="text-lg sm:text-xl font-bold text-white text-glow">0</div>
+                                <div class="text-[10px] text-pink-300/75">DAYS</div>
+                            </div>
+                            <div class="bg-pink-950/50 rounded-xl p-2 border border-pink-500/20">
+                                <div id="uptimeHours" class="text-lg sm:text-xl font-bold text-white text-glow">00</div>
+                                <div class="text-[10px] text-pink-300/75">HOURS</div>
+                            </div>
+                            <div class="bg-pink-950/50 rounded-xl p-2 border border-pink-500/20">
+                                <div id="uptimeMins" class="text-lg sm:text-xl font-bold text-white text-glow">00</div>
+                                <div class="text-[10px] text-pink-300/75">MINS</div>
+                            </div>
+                            <div class="bg-pink-950/50 rounded-xl p-2 border border-pink-500/20">
+                                <div id="uptimeSecs" class="text-lg sm:text-xl font-bold text-pink-400 text-glow">00</div>
+                                <div class="text-[10px] text-pink-300/75">SECS</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Interactive Navigation Tabs -->
+            <div id="dashboardTabsAnchor" class="scroll-mt-24 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="switchTab('letter')" id="tabBtn-letter" class="tab-btn liquid-glass px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold text-white border-pink-400 flex items-center gap-2 transition">
+                        <i data-lucide="mail-heart" class="w-4 h-4 text-pink-300"></i>
+                        <span>A Letter For You</span>
+                    </button>
+                    <button onclick="switchTab('commits')" id="tabBtn-commits" class="tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-pink-400"></i>
+                        <span>Our Story & Memories</span>
+                    </button>
+                    <button onclick="switchTab('reasons')" id="tabBtn-reasons" class="tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
+                        <i data-lucide="stars" class="w-4 h-4 text-pink-400"></i>
+                        <span>Why I Love You</span>
+                    </button>
+                    <button onclick="switchTab('lab')" id="tabBtn-lab" class="tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
+                        <i data-lucide="heart" class="w-4 h-4 text-pink-400"></i>
+                        <span>3D Heart Glow</span>
+                    </button>
+                    <button onclick="switchTab('games')" id="tabBtn-games" class="tab-btn liquid-glass-subtle hover:border-pink-400 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/90 hover:text-white flex items-center gap-2 transition box-glow">
+                        <i data-lucide="gamepad-2" class="w-4 h-4 text-pink-400"></i>
+                        <span>Couple Games</span>
+                    </button>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="toggleAutoSwitch()" id="autoSwitchToggleBtn" class="liquid-glass-subtle hover:border-pink-400 px-3.5 py-2.5 rounded-2xl text-xs text-pink-200 hover:text-white transition flex items-center gap-1.5" title="Toggle automatic tab switching">
+                        <span id="autoSwitchDot" class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
+                        <span id="autoSwitchLabel">Auto-Switch: On</span>
+                    </button>
+                    <button onclick="triggerHeartShower()" class="liquid-glass-subtle hover:border-pink-400 px-4 py-2.5 rounded-2xl text-xs text-pink-100 hover:text-white transition flex items-center gap-2 box-glow">
+                        <i data-lucide="party-popper" class="w-4 h-4 text-pink-400"></i>
+                        <span>Shower With Hearts</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Subtle Auto-Switch Progress Strip (Appears cleanly when a tab is advancing) -->
+            <div id="tabAutoProgressWrap" class="hidden -mt-2 px-1 space-y-1.5">
+                <div class="flex items-center justify-between text-[11px] text-pink-200/80">
+                    <span id="tabAutoProgressText" class="flex items-center gap-1.5">
+                        <span class="text-pink-400">✦</span>
+                        <span>Up next...</span>
+                    </span>
+                    <button type="button" onclick="triggerNextAutoTabNow()" class="text-pink-300 hover:text-white transition underline decoration-pink-400/40">
+                        Skip Now →
+                    </button>
+                </div>
+                <div class="w-full h-1 rounded-full bg-pink-950/70 overflow-hidden">
+                    <div id="tabAutoProgressBar" class="h-full w-full origin-left rounded-full bg-gradient-to-r from-pink-500 via-rose-400 to-fuchsia-500" style="transform: scaleX(0);"></div>
+                </div>
+            </div>
+
+            <!-- TAB 1: A LETTER FOR YOU (Dreamy Liquid Glass Stationery) -->
+            <div id="tabContent-letter" class="liquid-glass rounded-3xl p-6 sm:p-10">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-pink-300/15">
+                    <div class="flex items-center gap-2 text-xs sm:text-sm text-pink-200">
+                        <i data-lucide="feather" class="w-4 h-4 text-pink-400"></i>
+                        <span class="font-serif italic text-base text-white">Written from my heart to yours</span>
+                    </div>
+                    <button onclick="replayTypewriter()" class="text-xs px-3.5 py-1.5 rounded-full bg-pink-500/20 hover:bg-pink-500/35 text-pink-100 border border-pink-400/30 transition flex items-center gap-1.5">
+                        <i data-lucide="rotate-ccw" class="w-3 h-3"></i> Read Again
+                    </button>
+                </div>
+
+                <!-- Romantic Stationery Letter Body -->
+                <div class="max-w-2xl mx-auto py-2 selectable">
+                    <div class="text-pink-300 font-serif italic text-lg sm:text-xl mb-4">
+                        Dearest <span id="letterGreetingName" class="text-white font-semibold">My Love</span>,
+                    </div>
+                    <div class="pl-4 sm:pl-6 border-l-2 border-pink-400/40 grid">
+                        <span id="typewriterSizer" aria-hidden="true" class="col-start-1 row-start-1 invisible pointer-events-none select-none text-sm sm:text-base whitespace-pre-wrap leading-8 tracking-wide font-sans"></span>
+                        <div class="col-start-1 row-start-1">
+                            <span id="typewriterOutput" class="text-pink-100 text-sm sm:text-base whitespace-pre-wrap leading-8 tracking-wide font-sans"></span><span class="cursor-blink text-pink-400 font-bold">♥</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-right font-serif italic text-base sm:text-lg text-pink-200">
+                        Forever & Always Yours ♥
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: OUR STORY & MEMORIES (Romantic Timeline) -->
+            <div id="tabContent-commits" class="hidden liquid-glass rounded-3xl p-6 sm:p-8">
+                <div class="flex items-center justify-between pb-4 mb-6 border-b border-pink-300/15">
+                    <div class="flex items-center gap-2 text-sm text-pink-200">
+                        <i data-lucide="book-heart" class="w-4 h-4 text-pink-400"></i>
+                        <span class="font-serif italic text-base text-white">Our Favorite Chapters Together</span>
+                    </div>
+                    <span class="text-xs text-pink-300/80">Tap any memory to send hearts ♥</span>
+                </div>
+
+                <div id="commitTimelineList" class="relative pl-6 border-l-2 border-pink-400/40 space-y-6">
+                    <!-- Populated dynamically via JS from CONFIG.MEMORIES -->
+                </div>
+            </div>
+
+            <!-- TAB 3: REASONS I LOVE YOU (Interactive Reveal Cards) -->
+            <div id="tabContent-reasons" class="hidden liquid-glass rounded-3xl p-6 sm:p-8">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-pink-300/15">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-pink-400"></i>
+                        <span class="font-serif italic text-base sm:text-lg text-white">Little Things That Make Me Fall For You Every Day</span>
+                    </div>
+                    <span class="text-xs text-pink-300/80">Tap any card for a burst of love ✨</span>
+                </div>
+
+                <div id="reasonsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Populated dynamically via JS from CONFIG.REASONS -->
+                </div>
+            </div>
+
+            <!-- TAB 4: 3D HEART GLOW (Interactive Spinning ASCII & Thermal Heart) -->
+            <div id="tabContent-lab" class="hidden liquid-glass rounded-3xl p-6 sm:p-8">
+                <div class="flex flex-wrap items-center justify-between gap-4 pb-4 mb-4 border-b border-pink-300/15">
+                    <div>
+                        <h3 class="text-base sm:text-lg font-serif italic font-bold text-white flex items-center gap-2">
+                            <i data-lucide="heart" class="w-4 h-4 text-pink-400 fill-pink-400"></i>
+                            <span>Interactive Glowing Heart</span>
+                        </h3>
+                        <p class="text-xs text-pink-200/75">Tap anywhere inside the crystal frame to create ripples of glowing hearts</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="cycleAsciiMode()" class="px-3.5 py-1.5 rounded-full bg-pink-500/25 hover:bg-pink-500/40 border border-pink-400/40 text-xs text-pink-100 transition">
+                            Style: <span id="asciiModeLabel">3D Spinning Heart</span>
+                        </button>
+                        <button onclick="resetToLockScreen()" class="px-3.5 py-1.5 rounded-full bg-fuchsia-600/30 hover:bg-fuchsia-600/50 border border-fuchsia-400/40 text-xs text-white transition flex items-center gap-1">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Replay Lock Snap
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive ASCII Render Box -->
+                <div id="asciiLabInteractiveZone" onclick="spawnClickBurst(event)" class="relative w-full h-72 sm:h-80 rounded-2xl bg-thermal-900/80 border border-pink-500/30 flex items-center justify-center overflow-hidden cursor-pointer">
+                    <pre id="asciiHeart3DStage" class="text-[9px] sm:text-[11px] leading-[1.05] font-mono text-pink-400 text-glow select-none text-center pointer-events-none"></pre>
+                    <div class="absolute bottom-3 right-4 text-[11px] text-pink-300/70 pointer-events-none">
+                        ✨ Tap anywhere inside to burst glowing hearts
+                    </div>
+                </div>
+            </div>
+
+            <!-- GENTLE SCROLL DIVIDER INTO COUPLE GAMES -->
+            <div class="pt-4 pb-1 flex flex-col items-center justify-center text-center">
+                <button type="button" onclick="scrollToGames()" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-500/15 border border-pink-400/25 text-xs text-pink-200/90 hover:text-white hover:border-pink-400/50 transition">
+                    <span>Scroll Down To Play Our Couple Games ♥</span>
+                    <i data-lucide="chevrons-down" class="w-3.5 h-3.5 text-pink-400 animate-bounce"></i>
+                </button>
+            </div>
+
+            <!-- ==========================================
+                 COUPLE GAMES LOUNGE (Q&A · THIS OR THAT · WHO IS MORE LIKELY TO?)
+                 ========================================== -->
+            <div id="coupleGamesSection" class="scroll-mt-24 liquid-glass rounded-3xl p-6 sm:p-9 space-y-6">
+                
+                <!-- Games Header -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-pink-300/15">
+                    <div>
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-200 text-[11px] uppercase tracking-wider mb-2">
+                            <i data-lucide="gamepad-2" class="w-3 h-3 text-pink-300"></i>
+                            <span>Play Together ♥</span>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-bold font-serif italic text-white text-glow">
+                            Our Little Couple Games
+                        </h3>
+                        <p class="text-xs sm:text-sm text-pink-200/80 mt-1">
+                            See how perfectly in sync our minds are — finish any game for a sweet surprise 💋
+                        </p>
+                    </div>
+
+                    <!-- Game Mode Selector Tabs -->
+                    <div class="flex flex-wrap gap-2">
+                        <button type="button" onclick="switchGameMode('qna')" id="gameTab-qna" class="liquid-glass px-3.5 py-2 rounded-2xl text-xs font-semibold text-white border-pink-400 flex items-center gap-1.5 transition">
+                            <i data-lucide="message-circle" class="w-3.5 h-3.5 text-pink-300"></i>
+                            <span>Sweet Q&amp;A</span>
+                        </button>
+                        <button type="button" onclick="switchGameMode('thisOrThat')" id="gameTab-thisOrThat" class="liquid-glass-subtle px-3.5 py-2 rounded-2xl text-xs font-medium text-pink-200/85 hover:text-white flex items-center gap-1.5 transition">
+                            <i data-lucide="shuffle" class="w-3.5 h-3.5 text-pink-400"></i>
+                            <span>This or That</span>
+                        </button>
+                        <button type="button" onclick="switchGameMode('whoLikely')" id="gameTab-whoLikely" class="liquid-glass-subtle px-3.5 py-2 rounded-2xl text-xs font-medium text-pink-200/85 hover:text-white flex items-center gap-1.5 transition">
+                            <i data-lucide="users" class="w-3.5 h-3.5 text-pink-400"></i>
+                            <span>Who's More Likely?</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Progress & Sync Counter -->
+                <div class="space-y-2.5">
+                    <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+                        <div class="flex items-center gap-2 text-pink-200/90">
+                            <span id="gameModeTitleBadge" class="font-semibold text-white">Sweet Q&amp;A</span>
+                            <span class="text-pink-400/60">•</span>
+                            <span id="gameProgressLabel">Question 1 of 5</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span id="gameScorePill" class="px-3 py-1 rounded-full bg-pink-500/20 border border-pink-400/35 text-pink-100 font-semibold">
+                                In Sync: 0 ♥
+                            </span>
+                            <button type="button" onclick="restartCurrentGame()" class="px-3 py-1 rounded-full liquid-glass-subtle text-pink-200/85 hover:text-white hover:border-pink-400/50 transition flex items-center gap-1">
+                                <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+                                <span>Restart</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="w-full h-2 rounded-full bg-pink-950/70 border border-pink-500/20 overflow-hidden">
+                        <div id="gameProgressBar" class="h-full rounded-full bg-gradient-to-r from-pink-500 via-rose-400 to-fuchsia-500 transition-all duration-300" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- Active Game Stage (Populated Dynamically by JS) -->
+                <div id="gameStageContainer" class="relative z-10 min-h-[260px]"></div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="relative z-10 text-center py-4 px-4 text-xs text-pink-300/60 border-t border-pink-500/10 bg-thermal-900/30 backdrop-blur-sm">
+        <span>Handcrafted With All My Love ♥ Just For You</span>
+    </footer>
+
+    <!-- ==========================================
+         FULL-SCREEN "I LOVE YOU & KISSES" FINALE OVERLAY
+         ========================================== -->
+    <div id="loveFinaleOverlay" onclick="handleFinaleBackdropTap(event)" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-500 flex items-center justify-center p-4 sm:p-6 bg-thermal-900/65 backdrop-blur-sm cursor-pointer">
+        <!-- 60fps Pre-Baked Sprite Canvas filling the entire screen with I Love You & Kisses -->
+        <canvas id="finaleCanvas" class="fixed inset-0 w-full h-full pointer-events-none transform-gpu"></canvas>
+
+        <!-- Center Keepsake Celebration Card -->
+        <div onclick="event.stopPropagation()" class="liquid-glass rounded-3xl p-7 sm:p-10 max-w-lg w-full text-center relative z-10 border border-pink-400/50 shadow-2xl shadow-pink-500/40 cursor-default">
+            <div class="text-3xl sm:text-4xl mb-3 float-soft select-none">💋 ♥ 💋</div>
+
+            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-pink-500/25 border border-pink-300/40 text-pink-100 text-[11px] uppercase tracking-widest mb-3">
+                <span>All My Love For You</span>
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl font-bold font-serif italic text-white text-glow mb-2">
+                I Love You So Much ♥
+            </h2>
+
+            <p id="finaleScoreLine" class="text-xs sm:text-sm font-semibold text-pink-300 mb-3"></p>
+
+            <p class="text-xs sm:text-sm text-pink-100/90 leading-relaxed mb-5">
+                Every little answer, laugh, and moment with you reminds me how lucky I am. Sending you a million kisses right now, <span id="finaleRecipientName" class="text-pink-300 font-semibold">My Favorite Person</span> 💋
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center gap-2 mb-6 text-xs">
+                <span class="px-3 py-1 rounded-full bg-pink-500/20 border border-pink-400/35 text-pink-100">I Love You ♥</span>
+                <span class="px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/35 text-pink-100">Muah! 💋</span>
+                <span class="px-3 py-1 rounded-full bg-fuchsia-500/20 border border-fuchsia-400/35 text-pink-100">Forever Yours ✨</span>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <button type="button" onclick="burstMoreLoveAndKisses(event)" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-pink-600 via-rose-500 to-fuchsia-600 hover:from-pink-500 hover:to-fuchsia-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-pink-600/30 box-glow transition flex items-center gap-2">
+                    <span>More Kisses &amp; Love 💋</span>
+                </button>
+                <button type="button" onclick="closeLoveFinale()" class="px-5 py-3 rounded-2xl liquid-glass-subtle hover:border-pink-400 text-pink-100 hover:text-white font-medium text-xs sm:text-sm transition flex items-center gap-1.5">
+                    <span>Back To Games ♥</span>
+                </button>
+            </div>
+
+            <p class="mt-4 text-[11px] text-pink-300/70">✨ Tap anywhere on the screen for extra kisses</p>
+        </div>
+    </div>
+
+    <!-- =================================================================
+         JAVASCRIPT ENGINE: CONFIG, THERMAL ASCII SHADER, THANOS SNAP & SFX
+         ================================================================= -->
+    <script>
+        /* =====================================================================
+         * 1. GIFT CONFIGURATION BLOCK (EDIT THIS FOR YOUR GIRLFRIEND!)
+         * ===================================================================== */
+        const CONFIG = {
+            // Accepted secret words (case-insensitive) that trigger the Thanos Snap unlock
+            SECRET_KEYWORDS: ['love', 'forever', 'cutie', 'babe', 'heart', 'us'],
+
+            // Her Name or Cute Nickname
+            GIRLFRIEND_NAME: 'My Favorite Person',
+
+            // Anniversary / Start Date for the live ticking counter
+            START_DATE: '2026-10-23T06:24:00',
+
+            // The romantic message typed out in "A Letter For You"
+            LOVE_LETTER_TEXT: 
+`Out of everyone in this world, finding you will always be my favorite miracle.
+
+Every single day with you feels brighter, warmer, and fuller of life. You have this effortless way of turning ordinary moments into memories I want to hold onto forever, and your smile is still my favorite sight in the world.
+
+No matter where life takes us next, my heart will always choose you—today, tomorrow, and every day after. I love you more than words could ever say.`,
+
+            // Relationship Story & Milestones
+            MEMORIES: [
+                {
+                    badge: 'Chapter One',
+                    date: 'The Beginning',
+                    title: 'The Day Our Paths Crossed ♥',
+                    desc: 'From the very first moment we started talking, there was something effortlessly magical about you that I could never forget.'
+                },
+                {
+                    badge: 'Butterflies',
+                    date: 'Our First Date',
+                    title: 'Laughs, Smiles & Endless Conversation ✨',
+                    desc: 'Time flew by way too fast. I remember looking at you and wishing the night would never have to end.'
+                },
+                {
+                    badge: 'Favorite Moments',
+                    date: 'Late Nights & Inside Jokes',
+                    title: 'Falling Deeper For You Every Day 🌙',
+                    desc: 'All our long talks, silly moments, and quiet hugs showed me what true happiness really feels like.'
+                },
+                {
+                    badge: 'Always & Forever',
+                    date: 'Today & Beyond',
+                    title: 'Every Adventure Still Ahead Of Us 🌸',
+                    desc: 'Making memories with you is my favorite thing in the world. Here is to us and everything yet to come.'
+                }
+            ],
+
+            // Reasons I Love You Cards
+            REASONS: [
+                {
+                    icon: 'sparkles',
+                    title: 'Your Beautiful Smile',
+                    text: 'The way your eyes light up when you smile can instantly make my whole day ten times better.'
+                },
+                {
+                    icon: 'heart',
+                    title: 'Your Kind Heart',
+                    text: 'You care so deeply and genuinely about the people around you, and it inspires me every single day.'
+                },
+                {
+                    icon: 'sun',
+                    title: 'How Safe You Feel',
+                    text: 'Being with you feels like coming home. Even in complete silence, everything feels peaceful with you.'
+                },
+                {
+                    icon: 'music',
+                    title: 'Your Sweet Laugh',
+                    text: 'Making you laugh is genuinely my favorite achievement on any given day.'
+                },
+                {
+                    icon: 'moon',
+                    title: 'Our Late Night Talks',
+                    text: 'Whether we are talking about big dreams or the silliest little things, I never get tired of your voice.'
+                },
+                {
+                    icon: 'infinity',
+                    title: 'Just Being Unapologetically You',
+                    text: 'Every little quirk, habit, and detail about who you are makes me fall in love with you all over again.'
+                }
+            ],
+
+            // Rotating sweet quotes in the top banner
+            CUSTOM_QUOTES: [
+                '"Every moment with you feels like my favorite daydream come true."',
+                '"In a room full of art, I would still stare at you."',
+                '"You are my today and all of my tomorrows. ♥"',
+                '"Home is not a place—it is wherever I am with you."'
+            ],
+
+            // Couple Games Configuration (Edit your pre-recorded answers anytime!)
+            GAMES: {
+                // 1. Sweet Q&A
+                QNA: [
+                    {
+                        question: "What's my favorite thing to do whenever I'm with you?",
+                        options: [
+                            'Hold your hand & talk for hours',
+                            'Watch movies cuddled up together',
+                            'Make you laugh until your cheeks hurt',
+                            'Literally anything, as long as it is with you ♥'
+                        ],
+                        yourPick: 3,
+                        yourNote: 'Trick question—every single one is true, because anything with you is my favorite! ♥'
+                    },
+                    {
+                        question: 'When I see your name pop up on my phone, what happens instantly?',
+                        options: [
+                            'Instant big silly smile',
+                            'Drop everything just to reply',
+                            'My whole mood gets 10x brighter',
+                            'All of the above, every single time ✨'
+                        ],
+                        yourPick: 3,
+                        yourNote: '100% guilty of smiling at my screen whenever you text me ♥'
+                    },
+                    {
+                        question: 'What is our ultimate cozy date night?',
+                        options: [
+                            'Ordering favorite food + late night movie',
+                            'Long night drive with our playlist',
+                            'Stargazing & deep midnight talks',
+                            'Cooking together & making a cute mess'
+                        ],
+                        yourPick: 0,
+                        yourNote: 'Cozy food + cuddling + you = absolute perfection in my book 💕'
+                    },
+                    {
+                        question: "What's the first thing I fell hopelessly in love with about you?",
+                        options: [
+                            'Your gorgeous smile',
+                            'Your warm, kind heart',
+                            'The sparkle in your eyes',
+                            'How effortless it felt talking to you'
+                        ],
+                        yourPick: 0,
+                        yourNote: 'That smile still stops my heart every single day ♥'
+                    },
+                    {
+                        question: 'How much do I love you?',
+                        options: [
+                            'A whole lot',
+                            'To the moon and back',
+                            'More than yesterday, less than tomorrow',
+                            'More than words could ever measure ♥'
+                        ],
+                        yourPick: 3,
+                        yourNote: 'And somehow I still fall for you even harder every single day ∞'
+                    }
+                ],
+
+                // 2. "This or That" (Mind Sync Matching Game)
+                THIS_OR_THAT: [
+                    {
+                        a: { emoji: '🌙', text: 'Late Night Drives' },
+                        b: { emoji: '☕', text: 'Morning Coffee Cuddles' },
+                        yourPick: 'a',
+                        yourNote: 'Windows down, favorite songs playing, and your hand in mine ♥'
+                    },
+                    {
+                        a: { emoji: '🏔️', text: 'Mountain Cabin' },
+                        b: { emoji: '🏖️', text: 'Beach Sunset' },
+                        yourPick: 'b',
+                        yourNote: 'Golden sunset glow with you right beside me is unbeatable ✨'
+                    },
+                    {
+                        a: { emoji: '🎬', text: 'Cozy Movie Marathon' },
+                        b: { emoji: '🌌', text: 'Midnight Stargazing' },
+                        yourPick: 'a',
+                        yourNote: 'Blankets, snacks, and you leaning on my shoulder—yes please! 💕'
+                    },
+                    {
+                        a: { emoji: '🍕', text: 'Midnight Street Food' },
+                        b: { emoji: '🕯️', text: 'Candlelight Dinner' },
+                        yourPick: 'a',
+                        yourNote: 'Laughing over messy midnight snacks together hits different 😌'
+                    },
+                    {
+                        a: { emoji: '🌧️', text: 'Rainy Day Indoor Hugs' },
+                        b: { emoji: '☀️', text: 'Sunny Picnic Date' },
+                        yourPick: 'a',
+                        yourNote: 'Listening to the rain while holding you close is pure heaven ♥'
+                    },
+                    {
+                        a: { emoji: '📸', text: 'Silly Candid Selfies' },
+                        b: { emoji: '💌', text: 'Handwritten Love Notes' },
+                        yourPick: 'b',
+                        yourNote: 'Love notes last forever—just like us ✨'
+                    },
+                    {
+                        a: { emoji: '🎶', text: 'Slow Dancing in the Room' },
+                        b: { emoji: '🎢', text: 'Spontaneous Road Trip' },
+                        yourPick: 'a',
+                        yourNote: 'No crowd, just our song and you in my arms 💕'
+                    }
+                ],
+
+                // 3. "Who Is More Likely To...?" (He vs. She — 'her' = Me / Her, 'him' = You / Him)
+                WHO_LIKELY: [
+                    {
+                        question: 'Who is more likely to fall asleep during a movie?',
+                        yourPick: 'her',
+                        yourNote: 'Ten minutes into the movie and you are already curled up dreaming—and it is the cutest thing ever 😴♥'
+                    },
+                    {
+                        question: 'Who takes longer to get ready?',
+                        yourPick: 'her',
+                        yourNote: 'Hey, perfection takes time and you ALWAYS look breathtaking when you walk out ✨'
+                    },
+                    {
+                        question: 'Who is more likely to say "I love you" first every single day?',
+                        yourPick: 'him',
+                        yourNote: 'I literally cannot help myself—it is always on the tip of my tongue ♥'
+                    },
+                    {
+                        question: 'Who gets hangry faster when food is late?',
+                        yourPick: 'her',
+                        yourNote: 'Rule #1 of loving you: always keep emergency snacks nearby 🍟😘'
+                    },
+                    {
+                        question: 'Who is more likely to take 100 cute photos of the other?',
+                        yourPick: 'him',
+                        yourNote: 'Half my camera roll is just you being adorable without even knowing 📸💕'
+                    },
+                    {
+                        question: 'Who is more likely to steal all the blankets at night?',
+                        yourPick: 'her',
+                        yourNote: 'Somehow you become a cozy burrito while I freeze—totally worth it though 😂♥'
+                    },
+                    {
+                        question: 'Who is more likely to plan a surprise just to make the other smile?',
+                        yourPick: 'him',
+                        yourNote: 'Seeing your eyes light up is genuinely my favorite superpower ✨'
+                    }
+                ]
+            }
+        };
+
+        /* =====================================================================
+         * 2. WEB AUDIO API SYNTHESIZER (Pre-cached Dust Buffer for Zero Lag)
+         * ===================================================================== */
+        let audioCtx = null;
+        let cachedNoiseBuffer = null;
+        let soundEnabled = true;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) audioCtx = new AudioContextClass();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            if (audioCtx && !cachedNoiseBuffer) {
+                const bufferSize = Math.floor(audioCtx.sampleRate * 2.2);
+                cachedNoiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const output = cachedNoiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+            }
+            return audioCtx;
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('soundLabel').textContent = soundEnabled ? 'Sound: On' : 'Sound: Off';
+            const icon = document.getElementById('soundIcon');
+            icon.setAttribute('data-lucide', soundEnabled ? 'volume-2' : 'volume-x');
+            if (window.lucide) lucide.createIcons();
+            if (soundEnabled) playUiBeep(660, 0.06);
+        }
+
+        function playUiBeep(freq = 520, duration = 0.07) {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        // Synthesizes a crystalline shimmer + granular dust disintegration sound
+        function playThanosSnapSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx || !cachedNoiseBuffer) return;
+                const now = ctx.currentTime;
+
+                // 1. Filtered White Noise Dust Sweep (reuses cached buffer -> zero stutter)
+                const whiteNoise = ctx.createBufferSource();
+                whiteNoise.buffer = cachedNoiseBuffer;
+
+                const bandpass = ctx.createBiquadFilter();
+                bandpass.type = 'bandpass';
+                bandpass.frequency.setValueAtTime(400, now);
+                bandpass.frequency.exponentialRampToValueAtTime(3800, now + 2.0);
+                bandpass.Q.setValueAtTime(2.5, now);
+
+                const noiseGain = ctx.createGain();
+                noiseGain.gain.setValueAtTime(0.01, now);
+                noiseGain.gain.linearRampToValueAtTime(0.18, now + 0.3);
+                noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.15);
+
+                whiteNoise.connect(bandpass);
+                bandpass.connect(noiseGain);
+                noiseGain.connect(ctx.destination);
+                whiteNoise.start(now);
+
+                // 2. Ethereal Pink Chord Shimmer
+                const notes = [523.25, 659.25, 783.99, 987.77, 1318.51];
+                notes.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                    osc.frequency.exponentialRampToValueAtTime(freq * 1.02, now + 1.9);
+
+                    gain.gain.setValueAtTime(0.001, now + idx * 0.08);
+                    gain.gain.linearRampToValueAtTime(0.05, now + idx * 0.08 + 0.14);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.05);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + idx * 0.08);
+                    osc.stop(now + 2.1);
+                });
+            } catch (e) {}
+        }
+
+        // Joyful 2-note chime for game matches
+        function playMatchChime() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const now = ctx.currentTime;
+                [587.33, 880].forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.085);
+                    gain.gain.setValueAtTime(0.001, now + idx * 0.085);
+                    gain.gain.linearRampToValueAtTime(0.09, now + idx * 0.085 + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.085 + 0.34);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + idx * 0.085);
+                    osc.stop(now + idx * 0.085 + 0.36);
+                });
+            } catch (e) {}
+        }
+
+        // Dreamy romantic arpeggio for the full-screen I Love You & Kisses finale
+        function playLoveFinaleSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                const now = ctx.currentTime;
+                const melody = [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98];
+                melody.forEach((freq, idx) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    const t0 = now + idx * 0.09;
+                    osc.frequency.setValueAtTime(freq, t0);
+                    gain.gain.setValueAtTime(0.001, t0);
+                    gain.gain.linearRampToValueAtTime(0.075, t0 + 0.05);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.25);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(t0);
+                    osc.stop(t0 + 1.3);
+                });
+            } catch (e) {}
+        }
+
+        /* =====================================================================
+         * 3. VIEW 0: "DO YOU LOVE ME?" SCREEN WITH UNCLICKABLE DODGING "NO"
+         * ===================================================================== */
+        let loveQuestionActive = true;
+        let noBtnHasEscaped = false;
+        let noDodgeCount = 0;
+        let lastNoDodgeAt = 0;
+
+        const NO_DODGE_MESSAGES = [
+            'Nice try! That button is shy ♥',
+            'Nope, you can\'t click that one! ✨',
+            'Caught you trying to say no 😏',
+            'My heart only accepts Yes 💕',
+            'Haha, too slow! Just tap Yes ♥',
+            'Not an option, cutie! 🌸'
+        ];
+
+        function dodgeNoButton(e) {
+            if (!loveQuestionActive) return;
+
+            if (e) {
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+            }
+
+            const now = performance.now();
+            if (now - lastNoDodgeAt < 65) return;
+            lastNoDodgeAt = now;
+
+            const noBtn = document.getElementById('noLoveBtn');
+            const noSlot = document.getElementById('noBtnSlot');
+            const yesBtn = document.getElementById('yesLoveBtn');
+            const headerEl = document.querySelector('header');
+            const cardEl = document.getElementById('loveQuestionCard');
+            if (!noBtn || !yesBtn) return;
+
+            const curRect = noBtn.getBoundingClientRect();
+            const btnW = curRect.width || 96;
+            const btnH = curRect.height || 48;
+
+            // On first dodge, detach into document.body so backdrop-filter & overflow-hidden never clip it
+            if (!noBtnHasEscaped) {
+                noBtnHasEscaped = true;
+                if (noSlot) {
+                    noSlot.style.width = `${btnW}px`;
+                    noSlot.style.height = `${btnH}px`;
+                }
+                document.body.appendChild(noBtn);
+                noBtn.classList.add('no-btn-floating');
+                noBtn.style.width = `${btnW}px`;
+                noBtn.style.left = `${curRect.left}px`;
+                noBtn.style.top = `${curRect.top}px`;
+                void noBtn.offsetWidth; // Reflow before transitioning to the new spot
+            }
+
+            // Determine cursor / touch coordinates
+            let cursorX = pointer.x;
+            let cursorY = pointer.y;
+            if (e && e.touches && e.touches.length > 0) {
+                cursorX = e.touches[0].clientX;
+                cursorY = e.touches[0].clientY;
+            } else if (e && typeof e.clientX === 'number' && (e.clientX !== 0 || e.clientY !== 0)) {
+                cursorX = e.clientX;
+                cursorY = e.clientY;
+            }
+
+            // Compute safe viewport bounds (below header, above footer, comfortably inside edges)
+            const headerBottom = headerEl ? headerEl.getBoundingClientRect().bottom : 64;
+            const padX = 20;
+            const minX = padX;
+            const maxX = Math.max(minX, window.innerWidth - btnW - padX);
+            const minY = Math.max(20, headerBottom + 20);
+            const maxY = Math.max(minY, window.innerHeight - btnH - 72);
+
+            // Keep jumps playfully near the central card region on large monitors
+            const cardRect = cardEl ? cardEl.getBoundingClientRect() : {
+                left: window.innerWidth * 0.3,
+                right: window.innerWidth * 0.7,
+                top: window.innerHeight * 0.25,
+                bottom: window.innerHeight * 0.75
+            };
+            const centerX = (cardRect.left + cardRect.right) * 0.5;
+            const centerY = (cardRect.top + cardRect.bottom) * 0.5;
+            const zoneMinX = Math.max(minX, centerX - 340);
+            const zoneMaxX = Math.min(maxX, centerX + 340 - btnW);
+            const zoneMinY = Math.max(minY, centerY - 240);
+            const zoneMaxY = Math.min(maxY, centerY + 240 - btnH);
+
+            const spawnMinX = zoneMaxX > zoneMinX + 40 ? zoneMinX : minX;
+            const spawnMaxX = zoneMaxX > zoneMinX + 40 ? zoneMaxX : maxX;
+            const spawnMinY = zoneMaxY > zoneMinY + 40 ? zoneMinY : minY;
+            const spawnMaxY = zoneMaxY > zoneMinY + 40 ? zoneMaxY : maxY;
+
+            const yesRect = yesBtn.getBoundingClientRect();
+            const yesPad = 24;
+
+            let bestX = spawnMinX;
+            let bestY = spawnMinY;
+            let bestScore = -Infinity;
+
+            for (let attempt = 0; attempt < 36; attempt++) {
+                const candX = spawnMinX + Math.random() * Math.max(1, spawnMaxX - spawnMinX);
+                const candY = spawnMinY + Math.random() * Math.max(1, spawnMaxY - spawnMinY);
+
+                // Never overlap the Yes button
+                const overlapsYes =
+                    candX < yesRect.right + yesPad &&
+                    candX + btnW > yesRect.left - yesPad &&
+                    candY < yesRect.bottom + yesPad &&
+                    candY + btnH > yesRect.top - yesPad;
+                if (overlapsYes) continue;
+
+                const candCx = candX + btnW * 0.5;
+                const candCy = candY + btnH * 0.5;
+                const distCursor = Math.hypot(candCx - cursorX, candCy - cursorY);
+                const distPrev = Math.hypot(candX - curRect.left, candY - curRect.top);
+
+                // Prefer positions clearly away from cursor and previous spot
+                if (distCursor >= 150 && distPrev >= 110) {
+                    bestX = candX;
+                    bestY = candY;
+                    bestScore = Infinity;
+                    break;
+                }
+
+                const score = Math.min(distCursor, 220) + Math.min(distPrev, 180);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestX = candX;
+                    bestY = candY;
+                }
+            }
+
+            const tilt = ((Math.random() - 0.5) * 10).toFixed(1);
+            noBtn.style.left = `${Math.round(bestX)}px`;
+            noBtn.style.top = `${Math.round(bestY)}px`;
+            noBtn.style.transform = `rotate(${tilt}deg)`;
+
+            const msgEl = document.getElementById('noDodgeMessage');
+            if (msgEl) {
+                msgEl.textContent = NO_DODGE_MESSAGES[noDodgeCount % NO_DODGE_MESSAGES.length];
+            }
+            noDodgeCount++;
+            playUiBeep(380 + (noDodgeCount % 5) * 45, 0.05);
+        }
+
+        function keepFloatingNoButtonInBounds() {
+            if (!loveQuestionActive || !noBtnHasEscaped) return;
+            const noBtn = document.getElementById('noLoveBtn');
+            const headerEl = document.querySelector('header');
+            if (!noBtn) return;
+
+            const rect = noBtn.getBoundingClientRect();
+            const headerBottom = headerEl ? headerEl.getBoundingClientRect().bottom : 64;
+            const clampedX = Math.min(Math.max(20, rect.left), Math.max(20, window.innerWidth - rect.width - 20));
+            const clampedY = Math.min(Math.max(headerBottom + 20, rect.top), Math.max(headerBottom + 20, window.innerHeight - rect.height - 72));
+            noBtn.style.left = `${Math.round(clampedX)}px`;
+            noBtn.style.top = `${Math.round(clampedY)}px`;
+        }
+
+        function initLoveQuestionInteractions() {
+            const noBtn = document.getElementById('noLoveBtn');
+            if (!noBtn) return;
+
+            noBtn.addEventListener('pointerenter', dodgeNoButton);
+            noBtn.addEventListener('mouseenter', dodgeNoButton);
+            noBtn.addEventListener('pointerdown', dodgeNoButton);
+            noBtn.addEventListener('mousedown', dodgeNoButton);
+            noBtn.addEventListener('touchstart', dodgeNoButton, { passive: false });
+            noBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dodgeNoButton(e);
+            });
+            noBtn.addEventListener('focus', () => {
+                noBtn.blur();
+                dodgeNoButton();
+            });
+        }
+
+        function handleLoveYes(e) {
+            if (!loveQuestionActive) return;
+            loveQuestionActive = false;
+
+            // Warm up audio context & noise buffer now so the Thanos Snap has zero audio stutter
+            getAudioContext();
+            playUiBeep(784, 0.09);
+
+            // Burst hearts from the Yes button
+            const yesBtn = document.getElementById('yesLoveBtn');
+            if (yesBtn) {
+                const r = yesBtn.getBoundingClientRect();
+                triggerHeartShower(r.left + r.width / 2, r.top + r.height / 2);
+            } else {
+                triggerHeartShower();
+            }
+
+            // Hide the No button cleanly (whether in card or floating on body)
+            const noBtn = document.getElementById('noLoveBtn');
+            if (noBtn) {
+                noBtn.style.display = 'none';
+            }
+
+            const qContainer = document.getElementById('loveQuestionContainer');
+            const lockContainer = document.getElementById('lockScreenContainer');
+
+            qContainer.style.opacity = '0';
+            qContainer.style.transform = 'scale(0.97) translateY(-8px)';
+
+            setTimeout(() => {
+                qContainer.classList.add('hidden');
+                lockContainer.classList.remove('hidden');
+                document.getElementById('headerStatusBadge').textContent = 'Locked Keepsake';
+
+                requestAnimationFrame(() => {
+                    lockContainer.classList.remove('opacity-0');
+                    const inputEl = document.getElementById('keywordInput');
+                    if (inputEl) inputEl.focus();
+                });
+            }, 380);
+        }
+
+        /* =====================================================================
+         * 4. PRE-RENDERED SPRITE ATLASES (Eliminates Per-Frame fillText & shadowBlur Lag)
+         * ===================================================================== */
+        const ASCII_CHARS = ['·', '°', '+', '*', '✦', '♡', '✿', '♥', '✦', '♥'];
+        const UNIQUE_BG_CHARS = ['·', '°', '+', '*', '✦', '♡', '✿', '♥'];
+        const BG_CHAR_TO_COL = {};
+        UNIQUE_BG_CHARS.forEach((c, idx) => { BG_CHAR_TO_COL[c] = idx; });
+
+        const BG_SPRITE_SIZE = 20;
+        let bgGlyphAtlas = null;
+
+        const SNAP_COLORS = [
+            '#fce7f3', // Soft White-Pink
+            '#f9a8d4', // Light Pink
+            '#f472b6', // Neon Pink
+            '#ec4899', // Hot Magenta
+            '#fbbf24', // Golden Thermal Spark
+            '#d946ef'  // Cyber Fuchsia
+        ];
+        const SNAP_GLYPHS = ['♥', '♡', '✦', '✿', '*', '·', '°'];
+        const DOT_SPRITE_SIZE = 24;
+        const GLYPH_SPRITE_SIZE = 32;
+
+        let dotSprites = [];
+        let glyphSprites = []; // [colorIdx][glyphIdx]
+
+        function buildBgGlyphAtlas() {
+            const colors = [
+                'rgb(253, 224, 240)', // Mouse hover bright pink-white
+                'rgb(244, 114, 182)', // High intensity thermal pink
+                'rgb(190, 24, 93)'    // Base thermal magenta
+            ];
+            const atlas = document.createElement('canvas');
+            atlas.width = UNIQUE_BG_CHARS.length * BG_SPRITE_SIZE;
+            atlas.height = colors.length * BG_SPRITE_SIZE;
+            const ctx = atlas.getContext('2d');
+            ctx.font = '12px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            for (let row = 0; row < colors.length; row++) {
+                ctx.fillStyle = colors[row];
+                for (let col = 0; col < UNIQUE_BG_CHARS.length; col++) {
+                    ctx.fillText(
+                        UNIQUE_BG_CHARS[col],
+                        col * BG_SPRITE_SIZE + BG_SPRITE_SIZE * 0.5,
+                        row * BG_SPRITE_SIZE + BG_SPRITE_SIZE * 0.5
+                    );
+                }
+            }
+            bgGlyphAtlas = atlas;
+        }
+
+        function buildParticleSprites() {
+            // 1. Pre-baked glowing dust dot sprites (replaces expensive shadowBlur per frame)
+            dotSprites = SNAP_COLORS.map((color) => {
+                const c = document.createElement('canvas');
+                c.width = DOT_SPRITE_SIZE;
+                c.height = DOT_SPRITE_SIZE;
+                const ctx = c.getContext('2d');
+                const half = DOT_SPRITE_SIZE * 0.5;
+
+                // Soft pink outer glow matching shadowBlur: 8
+                const halo = ctx.createRadialGradient(half, half, 1.5, half, half, half);
+                halo.addColorStop(0, 'rgba(236, 72, 153, 0.7)');
+                halo.addColorStop(0.55, 'rgba(236, 72, 153, 0.25)');
+                halo.addColorStop(1, 'rgba(236, 72, 153, 0)');
+                ctx.fillStyle = halo;
+                ctx.fillRect(0, 0, DOT_SPRITE_SIZE, DOT_SPRITE_SIZE);
+
+                // Bright particle core
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(half, half, 4, 0, Math.PI * 2);
+                ctx.fill();
+                return c;
+            });
+
+            // 2. Pre-baked glowing ASCII heart/star glyph sprites
+            glyphSprites = SNAP_COLORS.map((color) => {
+                return SNAP_GLYPHS.map((glyph) => {
+                    const c = document.createElement('canvas');
+                    c.width = GLYPH_SPRITE_SIZE;
+                    c.height = GLYPH_SPRITE_SIZE;
+                    const ctx = c.getContext('2d');
+                    const half = GLYPH_SPRITE_SIZE * 0.5;
+                    ctx.font = 'bold 13px "JetBrains Mono", monospace';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.shadowColor = '#ec4899';
+                    ctx.shadowBlur = 7;
+                    ctx.fillStyle = color;
+                    ctx.fillText(glyph, half, half);
+                    return c;
+                });
+            });
+        }
+
+        /* =====================================================================
+         * 5. BACKGROUND CANVAS: PINK THERMAL PLASMA + REACTIVE ASCII MATRIX
+         * ===================================================================== */
+        const bgCanvas = document.getElementById('thermalAsciiCanvas');
+        const bgCtx = bgCanvas.getContext('2d', { alpha: false });
+        let bgWidth = window.innerWidth;
+        let bgHeight = window.innerHeight;
+        let pointer = { x: bgWidth / 2, y: bgHeight / 2, active: false };
+        let thermalTime = 0;
+        let lastBgRenderAt = 0;
+
+        function resizeCanvases() {
+            bgWidth = window.innerWidth;
+            bgHeight = window.innerHeight;
+            bgCanvas.width = bgWidth;
+            bgCanvas.height = bgHeight;
+            snapCanvas.width = bgWidth;
+            snapCanvas.height = bgHeight;
+            const finaleCanvasEl = document.getElementById('finaleCanvas');
+            if (finaleCanvasEl) {
+                finaleCanvasEl.width = bgWidth;
+                finaleCanvasEl.height = bgHeight;
+            }
+            keepFloatingNoButtonInBounds();
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            pointer.x = e.clientX;
+            pointer.y = e.clientY;
+            pointer.active = true;
+
+            // Extra safety: if cursor slides into the No button during motion, dodge immediately
+            if (loveQuestionActive) {
+                const noBtn = document.getElementById('noLoveBtn');
+                const yesBtn = document.getElementById('yesLoveBtn');
+                if (noBtn && yesBtn) {
+                    const yr = yesBtn.getBoundingClientRect();
+                    const overYes =
+                        e.clientX >= yr.left && e.clientX <= yr.right &&
+                        e.clientY >= yr.top && e.clientY <= yr.bottom;
+                    if (!overYes) {
+                        const nr = noBtn.getBoundingClientRect();
+                        const pad = 6;
+                        if (
+                            e.clientX >= nr.left - pad &&
+                            e.clientX <= nr.right + pad &&
+                            e.clientY >= nr.top - pad &&
+                            e.clientY <= nr.bottom + pad
+                        ) {
+                            dodgeNoButton(e);
+                        }
+                    }
+                }
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                pointer.x = e.touches[0].clientX;
+                pointer.y = e.touches[0].clientY;
+                pointer.active = true;
+            }
+        }, { passive: true });
+
+        function renderThermalAsciiBackground(dtScale) {
+            thermalTime += 0.018 * dtScale;
+
+            // 1. Base dark magenta wash
+            bgCtx.globalAlpha = 1;
+            bgCtx.fillStyle = '#0e020b';
+            bgCtx.fillRect(0, 0, bgWidth, bgHeight);
+
+            // 2. Soft moving thermal plasma blobs
+            const blob1X = bgWidth * (0.5 + 0.32 * Math.sin(thermalTime * 0.4));
+            const blob1Y = bgHeight * (0.5 + 0.28 * Math.cos(thermalTime * 0.3));
+            const grad1 = bgCtx.createRadialGradient(blob1X, blob1Y, 20, blob1X, blob1Y, Math.max(bgWidth, bgHeight) * 0.55);
+            grad1.addColorStop(0, 'rgba(236, 72, 153, 0.26)');
+            grad1.addColorStop(0.5, 'rgba(157, 23, 77, 0.14)');
+            grad1.addColorStop(1, 'rgba(14, 2, 11, 0)');
+            bgCtx.fillStyle = grad1;
+            bgCtx.fillRect(0, 0, bgWidth, bgHeight);
+
+            const blob2X = pointer.active ? pointer.x : bgWidth * (0.5 - 0.3 * Math.cos(thermalTime * 0.5));
+            const blob2Y = pointer.active ? pointer.y : bgHeight * (0.5 + 0.3 * Math.sin(thermalTime * 0.4));
+            const grad2 = bgCtx.createRadialGradient(blob2X, blob2Y, 10, blob2X, blob2Y, 360);
+            grad2.addColorStop(0, 'rgba(244, 114, 182, 0.24)');
+            grad2.addColorStop(0.5, 'rgba(192, 38, 211, 0.10)');
+            grad2.addColorStop(1, 'rgba(14, 2, 11, 0)');
+            bgCtx.fillStyle = grad2;
+            bgCtx.fillRect(0, 0, bgWidth, bgHeight);
+
+            if (!bgGlyphAtlas) return;
+
+            // 3. Reactive ASCII Thermal Matrix (fast sprite-atlas blits)
+            const cellSize = bgWidth < 640 ? 28 : 24;
+            const halfCell = cellSize * 0.5;
+            const halfSprite = BG_SPRITE_SIZE * 0.5;
+            const t09 = thermalTime * 0.9;
+            const t06 = thermalTime * 0.6;
+            const t07 = thermalTime * 0.7;
+            const t05 = thermalTime * 0.5;
+            const px = pointer.x;
+            const py = pointer.y;
+            const radiusSq = 220 * 220;
+            const invRadius = 1 / 220;
+            const charLen = ASCII_CHARS.length;
+
+            for (let y = halfCell; y < bgHeight; y += cellSize) {
+                const dy = y - py;
+                const dySq = dy * dy;
+                const ny = y * 0.0035;
+                const cosNy = Math.cos(ny * 1.8 - t06);
+                const ny25 = ny * 2.5 - t07;
+
+                for (let x = halfCell; x < bgWidth; x += cellSize) {
+                    let mouseBoost = 0;
+                    const dx = x - px;
+                    const distSq = dx * dx + dySq;
+                    if (distSq < radiusSq) {
+                        mouseBoost = 1 - Math.sqrt(distSq) * invRadius;
+                    }
+
+                    const nx = x * 0.0035;
+                    const v1 = Math.sin(nx * 2.1 + t09 + cosNy);
+                    const v2 = Math.cos(ny25 + Math.sin(nx * 1.4 + thermalTime));
+                    const v3 = Math.sin((nx + ny) * 1.7 + t05);
+                    const fieldVal = (v1 + v2 + v3) * 0.3333333 + mouseBoost * 0.85;
+                    const normalized = fieldVal >= 1 ? 1 : (fieldVal <= -1 ? 0 : (fieldVal + 1) * 0.5);
+
+                    if (normalized > 0.26) {
+                        const charIndex = Math.min(charLen - 1, (normalized * charLen) | 0);
+                        const col = BG_CHAR_TO_COL[ASCII_CHARS[charIndex]];
+                        const baseAlpha = (normalized - 0.2) * 0.55 + mouseBoost * 0.35;
+
+                        let row = 2;
+                        let alpha = baseAlpha * 0.85;
+                        if (mouseBoost > 0.35) {
+                            row = 0;
+                            alpha = Math.min(0.9, baseAlpha + 0.2);
+                        } else if (normalized > 0.75) {
+                            row = 1;
+                            alpha = baseAlpha;
+                        }
+
+                        bgCtx.globalAlpha = alpha;
+                        bgCtx.drawImage(
+                            bgGlyphAtlas,
+                            col * BG_SPRITE_SIZE,
+                            row * BG_SPRITE_SIZE,
+                            BG_SPRITE_SIZE,
+                            BG_SPRITE_SIZE,
+                            x - halfSprite,
+                            y - halfSprite,
+                            BG_SPRITE_SIZE,
+                            BG_SPRITE_SIZE
+                        );
+                    }
+                }
+            }
+            bgCtx.globalAlpha = 1;
+        }
+
+        /* =====================================================================
+         * 6. FOREGROUND CANVAS: ZERO-LAG THANOS SNAP & HEART PARTICLES
+         * ===================================================================== */
+        const snapCanvas = document.getElementById('snapParticleCanvas');
+        const snapCtx = snapCanvas.getContext('2d');
+        let snapParticles = [];
+        let hasRenderedParticles = false;
+        let isSnapping = false;
+
+        // Generates silky-smooth glowing pink/gold/heart dust particles from the Lock Card
+        function triggerThanosSnapEffect(cardElement, onCompleteCallback) {
+            if (dotSprites.length === 0) buildParticleSprites();
+            const rect = cardElement.getBoundingClientRect();
+            playThanosSnapSound();
+            isSnapping = true;
+
+            // Adaptive density (~1150 particles on desktop, ~700 on mobile) for silky 60fps+
+            const targetCount = window.innerWidth < 640 ? 700 : 1150;
+            const particleStep = Math.max(9, Math.round(Math.sqrt((rect.width * rect.height) / targetCount)));
+            const cornerR = 24; // Matches rounded-3xl so dust respects the card's rounded corners
+
+            for (let y = rect.top + 4; y <= rect.bottom - 4; y += particleStep) {
+                const relY = y - rect.top;
+                const normY = relY / rect.height;
+
+                for (let x = rect.left + 4; x <= rect.right - 4; x += particleStep) {
+                    const relX = x - rect.left;
+
+                    // Skip sharp outer corners outside the rounded-3xl radius
+                    const cornerDx = relX < cornerR ? cornerR - relX : (relX > rect.width - cornerR ? relX - (rect.width - cornerR) : 0);
+                    const cornerDy = relY < cornerR ? cornerR - relY : (relY > rect.height - cornerR ? relY - (rect.height - cornerR) : 0);
+                    if (cornerDx > 0 && cornerDy > 0 && (cornerDx * cornerDx + cornerDy * cornerDy) > cornerR * cornerR) {
+                        continue;
+                    }
+
+                    const normX = relX / rect.width;
+                    // Wave delay sweeping from bottom-left to top-right
+                    const delay = (normX * 0.55 + (1 - normY) * 0.45) * 32 + Math.random() * 10;
+
+                    const colorIdx = (Math.random() * SNAP_COLORS.length) | 0;
+                    const isAsciiParticle = Math.random() < 0.2;
+                    const sprite = isAsciiParticle
+                        ? glyphSprites[colorIdx][(Math.random() * SNAP_GLYPHS.length) | 0]
+                        : dotSprites[colorIdx];
+
+                    const jitter = particleStep * 0.7;
+                    snapParticles.push({
+                        x: x + (Math.random() - 0.5) * jitter,
+                        y: y + (Math.random() - 0.5) * jitter,
+                        vx: Math.random() * 1.9 + 0.65,     // Drift right
+                        vy: -(Math.random() * 2.2 + 0.55),  // Drift upward
+                        size: Math.random() * 2.4 + 2.0,
+                        delay: delay,
+                        life: 0,
+                        maxLife: 50 + Math.random() * 34,
+                        sprite: sprite,
+                        isAscii: isAsciiParticle,
+                        turbulenceSeed: Math.random() * 100
+                    });
+                }
+            }
+
+            // Pure GPU-composited fade & lift (avoiding expensive filter: blur() over backdrop-filter)
+            cardElement.style.willChange = 'opacity, transform';
+            cardElement.style.transition = 'opacity 0.6s ease-out, transform 0.7s ease-out';
+            cardElement.style.opacity = '0';
+            cardElement.style.transform = 'scale(1.02) translateY(-8px)';
+
+            setTimeout(() => {
+                cardElement.style.willChange = 'auto';
+                if (onCompleteCallback) onCompleteCallback();
+            }, 1180);
+        }
+
+        // Interactive Heart Burst Shower
+        function triggerHeartShower(originX = window.innerWidth / 2, originY = window.innerHeight / 2) {
+            if (glyphSprites.length === 0) buildParticleSprites();
+            playUiBeep(740, 0.1);
+            const burstCount = 65;
+
+            for (let i = 0; i < burstCount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 6 + 1.5;
+                const colorIdx = (Math.random() * SNAP_COLORS.length) | 0;
+                const glyphIdx = (Math.random() * SNAP_GLYPHS.length) | 0;
+
+                snapParticles.push({
+                    x: originX + (Math.random() - 0.5) * 40,
+                    y: originY + (Math.random() - 0.5) * 40,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 1.5,
+                    size: Math.random() * 3.5 + 2.5,
+                    delay: 0,
+                    life: 0,
+                    maxLife: 50 + Math.random() * 30,
+                    sprite: glyphSprites[colorIdx][glyphIdx],
+                    isAscii: true,
+                    turbulenceSeed: Math.random() * 50
+                });
+            }
+        }
+
+        function updateAndRenderParticles(dtScale) {
+            const count = snapParticles.length;
+            if (count === 0) {
+                if (hasRenderedParticles) {
+                    snapCtx.clearRect(0, 0, bgWidth, bgHeight);
+                    hasRenderedParticles = false;
+                }
+                return;
+            }
+
+            snapCtx.clearRect(0, 0, bgWidth, bgHeight);
+            hasRenderedParticles = true;
+
+            const halfGlyph = GLYPH_SPRITE_SIZE * 0.5;
+            const timeTerm = thermalTime * 2;
+
+            for (let i = count - 1; i >= 0; i--) {
+                const p = snapParticles[i];
+
+                if (p.delay > 0) {
+                    p.delay -= dtScale;
+                    const drawSize = p.isAscii ? 18 : p.size * 3.4;
+                    const half = drawSize * 0.5;
+                    snapCtx.globalAlpha = 0.72;
+                    snapCtx.drawImage(p.sprite, p.x - half, p.y - half, drawSize, drawSize);
+                    continue;
+                }
+
+                p.life += dtScale;
+                const progress = p.life / p.maxLife;
+                if (progress >= 1) {
+                    // O(1) swap-and-pop removal instead of O(N) splice
+                    const lastIdx = snapParticles.length - 1;
+                    if (i !== lastIdx) snapParticles[i] = snapParticles[lastIdx];
+                    snapParticles.pop();
+                    continue;
+                }
+
+                // Curl / organic swirl turbulence (delta-time normalized)
+                const swirlAngle = Math.sin(p.x * 0.012 + p.turbulenceSeed + timeTerm) * 1.4;
+                p.vx += (Math.cos(swirlAngle) * 0.08 + 0.03) * dtScale;
+                p.vy += (Math.sin(swirlAngle) * 0.08 - 0.04) * dtScale;
+
+                p.x += p.vx * dtScale;
+                p.y += p.vy * dtScale;
+
+                const alpha = 1 - progress * Math.sqrt(progress); // Fast equivalent of Math.pow(progress, 1.5)
+                if (alpha <= 0.01) continue;
+
+                snapCtx.globalAlpha = alpha;
+                if (p.isAscii) {
+                    snapCtx.drawImage(p.sprite, p.x - halfGlyph, p.y - halfGlyph);
+                } else {
+                    const drawSize = p.size * 3.6 * (1 - progress * 0.35);
+                    const half = drawSize * 0.5;
+                    snapCtx.drawImage(p.sprite, p.x - half, p.y - half, drawSize, drawSize);
+                }
+            }
+
+            snapCtx.globalAlpha = 1;
+        }
+
+        /* =====================================================================
+         * 7. AUTHENTICATION, UNLOCK FLOW & DASHBOARD LOGIC
+         * ===================================================================== */
+        function handleUnlockAttempt(e) {
+            if (e) e.preventDefault();
+            if (isSnapping) return;
+
+            const inputEl = document.getElementById('keywordInput');
+            const statusEl = document.getElementById('authAttemptStatus');
+            const lockCard = document.getElementById('lockCard');
+            const entered = inputEl.value.trim().toLowerCase();
+
+            const accepted = CONFIG.SECRET_KEYWORDS.map(k => k.trim().toLowerCase());
+
+            if (accepted.includes(entered) && entered.length > 0) {
+                statusEl.classList.add('hidden');
+                lockCard.classList.remove('shake');
+                unlockWithSnap();
+            } else {
+                playUiBeep(210, 0.18);
+                statusEl.textContent = 'Not quite! Try another sweet word ♥';
+                statusEl.classList.remove('hidden');
+                lockCard.classList.remove('shake');
+                void lockCard.offsetWidth;
+                lockCard.classList.add('shake');
+            }
+        }
+
+        function autoFillAndSnap() {
+            const firstKey = CONFIG.SECRET_KEYWORDS[0] || 'forever';
+            const inputEl = document.getElementById('keywordInput');
+            inputEl.value = firstKey;
+            unlockWithSnap();
+        }
+
+        function unlockWithSnap() {
+            if (isSnapping) return;
+            const lockCard = document.getElementById('lockCard');
+            const lockContainer = document.getElementById('lockScreenContainer');
+            const dashboard = document.getElementById('dashboardContainer');
+
+            document.getElementById('headerStatusBadge').textContent = 'Unlocking Magic...';
+
+            // Clear old typewriter text before revealing so there is no flicker
+            const output = document.getElementById('typewriterOutput');
+            if (output) output.textContent = '';
+
+            triggerThanosSnapEffect(lockCard, () => {
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                lockContainer.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+                dashboard.style.willChange = 'opacity';
+
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        dashboard.classList.remove('opacity-0');
+                        document.getElementById('headerStatusBadge').textContent = 'Unlocked With Love';
+                        document.getElementById('replayLockBtn').classList.remove('hidden');
+                        document.getElementById('replayLockBtn').classList.add('flex');
+                        isSnapping = false;
+
+                        // Begin smooth typewriter once the glass dashboard fade is underway
+                        setTimeout(() => {
+                            dashboard.style.willChange = 'auto';
+                            switchTab('letter', { silent: true, fromAuto: true });
+                        }, 280);
+                    });
+                });
+            });
+        }
+
+        function resetToLockScreen() {
+            playUiBeep(440, 0.08);
+            stopTypewriterEffect();
+            cancelAllTabAutoTimers();
+            closeLoveFinale(true);
+
+            const lockCard = document.getElementById('lockCard');
+            const lockContainer = document.getElementById('lockScreenContainer');
+            const dashboard = document.getElementById('dashboardContainer');
+
+            dashboard.classList.add('opacity-0');
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                dashboard.classList.add('hidden');
+                lockContainer.classList.remove('hidden', 'opacity-0');
+                lockCard.classList.remove('shake');
+                lockCard.style.transition = '';
+                lockCard.style.opacity = '1';
+                lockCard.style.transform = 'none';
+                document.getElementById('keywordInput').value = '';
+                document.getElementById('headerStatusBadge').textContent = 'Locked Keepsake';
+                document.getElementById('replayLockBtn').classList.add('hidden');
+                document.getElementById('replayLockBtn').classList.remove('flex');
+                isSnapping = false;
+            }, 300);
+        }
+
+        function toggleHintBox() {
+            playUiBeep(580, 0.05);
+            const box = document.getElementById('hintRevealBox');
+            box.classList.toggle('hidden');
+        }
+
+        /* =====================================================================
+         * 8. DASHBOARD TABS, TYPEWRITER, UPTIME CLOCK & 3D ASCII HEART LAB
+         * ===================================================================== */
+        let typewriterRafId = null;
+        let typewriterTextNode = null;
+        let autoSwitchEnabled = true;
+        let activeDashboardTab = 'letter';
+        let tabAutoSwitchTimer = null;
+        let tabAutoBarRafId = null;
+        let tabSequenceStepTimers = [];
+        let pendingAutoNextCallback = null;
+
+        function cancelAllTabAutoTimers() {
+            if (tabAutoSwitchTimer !== null) {
+                clearTimeout(tabAutoSwitchTimer);
+                tabAutoSwitchTimer = null;
+            }
+            if (tabAutoBarRafId !== null) {
+                cancelAnimationFrame(tabAutoBarRafId);
+                tabAutoBarRafId = null;
+            }
+            tabSequenceStepTimers.forEach((id) => clearTimeout(id));
+            tabSequenceStepTimers = [];
+            pendingAutoNextCallback = null;
+
+            document.querySelectorAll('.story-spotlight').forEach((el) => {
+                el.classList.remove('story-spotlight');
+            });
+
+            const wrap = document.getElementById('tabAutoProgressWrap');
+            const bar = document.getElementById('tabAutoProgressBar');
+            if (wrap) wrap.classList.add('hidden');
+            if (bar) bar.style.transform = 'scaleX(0)';
+
+            const gameWrap = document.getElementById('gameAutoNextWrap');
+            if (gameWrap) gameWrap.classList.add('hidden');
+        }
+
+        function startTabAutoBar(durationMs, labelText, onDone, targetIds) {
+            cancelAllTabAutoTimers();
+            if (!autoSwitchEnabled) return;
+
+            const wrapEl = document.getElementById(targetIds ? targetIds.wrap : 'tabAutoProgressWrap');
+            const barEl = document.getElementById(targetIds ? targetIds.bar : 'tabAutoProgressBar');
+            const textEl = document.getElementById(targetIds ? targetIds.text : 'tabAutoProgressText');
+
+            if (textEl) {
+                textEl.innerHTML = `<span class="text-pink-400">✦</span><span>${escapeHtml(labelText)}</span>`;
+            }
+            if (wrapEl) wrapEl.classList.remove('hidden');
+
+            pendingAutoNextCallback = onDone;
+            const startAt = performance.now();
+
+            function tickBar(now) {
+                const ratio = Math.min(1, (now - startAt) / durationMs);
+                if (barEl) barEl.style.transform = `scaleX(${ratio.toFixed(4)})`;
+                if (ratio < 1 && pendingAutoNextCallback === onDone) {
+                    tabAutoBarRafId = requestAnimationFrame(tickBar);
+                } else {
+                    tabAutoBarRafId = null;
+                }
+            }
+            tabAutoBarRafId = requestAnimationFrame(tickBar);
+
+            tabAutoSwitchTimer = setTimeout(() => {
+                const cb = pendingAutoNextCallback;
+                cancelAllTabAutoTimers();
+                if (autoSwitchEnabled && typeof cb === 'function') cb();
+            }, durationMs);
+        }
+
+        function triggerNextAutoTabNow() {
+            const cb = pendingAutoNextCallback;
+            cancelAllTabAutoTimers();
+            if (typeof cb === 'function') cb();
+        }
+
+        function toggleAutoSwitch() {
+            autoSwitchEnabled = !autoSwitchEnabled;
+            playUiBeep(autoSwitchEnabled ? 660 : 420, 0.06);
+            const label = document.getElementById('autoSwitchLabel');
+            const dot = document.getElementById('autoSwitchDot');
+            if (label) label.textContent = autoSwitchEnabled ? 'Auto-Switch: On' : 'Auto-Switch: Off';
+            if (dot) {
+                dot.className = autoSwitchEnabled
+                    ? 'w-2 h-2 rounded-full bg-pink-400 animate-pulse'
+                    : 'w-2 h-2 rounded-full bg-pink-300/35';
+            }
+
+            if (!autoSwitchEnabled) {
+                cancelAllTabAutoTimers();
+            } else {
+                const dashboard = document.getElementById('dashboardContainer');
+                if (dashboard && !dashboard.classList.contains('hidden')) {
+                    if (activeDashboardTab === 'games') {
+                        if (gameState.finished && !finaleActive) scheduleGameCompleteAutoAdvance();
+                    } else if (activeDashboardTab === 'letter') {
+                        if (typewriterRafId === null) onLetterTypewriterFinished();
+                    } else {
+                        scheduleAutoFlowForTab(activeDashboardTab);
+                    }
+                }
+            }
+        }
+
+        function stopTypewriterEffect() {
+            if (typewriterRafId !== null) {
+                cancelAnimationFrame(typewriterRafId);
+                typewriterRafId = null;
+            }
+        }
+
+        function onLetterTypewriterFinished() {
+            if (!autoSwitchEnabled || activeDashboardTab !== 'letter' || finaleActive) return;
+            const dashboard = document.getElementById('dashboardContainer');
+            if (!dashboard || dashboard.classList.contains('hidden')) return;
+
+            startTabAutoBar(4000, 'Letter complete — moving to Our Story & Memories ♥', () => {
+                switchTab('commits', { fromAuto: true });
+            });
+        }
+
+        function startTypewriterEffect() {
+            stopTypewriterEffect();
+            cancelAllTabAutoTimers();
+            const output = document.getElementById('typewriterOutput');
+            if (!output) return;
+            if (!typewriterTextNode || typewriterTextNode.parentNode !== output) {
+                output.textContent = '';
+                typewriterTextNode = document.createTextNode('');
+                output.appendChild(typewriterTextNode);
+            } else {
+                typewriterTextNode.nodeValue = '';
+            }
+
+            const fullText = CONFIG.LOVE_LETTER_TEXT;
+            const totalLen = fullText.length;
+            const msPerChar = 22;
+            const startTime = performance.now();
+            let lastIdx = 0;
+
+            function step(now) {
+                const targetIdx = Math.min(totalLen, Math.floor((now - startTime) / msPerChar));
+                if (targetIdx > lastIdx) {
+                    typewriterTextNode.nodeValue = fullText.slice(0, targetIdx);
+                    lastIdx = targetIdx;
+                }
+                if (lastIdx < totalLen) {
+                    typewriterRafId = requestAnimationFrame(step);
+                } else {
+                    typewriterRafId = null;
+                    onLetterTypewriterFinished();
+                }
+            }
+
+            typewriterRafId = requestAnimationFrame(step);
+        }
+
+        function replayTypewriter() {
+            playUiBeep(620, 0.06);
+            startTypewriterEffect();
+        }
+
+        function scheduleAutoFlowForTab(tabName) {
+            if (!autoSwitchEnabled || finaleActive) return;
+
+            if (tabName === 'commits') {
+                const cards = Array.from(document.querySelectorAll('#commitTimelineList .memory-card'));
+                const stepMs = 2300;
+                const totalMs = Math.max(1, cards.length) * stepMs;
+
+                startTabAutoBar(totalMs, 'Reading Our Story — next up: Why I Love You ♥', () => {
+                    switchTab('reasons', { fromAuto: true });
+                });
+
+                cards.forEach((card, idx) => {
+                    const tid = setTimeout(() => {
+                        cards.forEach((c) => c.classList.remove('story-spotlight'));
+                        card.classList.add('story-spotlight');
+                    }, idx * stepMs);
+                    tabSequenceStepTimers.push(tid);
+                });
+            } else if (tabName === 'reasons') {
+                const cards = Array.from(document.querySelectorAll('#reasonsGrid .reason-card'));
+                const stepMs = 1800;
+                const totalMs = Math.max(1, cards.length) * stepMs;
+
+                startTabAutoBar(totalMs, 'Every reason I love you — next up: 3D Heart Glow ✨', () => {
+                    switchTab('lab', { fromAuto: true });
+                });
+
+                cards.forEach((card, idx) => {
+                    const tid = setTimeout(() => {
+                        cards.forEach((c) => c.classList.remove('story-spotlight'));
+                        card.classList.add('story-spotlight');
+                    }, idx * stepMs);
+                    tabSequenceStepTimers.push(tid);
+                });
+            } else if (tabName === 'lab') {
+                const stepMs = 3200;
+                const totalMs = asciiModes.length * stepMs;
+
+                asciiMode = 0;
+                const modeLabel = document.getElementById('asciiModeLabel');
+                if (modeLabel) modeLabel.textContent = asciiModes[0];
+
+                startTabAutoBar(totalMs, 'Enjoying 3D Heart Glow — next up: Couple Games ♥', () => {
+                    switchTab('games', { fromAuto: true });
+                });
+
+                for (let m = 1; m < asciiModes.length; m++) {
+                    const tid = setTimeout(() => {
+                        asciiMode = m;
+                        const lbl = document.getElementById('asciiModeLabel');
+                        if (lbl) lbl.textContent = asciiModes[m];
+                    }, m * stepMs);
+                    tabSequenceStepTimers.push(tid);
+                }
+            }
+        }
+
+        function highlightDashboardTabButtons(activeName) {
+            const allTabs = ['letter', 'commits', 'reasons', 'lab', 'games'];
+            allTabs.forEach((t) => {
+                const btn = document.getElementById(`tabBtn-${t}`);
+                if (!btn) return;
+                if (t === activeName) {
+                    btn.className = 'tab-btn liquid-glass px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold text-white border-pink-400 flex items-center gap-2 transition';
+                } else {
+                    btn.className = 'tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition';
+                }
+            });
+        }
+
+        function activateGamesTabSilently() {
+            if (activeDashboardTab !== 'games') {
+                activeDashboardTab = 'games';
+                stopTypewriterEffect();
+                cancelAllTabAutoTimers();
+                highlightDashboardTabButtons('games');
+            }
+        }
+
+        function switchTab(tabName, opts = {}) {
+            if (!opts.silent) playUiBeep(540, 0.05);
+            cancelAllTabAutoTimers();
+            stopTypewriterEffect();
+
+            activeDashboardTab = tabName;
+            highlightDashboardTabButtons(tabName);
+
+            if (tabName === 'games') {
+                const section = document.getElementById('coupleGamesSection');
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                return;
+            }
+
+            const topTabs = ['letter', 'commits', 'reasons', 'lab'];
+            topTabs.forEach((t) => {
+                const content = document.getElementById(`tabContent-${t}`);
+                if (!content) return;
+                if (t === tabName) {
+                    content.classList.remove('hidden', 'tab-fade-in');
+                    void content.offsetWidth;
+                    content.classList.add('tab-fade-in');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+
+            if (opts.scrollTop) {
+                const anchor = document.getElementById('dashboardTabsAnchor');
+                if (anchor) {
+                    anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+
+            if (tabName === 'letter') {
+                startTypewriterEffect();
+            } else {
+                scheduleAutoFlowForTab(tabName);
+            }
+        }
+
+        const lastUptimeVals = { d: '', h: '', m: '', s: '' };
+        function updateUptimeCounter() {
+            const start = new Date(CONFIG.START_DATE).getTime();
+            const now = Date.now();
+            const diff = Math.max(0, now - start);
+
+            const d = String(Math.floor(diff / (1000 * 60 * 60 * 24)));
+            const h = String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+            const m = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, '0');
+            const s = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+
+            if (d !== lastUptimeVals.d) { document.getElementById('uptimeDays').textContent = d; lastUptimeVals.d = d; }
+            if (h !== lastUptimeVals.h) { document.getElementById('uptimeHours').textContent = h; lastUptimeVals.h = h; }
+            if (m !== lastUptimeVals.m) { document.getElementById('uptimeMins').textContent = m; lastUptimeVals.m = m; }
+            if (s !== lastUptimeVals.s) { document.getElementById('uptimeSecs').textContent = s; lastUptimeVals.s = s; }
+        }
+
+        function renderCommitTimeline() {
+            const container = document.getElementById('commitTimelineList');
+            container.innerHTML = CONFIG.MEMORIES.map((m) => `
+                <div class="relative group cursor-pointer" onclick="triggerHeartShower(window.innerWidth/2, window.innerHeight/2)">
+                    <span class="absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full bg-pink-500 border-2 border-pink-200 shadow shadow-pink-500"></span>
+                    <div class="memory-card liquid-glass-subtle p-5 rounded-2xl border border-pink-400/20 group-hover:border-pink-400/60 transition-all duration-300">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                            <span class="text-xs font-medium px-3 py-0.5 rounded-full bg-pink-500/25 text-pink-200 border border-pink-400/30">
+                                ${m.badge}
+                            </span>
+                            <span class="text-xs text-pink-300/80 italic">${m.date}</span>
+                        </div>
+                        <h4 class="text-base sm:text-lg font-serif italic font-bold text-white mt-1">${m.title}</h4>
+                        <p class="text-xs sm:text-sm text-pink-100/85 mt-1.5 leading-relaxed">${m.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderReasonsGrid() {
+            const grid = document.getElementById('reasonsGrid');
+            if (!grid) return;
+            grid.innerHTML = CONFIG.REASONS.map((r) => `
+                <div onclick="spawnClickBurst(event)" class="reason-card liquid-glass-subtle p-5 rounded-2xl border border-pink-400/25 hover:border-pink-400/70 transition-all duration-300 cursor-pointer group box-glow flex flex-col justify-between">
+                    <div>
+                        <div class="w-9 h-9 rounded-xl bg-pink-500/20 border border-pink-400/30 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <i data-lucide="${r.icon}" class="w-4 h-4 text-pink-300"></i>
+                        </div>
+                        <h4 class="text-base font-serif italic font-bold text-white mb-1.5">${r.title}</h4>
+                        <p class="text-xs sm:text-sm text-pink-100/80 leading-relaxed">${r.text}</p>
+                    </div>
+                    <div class="mt-4 pt-2 border-t border-pink-400/10 flex items-center justify-between text-[11px] text-pink-300/70">
+                        <span>Always & Forever</span>
+                        <span class="group-hover:translate-x-1 transition-transform">♥</span>
+                    </div>
+                </div>
+            `).join('');
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // 3D Rotating ASCII Heart Shader for Tab 4
+        let asciiMode = 0;
+        const asciiModes = ['3D Spinning Heart', 'Rippling Heart Waves', 'Sparkling Starlight Heart'];
+
+        function cycleAsciiMode() {
+            playUiBeep(640, 0.06);
+            asciiMode = (asciiMode + 1) % asciiModes.length;
+            document.getElementById('asciiModeLabel').textContent = asciiModes[asciiMode];
+        }
+
+        function spawnClickBurst(e) {
+            triggerHeartShower(e.clientX, e.clientY);
+        }
+
+        function render3DAsciiHeartStage() {
+            const stage = document.getElementById('asciiHeart3DStage');
+            if (!stage || document.getElementById('tabContent-lab').classList.contains('hidden')) return;
+
+            const width = 56;
+            const height = 22;
+            let output = '';
+            const rot = thermalTime * 1.6;
+            const cosR = Math.cos(rot);
+            const shadeRamp = ' ·°+✦♡✿♥';
+
+            for (let j = 0; j < height; j++) {
+                for (let i = 0; i < width; i++) {
+                    const x = ((i / width) * 2 - 1) * 1.45;
+                    const y = -(((j / height) * 2 - 1) * 1.35);
+
+                    if (asciiMode === 0) {
+                        const rx = x / (Math.abs(cosR) * 0.65 + 0.35);
+                        const heartEq = Math.pow(rx * rx + y * y - 1, 3) - (rx * rx) * Math.pow(y, 3);
+                        if (heartEq <= 0) {
+                            const depth = Math.min(1, Math.max(0, (-heartEq * 2.2) + 0.35));
+                            const idx = Math.min(shadeRamp.length - 1, Math.floor(depth * shadeRamp.length));
+                            output += shadeRamp[idx];
+                        } else {
+                            output += ' ';
+                        }
+                    } else if (asciiMode === 1) {
+                        const d = Math.sqrt(x * x + y * y);
+                        const wave = Math.sin(d * 8 - thermalTime * 4);
+                        output += wave > 0.2 ? '♥' : (wave > -0.3 ? '·' : ' ');
+                    } else {
+                        const heartEq = Math.pow(x * x + y * y - 1, 3) - (x * x) * Math.pow(y, 3);
+                        if (heartEq <= 0) {
+                            output += ((i + j + Math.floor(thermalTime * 6)) % 2 === 0) ? '♥' : '✦';
+                        } else {
+                            output += '·';
+                        }
+                    }
+                }
+                output += '\n';
+            }
+            stage.textContent = output;
+        }
+
+        function syncDataToUI() {
+            const qName = document.getElementById('questionRecipientName');
+            if (qName) qName.textContent = CONFIG.GIRLFRIEND_NAME;
+            document.getElementById('lockRecipientName').textContent = CONFIG.GIRLFRIEND_NAME;
+            document.getElementById('dashboardGirlfriendName').textContent = CONFIG.GIRLFRIEND_NAME;
+            const letterName = document.getElementById('letterGreetingName');
+            if (letterName) letterName.textContent = CONFIG.GIRLFRIEND_NAME;
+            const finaleName = document.getElementById('finaleRecipientName');
+            if (finaleName) finaleName.textContent = CONFIG.GIRLFRIEND_NAME;
+            const sizer = document.getElementById('typewriterSizer');
+            if (sizer) sizer.textContent = CONFIG.LOVE_LETTER_TEXT + ' ♥';
+            document.getElementById('hintKeywordsList').textContent = CONFIG.SECRET_KEYWORDS.join('  •  ');
+            renderCommitTimeline();
+            renderReasonsGrid();
+            renderActiveGame();
+        }
+
+        /* =====================================================================
+         * 9. TOP SCROLL-ONLY BLUR CONTROLLER (No Effect When Scrolling Is Paused)
+         * ===================================================================== */
+        let scrollBlurTimer = null;
+
+        function initScrollTopBlur() {
+            const blurEl = document.getElementById('topScrollBlur');
+            if (!blurEl) return;
+
+            window.addEventListener('scroll', () => {
+                if (finaleActive || window.scrollY <= 2) {
+                    blurEl.classList.remove('is-scrolling');
+                    if (scrollBlurTimer) {
+                        clearTimeout(scrollBlurTimer);
+                        scrollBlurTimer = null;
+                    }
+                    return;
+                }
+
+                blurEl.classList.add('is-scrolling');
+                if (scrollBlurTimer) clearTimeout(scrollBlurTimer);
+                scrollBlurTimer = setTimeout(() => {
+                    blurEl.classList.remove('is-scrolling');
+                    scrollBlurTimer = null;
+                }, 220);
+            }, { passive: true });
+        }
+
+        function scrollToGames() {
+            switchTab('games');
+        }
+
+        /* =====================================================================
+         * 10. COUPLE GAMES ENGINE (Sweet Q&A · This or That · Who's More Likely?)
+         * ===================================================================== */
+        const GAME_META = {
+            qna: {
+                title: 'Sweet Q&A',
+                nextMode: 'thisOrThat',
+                nextLabel: 'Play This or That'
+            },
+            thisOrThat: {
+                title: 'This or That',
+                nextMode: 'whoLikely',
+                nextLabel: "Play Who's More Likely?"
+            },
+            whoLikely: {
+                title: "Who's More Likely To...?",
+                nextMode: 'qna',
+                nextLabel: 'Play Sweet Q&A'
+            }
+        };
+
+        const gameState = {
+            mode: 'qna',
+            index: 0,
+            score: 0,
+            answered: false,
+            picked: null,
+            finished: false
+        };
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function getActiveGameQuestions() {
+            if (gameState.mode === 'thisOrThat') return CONFIG.GAMES.THIS_OR_THAT;
+            if (gameState.mode === 'whoLikely') return CONFIG.GAMES.WHO_LIKELY;
+            return CONFIG.GAMES.QNA;
+        }
+
+        function switchGameMode(mode, fromAuto = false) {
+            if (!GAME_META[mode]) return;
+            activateGamesTabSilently();
+            cancelAllTabAutoTimers();
+            if (!fromAuto) playUiBeep(580, 0.05);
+            gameState.mode = mode;
+            gameState.index = 0;
+            gameState.score = 0;
+            gameState.answered = false;
+            gameState.picked = null;
+            gameState.finished = false;
+            updateGameModeTabs();
+            renderActiveGame();
+        }
+
+        function restartCurrentGame() {
+            activateGamesTabSilently();
+            cancelAllTabAutoTimers();
+            playUiBeep(520, 0.06);
+            gameState.index = 0;
+            gameState.score = 0;
+            gameState.answered = false;
+            gameState.picked = null;
+            gameState.finished = false;
+            renderActiveGame();
+        }
+
+        function updateGameModeTabs() {
+            ['qna', 'thisOrThat', 'whoLikely'].forEach((m) => {
+                const btn = document.getElementById(`gameTab-${m}`);
+                if (!btn) return;
+                if (m === gameState.mode) {
+                    btn.className = 'liquid-glass px-3.5 py-2 rounded-2xl text-xs font-semibold text-white border-pink-400 flex items-center gap-1.5 transition';
+                } else {
+                    btn.className = 'liquid-glass-subtle px-3.5 py-2 rounded-2xl text-xs font-medium text-pink-200/85 hover:text-white flex items-center gap-1.5 transition';
+                }
+            });
+        }
+
+        function selectGameAnswer(choice, evt) {
+            if (gameState.answered || gameState.finished) return;
+            activateGamesTabSilently();
+            const questions = getActiveGameQuestions();
+            const q = questions[gameState.index];
+            if (!q) return;
+
+            gameState.answered = true;
+            gameState.picked = choice;
+
+            const isMatch = choice === q.yourPick;
+            if (isMatch) {
+                gameState.score++;
+                playMatchChime();
+                if (evt && evt.currentTarget) {
+                    const rect = evt.currentTarget.getBoundingClientRect();
+                    triggerHeartShower(rect.left + rect.width * 0.5, rect.top + rect.height * 0.5);
+                } else {
+                    triggerHeartShower();
+                }
+            } else {
+                playUiBeep(430, 0.08);
+            }
+
+            renderActiveGame();
+        }
+
+        function nextGameQuestion() {
+            activateGamesTabSilently();
+            const questions = getActiveGameQuestions();
+            if (gameState.index + 1 < questions.length) {
+                playUiBeep(600, 0.05);
+                gameState.index++;
+                gameState.answered = false;
+                gameState.picked = null;
+                renderActiveGame();
+            } else {
+                gameState.finished = true;
+                renderActiveGame();
+                replayLoveFinaleForCurrentGame();
+            }
+        }
+
+        function scheduleGameCompleteAutoAdvance() {
+            if (!autoSwitchEnabled || !gameState.finished || finaleActive) return;
+
+            const isFinalGame = gameState.mode === 'whoLikely';
+            const meta = GAME_META[gameState.mode];
+            const label = isFinalGame
+                ? 'All games finished — returning to A Letter For You ♥'
+                : `Game complete — switching to ${GAME_META[meta.nextMode].title} ✨`;
+
+            startTabAutoBar(4200, label, () => {
+                if (isFinalGame) {
+                    switchTab('letter', { fromAuto: true, scrollTop: true });
+                } else {
+                    switchGameMode(meta.nextMode, true);
+                }
+            }, {
+                wrap: 'gameAutoNextWrap',
+                bar: 'gameAutoNextBar',
+                text: 'gameAutoNextText'
+            });
+        }
+
+        function replayLoveFinaleForCurrentGame() {
+            cancelAllTabAutoTimers();
+            const questions = getActiveGameQuestions();
+            const meta = GAME_META[gameState.mode];
+            openLoveFinale(meta.title, gameState.score, questions.length);
+        }
+
+        function renderActiveGame() {
+            const stage = document.getElementById('gameStageContainer');
+            if (!stage) return;
+
+            const questions = getActiveGameQuestions();
+            const total = questions.length;
+            const meta = GAME_META[gameState.mode];
+
+            const titleBadge = document.getElementById('gameModeTitleBadge');
+            const progressLabel = document.getElementById('gameProgressLabel');
+            const scorePill = document.getElementById('gameScorePill');
+            const progressBar = document.getElementById('gameProgressBar');
+
+            if (titleBadge) titleBadge.textContent = meta.title;
+            if (scorePill) scorePill.textContent = `In Sync: ${gameState.score} / ${total} ♥`;
+
+            if (gameState.finished) {
+                if (progressLabel) progressLabel.textContent = 'Completed ♥';
+                if (progressBar) progressBar.style.width = '100%';
+
+                const pct = Math.round((gameState.score / Math.max(1, total)) * 100);
+                let syncTitle = 'Forever Soulmate Energy ♥';
+                if (pct >= 80) syncTitle = '100% Telepathic Soulmates ✨';
+                else if (pct >= 55) syncTitle = 'Perfectly Cute Couple Sync ♥';
+                else syncTitle = 'Adorable Opposites That Attract 😘';
+
+                stage.innerHTML = `
+                    <div class="liquid-glass-subtle rounded-3xl p-6 sm:p-8 text-center border border-pink-400/35 space-y-5 match-pop">
+                        <div class="text-4xl select-none">💋 ✨ ♥</div>
+                        <div>
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500/25 border border-pink-400/40 text-pink-100 text-xs mb-2">
+                                <i data-lucide="trophy" class="w-3.5 h-3.5 text-pink-300"></i>
+                                <span>${escapeHtml(meta.title)} Complete</span>
+                            </div>
+                            <h4 class="text-2xl sm:text-3xl font-bold font-serif italic text-white text-glow">
+                                ${gameState.score} / ${total} Matches (${pct}%)
+                            </h4>
+                            <p class="text-sm text-pink-200/90 mt-1.5">${escapeHtml(syncTitle)}</p>
+                        </div>
+
+                        <div id="gameAutoNextWrap" class="hidden max-w-md mx-auto pt-1 space-y-1.5 text-left">
+                            <div class="flex items-center justify-between text-[11px] text-pink-200/85">
+                                <span id="gameAutoNextText" class="flex items-center gap-1.5">
+                                    <span class="text-pink-400">✦</span>
+                                    <span>Switching automatically...</span>
+                                </span>
+                                <button type="button" onclick="triggerNextAutoTabNow()" class="text-pink-300 hover:text-white underline decoration-pink-400/40">Go Now →</button>
+                            </div>
+                            <div class="w-full h-1 rounded-full bg-pink-950/70 overflow-hidden">
+                                <div id="gameAutoNextBar" class="h-full w-full origin-left rounded-full bg-gradient-to-r from-pink-500 via-rose-400 to-fuchsia-500" style="transform: scaleX(0);"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+                            <button type="button" onclick="replayLoveFinaleForCurrentGame()" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-pink-600 via-rose-500 to-fuchsia-600 hover:from-pink-500 hover:to-fuchsia-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-pink-600/30 box-glow transition flex items-center gap-2">
+                                <span>Replay Love &amp; Kiss Shower 💋</span>
+                            </button>
+                            <button type="button" onclick="restartCurrentGame()" class="px-4 py-3 rounded-2xl liquid-glass-subtle hover:border-pink-400 text-xs sm:text-sm text-pink-100 hover:text-white transition flex items-center gap-1.5">
+                                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-pink-300"></i>
+                                <span>Play Again</span>
+                            </button>
+                            <button type="button" onclick="switchGameMode('${meta.nextMode}')" class="px-4 py-3 rounded-2xl liquid-glass hover:border-pink-400 text-xs sm:text-sm text-white font-semibold transition flex items-center gap-1.5">
+                                <span>${escapeHtml(meta.nextLabel)}</span>
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-pink-300"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                if (window.lucide) lucide.createIcons();
+                return;
+            }
+
+            const q = questions[gameState.index];
+            const completedSteps = gameState.index + (gameState.answered ? 1 : 0);
+            if (progressLabel) progressLabel.textContent = `Question ${gameState.index + 1} of ${total}`;
+            if (progressBar) progressBar.style.width = `${Math.round((completedSteps / total) * 100)}%`;
+
+            const isLast = gameState.index === total - 1;
+            const nextBtnLabel = isLast ? 'Finish & Open Surprise 💋' : 'Next Question';
+            const isMatch = gameState.answered && gameState.picked === q.yourPick;
+
+            let bodyHtml = '';
+
+            if (gameState.mode === 'qna') {
+                const optionsHtml = q.options.map((opt, idx) => {
+                    const isHerPick = gameState.answered && gameState.picked === idx;
+                    const isMyPick = gameState.answered && q.yourPick === idx;
+
+                    let cardCls = 'liquid-glass-subtle hover:border-pink-400/70 hover:bg-pink-500/15';
+                    if (gameState.answered) {
+                        if (isHerPick && isMyPick) {
+                            cardCls = 'match-card-glow';
+                        } else if (isMyPick) {
+                            cardCls = 'liquid-glass border-pink-400/80';
+                        } else if (isHerPick) {
+                            cardCls = 'liquid-glass-subtle border-rose-300/60';
+                        } else {
+                            cardCls = 'liquid-glass-subtle opacity-55';
+                        }
+                    }
+
+                    let badges = '';
+                    if (isHerPick && isMyPick) {
+                        badges = `<span class="text-[11px] px-2.5 py-0.5 rounded-full bg-pink-500/35 border border-pink-300/60 text-white font-semibold shrink-0">Both Picked ♥</span>`;
+                    } else if (isMyPick) {
+                        badges = `<span class="text-[11px] px-2.5 py-0.5 rounded-full bg-fuchsia-500/30 border border-fuchsia-300/50 text-pink-100 font-semibold shrink-0">My Answer ♥</span>`;
+                    } else if (isHerPick) {
+                        badges = `<span class="text-[11px] px-2.5 py-0.5 rounded-full bg-pink-500/20 border border-pink-400/40 text-pink-200 shrink-0">Your Pick</span>`;
+                    }
+
+                    return `
+                        <button type="button" ${gameState.answered ? 'disabled' : ''} onclick="selectGameAnswer(${idx}, event)" class="w-full text-left p-4 rounded-2xl border border-pink-400/25 transition-all duration-200 flex items-center justify-between gap-3 ${cardCls} ${gameState.answered ? 'cursor-default' : 'cursor-pointer'}">
+                            <span class="text-xs sm:text-sm text-pink-100 font-medium leading-snug">${escapeHtml(opt)}</span>
+                            ${badges}
+                        </button>
+                    `;
+                }).join('');
+
+                bodyHtml = `
+                    <div class="space-y-5">
+                        <div class="text-center space-y-1.5">
+                            <span class="text-[11px] uppercase tracking-widest text-pink-300/80">Sweet Couple Q&amp;A</span>
+                            <h4 class="text-lg sm:text-2xl font-serif italic font-bold text-white text-glow">
+                                ${escapeHtml(q.question)}
+                            </h4>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            ${optionsHtml}
+                        </div>
+                    </div>
+                `;
+            } else if (gameState.mode === 'thisOrThat') {
+                const renderChoiceCard = (sideKey, item) => {
+                    const isHerPick = gameState.answered && gameState.picked === sideKey;
+                    const isMyPick = gameState.answered && q.yourPick === sideKey;
+
+                    let cardCls = 'liquid-glass-subtle hover:border-pink-400/80 hover:-translate-y-0.5 box-glow';
+                    if (gameState.answered) {
+                        if (isHerPick && isMyPick) {
+                            cardCls = 'match-card-glow';
+                        } else if (isMyPick) {
+                            cardCls = 'liquid-glass border-pink-400/80';
+                        } else if (isHerPick) {
+                            cardCls = 'liquid-glass-subtle border-rose-300/60';
+                        } else {
+                            cardCls = 'liquid-glass-subtle opacity-55';
+                        }
+                    }
+
+                    let badgeHtml = '';
+                    if (isHerPick && isMyPick) {
+                        badgeHtml = `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pink-500/40 border border-pink-300/60 text-[11px] font-semibold text-white">✨ Both Picked!</span>`;
+                    } else if (isMyPick) {
+                        badgeHtml = `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-fuchsia-500/35 border border-fuchsia-300/50 text-[11px] font-semibold text-pink-100">My Pick ♥</span>`;
+                    } else if (isHerPick) {
+                        badgeHtml = `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pink-500/20 border border-pink-400/40 text-[11px] text-pink-200">You Picked</span>`;
+                    }
+
+                    return `
+                        <button type="button" ${gameState.answered ? 'disabled' : ''} onclick="selectGameAnswer('${sideKey}', event)" class="w-full p-6 sm:p-7 rounded-3xl border border-pink-400/25 transition-all duration-200 flex flex-col items-center justify-center text-center gap-3 min-h-[168px] ${cardCls} ${gameState.answered ? 'cursor-default' : 'cursor-pointer'}">
+                            <span class="text-3xl sm:text-4xl select-none">${item.emoji}</span>
+                            <span class="text-base sm:text-lg font-serif italic font-bold text-white leading-snug">${escapeHtml(item.text)}</span>
+                            <div class="min-h-[26px] flex items-center justify-center">${badgeHtml}</div>
+                        </button>
+                    `;
+                };
+
+                bodyHtml = `
+                    <div class="space-y-5">
+                        <div class="text-center space-y-1.5">
+                            <span class="text-[11px] uppercase tracking-widest text-pink-300/80">Mind Sync • Pick Your Favorite</span>
+                            <h4 class="text-lg sm:text-2xl font-serif italic font-bold text-white text-glow">
+                                Which One Would You Choose?
+                            </h4>
+                        </div>
+                        <div class="relative grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+                            ${renderChoiceCard('a', q.a)}
+                            <div class="sm:hidden flex items-center justify-center -my-1.5 z-10 pointer-events-none">
+                                <span class="w-9 h-9 rounded-full bg-thermal-900 border border-pink-400/60 flex items-center justify-center text-[11px] font-bold text-pink-300 shadow-lg shadow-pink-500/30">OR</span>
+                            </div>
+                            <div class="hidden sm:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-thermal-900 border border-pink-400/60 items-center justify-center text-xs font-bold text-pink-300 shadow-lg shadow-pink-500/30 pointer-events-none">
+                                OR
+                            </div>
+                            ${renderChoiceCard('b', q.b)}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Who Is More Likely To...? (He vs. She — Me / You)
+                const renderWhoBtn = (whoKey, emoji, label, sublabel) => {
+                    const isHerPick = gameState.answered && gameState.picked === whoKey;
+                    const isMyPick = gameState.answered && q.yourPick === whoKey;
+
+                    let cardCls = 'liquid-glass-subtle hover:border-pink-400/80 hover:-translate-y-0.5 box-glow';
+                    if (gameState.answered) {
+                        if (isHerPick && isMyPick) {
+                            cardCls = 'match-card-glow';
+                        } else if (isMyPick) {
+                            cardCls = 'liquid-glass border-pink-400/80';
+                        } else if (isHerPick) {
+                            cardCls = 'liquid-glass-subtle border-rose-300/60';
+                        } else {
+                            cardCls = 'liquid-glass-subtle opacity-55';
+                        }
+                    }
+
+                    let badgeHtml = '';
+                    if (isHerPick && isMyPick) {
+                        badgeHtml = `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pink-500/40 border border-pink-300/60 text-[11px] font-semibold text-white">✨ MATCH!</span>`;
+                    } else if (isMyPick) {
+                        const myRevealText = whoKey === 'her' ? 'I Picked You 😘' : 'I Picked Me 😅';
+                        badgeHtml = `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-fuchsia-500/35 border border-fuchsia-300/50 text-[11px] font-semibold text-pink-100">${myRevealText}</span>`;
+                    } else if (isHerPick) {
+                        badgeHtml = `<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-pink-500/20 border border-pink-400/40 text-[11px] text-pink-200">Your Answer</span>`;
+                    }
+
+                    return `
+                        <button type="button" ${gameState.answered ? 'disabled' : ''} onclick="selectGameAnswer('${whoKey}', event)" class="w-full p-6 rounded-3xl border border-pink-400/25 transition-all duration-200 flex flex-col items-center justify-center text-center gap-2 min-h-[155px] ${cardCls} ${gameState.answered ? 'cursor-default' : 'cursor-pointer'}">
+                            <span class="text-3xl sm:text-4xl select-none">${emoji}</span>
+                            <span class="text-lg sm:text-xl font-serif italic font-bold text-white">${label}</span>
+                            <span class="text-[11px] text-pink-200/75">${sublabel}</span>
+                            <div class="min-h-[26px] mt-1 flex items-center justify-center">${badgeHtml}</div>
+                        </button>
+                    `;
+                };
+
+                bodyHtml = `
+                    <div class="space-y-5">
+                        <div class="text-center space-y-1.5">
+                            <span class="text-[11px] uppercase tracking-widest text-pink-300/80">He vs. She • Be Honest!</span>
+                            <h4 class="text-lg sm:text-2xl font-serif italic font-bold text-white text-glow">
+                                ${escapeHtml(q.question)}
+                            </h4>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            ${renderWhoBtn('her', '🙋‍♀️', 'Me', 'Haha okay, probably me')}
+                            ${renderWhoBtn('him', '🙋‍♂️', 'You', '100% definitely you')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            let revealHtml = '';
+            if (gameState.answered) {
+                let myPickDisplay = '';
+                if (gameState.mode === 'qna') {
+                    myPickDisplay = `My Pick: ${escapeHtml(q.options[q.yourPick])}`;
+                } else if (gameState.mode === 'thisOrThat') {
+                    const pickedObj = q.yourPick === 'a' ? q.a : q.b;
+                    myPickDisplay = `My Pick: ${pickedObj.emoji} ${escapeHtml(pickedObj.text)}`;
+                } else {
+                    myPickDisplay = q.yourPick === 'her' ? 'My Pre-Recorded Answer: Definitely You! 😘' : 'My Pre-Recorded Answer: Okay fine... Me! 😅';
+                }
+
+                const statusBadge = isMatch
+                    ? `<span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gradient-to-r from-pink-500/40 to-fuchsia-500/40 border border-pink-300/60 text-xs font-bold text-white shadow shadow-pink-500/30">✨ MATCH! In Perfect Sync ♥</span>`
+                    : `<span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-pink-500/20 border border-pink-400/40 text-xs font-semibold text-pink-200">${gameState.mode === 'whoLikely' ? '😂 Plot Twist! Debate Time' : '😏 Opposites Attract!'}</span>`;
+
+                revealHtml = `
+                    <div class="mt-5 p-5 rounded-2xl bg-pink-950/60 border border-pink-400/35 space-y-3 match-pop">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            ${statusBadge}
+                            <span class="text-xs font-medium text-pink-200">${myPickDisplay}</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-pink-100/90 italic leading-relaxed">
+                            "${escapeHtml(q.yourNote)}"
+                        </p>
+                        <div class="pt-1 flex justify-end">
+                            <button type="button" onclick="nextGameQuestion()" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-pink-600 via-rose-500 to-fuchsia-600 hover:from-pink-500 hover:to-fuchsia-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-pink-600/30 box-glow transition flex items-center gap-2">
+                                <span>${nextBtnLabel}</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            stage.innerHTML = bodyHtml + revealHtml;
+            if (window.lucide) lucide.createIcons();
+        }
+
+        /* =====================================================================
+         * 11. FULL-SCREEN "I LOVE YOU & KISSES" FINALE ENGINE (60FPS SPRITE CANVAS)
+         * ===================================================================== */
+        let finaleActive = false;
+        let finaleItems = [];
+        let finaleEmojiSprites = [];
+        let finalePhraseSprites = [];
+        let finaleSpawnAccum = 0;
+
+        const FINALE_EMOJIS = ['💋', '😘', '💖', '💕', '💋', '♥', '✨', '💘'];
+        const FINALE_PHRASES = [
+            'I Love You ♥',
+            'I Love You So Much 💋',
+            'Muah! 💋',
+            'Love You Always ♥',
+            'Forever Yours 💕',
+            'Kiss Kiss 💋',
+            'I ♥ U',
+            'My Everything ✨'
+        ];
+
+        function buildFinaleSprites() {
+            if (finaleEmojiSprites.length > 0 && finalePhraseSprites.length > 0) return;
+
+            // 1. Pre-baked glowing kiss & heart emoji sprites
+            finaleEmojiSprites = FINALE_EMOJIS.map((emoji) => {
+                const size = 64;
+                const c = document.createElement('canvas');
+                c.width = size;
+                c.height = size;
+                const ctx = c.getContext('2d');
+                ctx.font = '34px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.shadowColor = 'rgba(236, 72, 153, 0.85)';
+                ctx.shadowBlur = 12;
+                ctx.fillStyle = '#fce7f3';
+                ctx.fillText(emoji, size * 0.5, size * 0.52);
+                return c;
+            });
+
+            // 2. Pre-baked glowing "I Love You" rose-glass pill sprites
+            finalePhraseSprites = FINALE_PHRASES.map((phrase, idx) => {
+                const c = document.createElement('canvas');
+                c.width = 230;
+                c.height = 52;
+                const ctx = c.getContext('2d');
+
+                const isRose = idx % 2 === 0;
+                const padX = 12;
+                const padY = 8;
+                const w = c.width - padX * 2;
+                const h = c.height - padY * 2;
+                const r = h * 0.5;
+
+                ctx.save();
+                ctx.shadowColor = isRose ? 'rgba(236, 72, 153, 0.65)' : 'rgba(217, 70, 239, 0.6)';
+                ctx.shadowBlur = 12;
+                ctx.fillStyle = isRose ? 'rgba(131, 24, 67, 0.72)' : 'rgba(88, 28, 135, 0.68)';
+                ctx.strokeStyle = 'rgba(249, 168, 212, 0.7)';
+                ctx.lineWidth = 1.4;
+
+                ctx.beginPath();
+                ctx.moveTo(padX + r, padY);
+                ctx.lineTo(padX + w - r, padY);
+                ctx.arcTo(padX + w, padY, padX + w, padY + r, r);
+                ctx.arcTo(padX + w, padY + h, padX + w - r, padY + h, r);
+                ctx.lineTo(padX + r, padY + h);
+                ctx.arcTo(padX, padY + h, padX, padY + r, r);
+                ctx.arcTo(padX, padY, padX + r, padY, r);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                ctx.restore();
+
+                ctx.font = 'italic 600 15px "Playfair Display", "Plus Jakarta Sans", serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#fff1f8';
+                ctx.fillText(phrase, c.width * 0.5, c.height * 0.51);
+                return c;
+            });
+        }
+
+        function spawnFinaleItem(x, y, burstMode = false) {
+            const isPhrase = Math.random() < 0.42;
+            const sprite = isPhrase
+                ? finalePhraseSprites[(Math.random() * finalePhraseSprites.length) | 0]
+                : finaleEmojiSprites[(Math.random() * finaleEmojiSprites.length) | 0];
+
+            const scale = isPhrase
+                ? (0.72 + Math.random() * 0.36)
+                : (0.62 + Math.random() * 0.68);
+
+            let vx = (Math.random() - 0.5) * 1.1;
+            let vy = -(0.7 + Math.random() * 1.45);
+            if (burstMode) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 1.8 + Math.random() * 4.2;
+                vx = Math.cos(angle) * speed;
+                vy = Math.sin(angle) * speed - 1.2;
+            }
+
+            finaleItems.push({
+                x: x,
+                y: y,
+                vx: vx,
+                vy: vy,
+                scale: scale,
+                targetScale: scale,
+                rot: (Math.random() - 0.5) * 0.36,
+                vRot: (Math.random() - 0.5) * 0.012,
+                swaySeed: Math.random() * 100,
+                life: 0,
+                maxLife: burstMode ? (95 + Math.random() * 55) : (160 + Math.random() * 110),
+                sprite: sprite,
+                isPhrase: isPhrase
+            });
+        }
+
+        function openLoveFinale(gameTitle, matches, total) {
+            cancelAllTabAutoTimers();
+            buildFinaleSprites();
+
+            const overlay = document.getElementById('loveFinaleOverlay');
+            const canvas = document.getElementById('finaleCanvas');
+            const scoreLine = document.getElementById('finaleScoreLine');
+            const topBlur = document.getElementById('topScrollBlur');
+            if (!overlay || !canvas) return;
+
+            if (topBlur) topBlur.classList.remove('is-scrolling');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            if (scoreLine) {
+                scoreLine.textContent = `${gameTitle} Complete — ${matches} / ${total} In Sync ♥`;
+            }
+
+            finaleActive = true;
+            finaleItems = [];
+            finaleSpawnAccum = 0;
+            document.body.style.overflowY = 'hidden';
+
+            // Immediately fill the ENTIRE viewport with I Love You phrases & Kisses
+            const initialCount = window.innerWidth < 640 ? 55 : 85;
+            for (let i = 0; i < initialCount; i++) {
+                const rx = Math.random() * canvas.width;
+                const ry = Math.random() * canvas.height;
+                spawnFinaleItem(rx, ry, false);
+                finaleItems[finaleItems.length - 1].life = Math.random() * 35;
+            }
+
+            overlay.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                overlay.classList.remove('opacity-0');
+            });
+
+            playLoveFinaleSound();
+        }
+
+        function burstMoreLoveAndKisses(e) {
+            if (e) e.stopPropagation();
+            if (!finaleActive) return;
+            playLoveFinaleSound();
+            const originX = (e && typeof e.clientX === 'number' && e.clientX > 0) ? e.clientX : window.innerWidth * 0.5;
+            const originY = (e && typeof e.clientY === 'number' && e.clientY > 0) ? e.clientY : window.innerHeight * 0.5;
+            for (let i = 0; i < 28; i++) {
+                if (finaleItems.length > 135) finaleItems.shift();
+                spawnFinaleItem(
+                    originX + (Math.random() - 0.5) * 140,
+                    originY + (Math.random() - 0.5) * 100,
+                    true
+                );
+            }
+        }
+
+        function handleFinaleBackdropTap(e) {
+            if (!finaleActive) return;
+            playUiBeep(720 + Math.random() * 160, 0.07);
+            for (let i = 0; i < 14; i++) {
+                if (finaleItems.length > 135) finaleItems.shift();
+                spawnFinaleItem(e.clientX, e.clientY, true);
+            }
+        }
+
+        function closeLoveFinale(skipAutoAdvance = false) {
+            document.body.style.overflowY = '';
+            const overlay = document.getElementById('loveFinaleOverlay');
+            if (!overlay || overlay.classList.contains('hidden')) {
+                finaleActive = false;
+                finaleItems = [];
+                return;
+            }
+            overlay.classList.add('opacity-0');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                finaleActive = false;
+                finaleItems = [];
+                const canvas = document.getElementById('finaleCanvas');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+                if (!skipAutoAdvance && gameState.finished && autoSwitchEnabled) {
+                    const dashboard = document.getElementById('dashboardContainer');
+                    if (dashboard && !dashboard.classList.contains('hidden')) {
+                        scheduleGameCompleteAutoAdvance();
+                    }
+                }
+            }, 420);
+        }
+
+        function updateAndRenderFinale(dtScale) {
+            if (!finaleActive) return;
+            const canvas = document.getElementById('finaleCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Continuously float new I Love You & Kisses onto screen while open
+            const maxItems = window.innerWidth < 640 ? 68 : 108;
+            finaleSpawnAccum += dtScale;
+            if (finaleSpawnAccum >= 3.2 && finaleItems.length < maxItems) {
+                finaleSpawnAccum = 0;
+                const fromBottom = Math.random() < 0.72;
+                const sx = Math.random() * canvas.width;
+                const sy = fromBottom ? (canvas.height + 24) : (Math.random() * canvas.height * 0.85);
+                spawnFinaleItem(sx, sy, false);
+            }
+
+            for (let i = finaleItems.length - 1; i >= 0; i--) {
+                const it = finaleItems[i];
+                it.life += dtScale;
+                if (it.life >= it.maxLife || it.y < -90) {
+                    const lastIdx = finaleItems.length - 1;
+                    if (i !== lastIdx) finaleItems[i] = finaleItems[lastIdx];
+                    finaleItems.pop();
+                    continue;
+                }
+
+                // Gentle organic breeze + deceleration on burst items
+                it.vx *= Math.pow(0.988, dtScale);
+                it.vy += (-0.012) * dtScale;
+                if (it.vy < -2.4) it.vy = -2.4;
+
+                const sway = Math.sin(it.life * 0.05 + it.swaySeed) * 0.45;
+                it.x += (it.vx + sway) * dtScale;
+                it.y += it.vy * dtScale;
+                it.rot += it.vRot * dtScale;
+
+                const fadeIn = Math.min(1, it.life / 16);
+                const remaining = (it.maxLife - it.life) / 28;
+                const fadeOut = Math.min(1, Math.max(0, remaining));
+                const alpha = fadeIn * fadeOut * 0.94;
+                if (alpha <= 0.01) continue;
+
+                const popScale = it.targetScale * (0.65 + 0.35 * fadeIn);
+                const dw = it.sprite.width * popScale;
+                const dh = it.sprite.height * popScale;
+
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.translate(it.x, it.y);
+                ctx.rotate(it.rot);
+                ctx.drawImage(it.sprite, -dw * 0.5, -dh * 0.5, dw, dh);
+                ctx.restore();
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && finaleActive) {
+                closeLoveFinale();
+            }
+        });
+
+        /* =====================================================================
+         * 12. MAIN ANIMATION LOOP & INITIALIZATION
+         * ===================================================================== */
+        let lastFrameTime = performance.now();
+        let lastAsciiLabAt = 0;
+
+        function mainAnimationLoop(now) {
+            const rawDt = now - lastFrameTime;
+            lastFrameTime = now;
+            // Normalize to 60fps units (1.0 at 60Hz, 0.5 at 120Hz), clamped against tab-switch spikes
+            const dtScale = Math.min(rawDt, 50) / 16.6667;
+
+            // Update thermal background at ~30fps to save GPU backdrop-filter compositing
+            const bgElapsed = now - lastBgRenderAt;
+            if (bgElapsed >= 32) {
+                const bgDtScale = Math.min(bgElapsed, 80) / 16.6667;
+                lastBgRenderAt = now;
+                renderThermalAsciiBackground(bgDtScale);
+            }
+
+            // Foreground snap & heart burst particles run at full display refresh rate
+            updateAndRenderParticles(dtScale);
+
+            // Full-screen "I Love You & Kisses" finale runs only while open (0 cost when closed)
+            if (finaleActive) {
+                updateAndRenderFinale(dtScale);
+            }
+
+            // 3D ASCII heart lab updates cleanly at ~25fps only when visible
+            if (now - lastAsciiLabAt >= 40) {
+                lastAsciiLabAt = now;
+                render3DAsciiHeartStage();
+            }
+
+            requestAnimationFrame(mainAnimationLoop);
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+
+        function initApp() {
+            if (window.lucide) lucide.createIcons();
+            buildBgGlyphAtlas();
+            buildParticleSprites();
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(() => {
+                    buildBgGlyphAtlas();
+                    buildParticleSprites();
+                });
+            }
+
+            resizeCanvases();
+            syncDataToUI();
+            initLoveQuestionInteractions();
+            initScrollTopBlur();
+            updateUptimeCounter();
+            setInterval(updateUptimeCounter, 1000);
+
+            // Rotate romantic quotes every 6 seconds
+            let quoteIdx = 0;
+            setInterval(() => {
+                quoteIdx = (quoteIdx + 1) % CONFIG.CUSTOM_QUOTES.length;
+                const qEl = document.getElementById('rotatingQuoteDisplay');
+                if (qEl) qEl.textContent = CONFIG.CUSTOM_QUOTES[quoteIdx];
+            }, 6000);
+
+            lastFrameTime = performance.now();
+            lastBgRenderAt = 0;
+            requestAnimationFrame(mainAnimationLoop);
+        }
+
+        initApp();
+        window.addEventListener('load', () => {
+            if (window.lucide) lucide.createIcons();
+            resizeCanvases();
+        });
+    </script>
+</body>
+</html>
