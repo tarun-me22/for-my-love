@@ -793,7 +793,7 @@
                             </div>
 
                             <!-- Sleek MP3 Vinyl Album Visualizer (shown when MP3 is loaded from music/ or local file) -->
-                            <div id="mp3VisualPlayer" class="hidden relative w-full py-6 px-4 rounded-2xl bg-gradient-to-br from-thermal-900/95 via-pink-950/60 to-fuchsia-950/70 border border-pink-400/30 flex flex-col sm:flex-row items-center justify-center gap-5 overflow-hidden">
+                            <div id="mp3VisualPlayer" class="relative w-full py-6 px-4 rounded-2xl bg-gradient-to-br from-thermal-900/95 via-pink-950/60 to-fuchsia-950/70 border border-pink-400/30 flex flex-col sm:flex-row items-center justify-center gap-5 overflow-hidden">
                                 <div id="musicVinylDisc" class="vinyl-disc relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-thermal-900 via-pink-900/80 to-fuchsia-900/70 border-2 border-pink-400/50 shadow-xl shadow-pink-500/25 flex items-center justify-center shrink-0">
                                     <div class="w-20 h-20 rounded-full border border-pink-300/20 flex items-center justify-center">
                                         <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-fuchsia-600 border-2 border-pink-200/70 flex items-center justify-center shadow-inner">
@@ -808,11 +808,11 @@
                                 </div>
                             </div>
 
-                            <!-- Embedded YouTube Audio/Video Fallback (shown automatically if MP3 isn't uploaded to music/ yet) -->
-                            <div id="ytPlayerWrapper" class="relative w-full aspect-video rounded-2xl overflow-hidden bg-thermal-900/90 border border-pink-400/30 shadow-inner">
+                            <!-- Embedded YouTube Audio/Video Fallback (shown automatically only if MP3 fails to load) -->
+                            <div id="ytPlayerWrapper" class="hidden relative w-full aspect-video rounded-2xl overflow-hidden bg-thermal-900/90 border border-pink-400/30 shadow-inner">
                                 <iframe id="ytMusicIframe"
                                     class="w-full h-full"
-                                    src="https://www.youtube.com/embed/3n8IMQbicBA?start=24&enablejsapi=1&rel=0&modestbranding=1"
+                                    src="about:blank"
                                     title="Our Song Player"
                                     frameborder="0"
                                     referrerpolicy="strict-origin-when-cross-origin"
@@ -875,7 +875,7 @@
                                             class="w-full accent-pink-400 cursor-pointer h-1 bg-pink-950/80 rounded-lg" />
                                     </div>
                                     <button type="button" onclick="toggleYoutubeSourceVariant()" id="musicVideoVariantBtn"
-                                        class="text-[11px] px-2.5 py-1.5 rounded-full bg-pink-500/15 hover:bg-pink-500/30 border border-pink-400/30 text-pink-100 transition">
+                                        class="hidden text-[11px] px-2.5 py-1.5 rounded-full bg-pink-500/15 hover:bg-pink-500/30 border border-pink-400/30 text-pink-100 transition">
                                         Lyrics Video
                                     </button>
                                     <label class="cursor-pointer text-[11px] px-2.5 py-1.5 rounded-full bg-pink-500/25 hover:bg-pink-500/40 border border-pink-400/40 text-white transition flex items-center gap-1">
@@ -1279,7 +1279,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
                         id: 'mrignaini-karun',
                         heading: 'A Song That Reminds Me Of You',
                         title: 'Mrignaini',
-                        artist: 'Karun',
+                        artist: 'Karun (feat. Nanku)',
                         startTime: 24, // 0:24
                         duration: 126, // 2:06
                         audioUrl: 'music/mrignaini.mp3',
@@ -1302,9 +1302,9 @@ No matter where life takes us next, my heart will always choose you—today, tom
                         id: 'maharani-karun',
                         heading: 'A Song That I Like',
                         title: 'Maharani',
-                        artist: 'Karun, Lambo Drive, Arpit Bala & ReVo LEKHAK',
+                        artist: 'Karun, Lambo Drive, Arpit Bala & GHILDIYAL',
                         startTime: 76, // 1:16
-                        duration: 389, // 6:29
+                        duration: 390, // 6:30
                         audioUrl: 'music/maharani.mp3',
                         lrcUrl: 'music/maharani.lrc',
                         youtubeIds: ['VhRJ-3T4Rcw', 'GIK0r6WWbDQ', 'N1s-GN1SWqY'], // Automatic fallback if MP3 isn't uploaded yet
@@ -3225,6 +3225,9 @@ No matter where life takes us next, my heart will always choose you—today, tom
                     if (autoPlay) {
                         audio.play().then(() => {
                             if (token !== musicState.loadToken) return;
+                            if (Math.abs((audio.currentTime || 0) - safeSeek) > 0.75) {
+                                try { audio.currentTime = safeSeek; } catch (e) {}
+                            }
                             musicState.isPlaying = true;
                             startMusicSyncLoop();
                             updateMusicUI();
@@ -3279,10 +3282,17 @@ No matter where life takes us next, my heart will always choose you—today, tom
                     musicState.isPlaying = false;
                     stopMusicSyncLoop();
                 } else {
-                    if (musicState.audioEl.currentTime < 1 && getTrackStartTime(track) > 0) {
-                        try { musicState.audioEl.currentTime = getTrackStartTime(track); } catch (e) {}
+                    const desiredStart = getTrackStartTime(track);
+                    const needsStartSeek = musicState.audioEl.currentTime < 1 && desiredStart > 0;
+                    if (needsStartSeek) {
+                        try { musicState.audioEl.currentTime = desiredStart; } catch (e) {}
                     }
-                    musicState.audioEl.play().catch(() => {});
+                    const audioRef = musicState.audioEl;
+                    audioRef.play().then(() => {
+                        if (needsStartSeek && Math.abs((audioRef.currentTime || 0) - desiredStart) > 0.75) {
+                            try { audioRef.currentTime = desiredStart; } catch (e) {}
+                        }
+                    }).catch(() => {});
                     musicState.isPlaying = true;
                     startMusicSyncLoop();
                 }
@@ -3487,10 +3497,13 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 });
             }
 
+            if (CONFIG.MUSIC && Array.isArray(CONFIG.MUSIC.TRACKS)) {
+                CONFIG.MUSIC.TRACKS.forEach((tr) => tryFetchExternalLrc(tr));
+            }
+
             const track = getActiveMusicTrack();
             if (track) {
                 musicState.currentTime = getTrackStartTime(track);
-                tryFetchExternalLrc(track);
                 renderMusicTrackSelector();
                 renderMusicLyrics();
                 loadActiveTrackInPlayer(musicState.currentTime, false);
