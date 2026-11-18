@@ -711,139 +711,151 @@
                 </div>
             </div>
 
-            <!-- TAB 5: OUR MUSIC (Synced Lyrics & Pacific Time Auto-Start) -->
+            <!-- TAB 5: OUR MUSIC (Mrignaini & Maharani with Custom Start Times & Synced Lyrics) -->
             <div id="tabContent-music" class="hidden liquid-glass rounded-3xl p-6 sm:p-8 space-y-6">
                 <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-pink-300/15">
                     <div>
-                        <h3 class="text-base sm:text-lg font-serif italic font-bold text-white flex items-center gap-2">
+                        <h3 id="musicActiveSectionHeading" class="text-base sm:text-xl font-serif italic font-bold text-white flex items-center gap-2">
                             <i data-lucide="music" class="w-4 h-4 text-pink-400"></i>
-                            <span>Our Song &amp; Synced Lyrics</span>
+                            <span id="musicHeadingText">A Song That Reminds Me Of You</span>
                         </h3>
-                        <p class="text-xs text-pink-200/75">Press play anytime, or schedule it to start at your favorite Pacific Time ♥</p>
+                        <p class="text-xs text-pink-200/75 mt-0.5">Tap a song below to jump straight to the exact part I picked for you ♥</p>
                     </div>
-
-                    <!-- Live Pacific Time Badge -->
-                    <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-full liquid-glass-subtle border border-pink-400/30 text-xs">
-                        <span class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
-                        <span class="text-pink-300/85">Pacific Time:</span>
-                        <span id="pacificClockDisplay" class="font-mono font-semibold text-white">--:--:-- -- PT</span>
+                    <div id="musicEqualizerBars" class="flex items-end gap-1 h-7 shrink-0 opacity-50">
+                        <span class="w-1 bg-pink-400 rounded-full h-2 transition-all duration-150"></span>
+                        <span class="w-1 bg-rose-400 rounded-full h-4 transition-all duration-150"></span>
+                        <span class="w-1 bg-fuchsia-400 rounded-full h-3 transition-all duration-150"></span>
+                        <span class="w-1 bg-pink-300 rounded-full h-5 transition-all duration-150"></span>
                     </div>
                 </div>
 
-                <!-- Unmute prompt if browser blocked autoplay before a gesture -->
-                <div id="musicAutoplayBanner" class="hidden p-3.5 rounded-2xl bg-gradient-to-r from-pink-600/35 to-fuchsia-600/35 border border-pink-400/60 flex flex-wrap items-center justify-between gap-2 animate-pulse">
-                    <span class="text-xs sm:text-sm text-white font-medium flex items-center gap-2">
-                        <i data-lucide="volume-2" class="w-4 h-4 text-pink-300"></i>
-                        <span>It's Pacific Time! Tap to hear our song with full sound ♥</span>
-                    </span>
-                    <button type="button" onclick="resumeMusicAfterAutoplayBlock()" class="px-4 py-1.5 rounded-full bg-pink-500 hover:bg-pink-400 text-white text-xs font-semibold transition">
-                        Play Sound ♥
-                    </button>
-                </div>
-
-                <!-- Scheduled PT Trigger Toast -->
-                <div id="pacificTriggerToast" class="hidden p-3 rounded-2xl bg-pink-500/20 border border-pink-400/50 text-xs sm:text-sm text-pink-100 flex items-center justify-between gap-2">
-                    <span id="pacificTriggerToastText">✨ Pacific Time reached — Playing our song ♥</span>
-                    <button type="button" onclick="document.getElementById('pacificTriggerToast').classList.add('hidden')" class="text-pink-300 hover:text-white text-xs">Dismiss</button>
+                <!-- Two Dedicated Song Cards with Exact Headings -->
+                <div id="musicTrackSelector" class="grid grid-cols-1 sm:grid-cols-2 gap-3" data-no-slide="true">
+                    <!-- Populated dynamically from CONFIG.MUSIC.TRACKS -->
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                    <!-- Left: Player Controls & Pacific Time Scheduler -->
-                    <div class="lg:col-span-5 space-y-4" data-no-slide="true">
-                        <!-- Track Info & Controls Card -->
-                        <div class="liquid-glass-subtle rounded-2xl p-5 border border-pink-400/25 space-y-4">
-                            <div class="flex items-center justify-between gap-3">
+                    <!-- Left: Embedded Player & Exact Start-Time Controls -->
+                    <div class="lg:col-span-6 space-y-4" data-no-slide="true">
+                        <div class="liquid-glass-subtle rounded-2xl p-4 sm:p-5 border border-pink-400/25 space-y-4">
+                            <!-- Current Song Heading & Title -->
+                            <div class="flex items-start justify-between gap-3">
                                 <div class="min-w-0">
-                                    <div id="musicTrackBadge" class="text-[10px] uppercase tracking-widest text-pink-300/80 mb-0.5">Track 1 of 2</div>
-                                    <h4 id="musicTrackTitle" class="text-base sm:text-lg font-serif italic font-bold text-white truncate">Midnight In Your Arms</h4>
-                                    <p id="musicTrackArtist" class="text-xs text-pink-200/75 truncate">Built-in Dreamy Synth ♥</p>
+                                    <div id="musicTrackBadge" class="text-[11px] font-semibold uppercase tracking-wider text-pink-300 mb-0.5">A Song That Reminds Me Of You</div>
+                                    <h4 id="musicTrackTitle" class="text-lg sm:text-xl font-serif italic font-bold text-white truncate">Mrignaini</h4>
+                                    <p id="musicTrackArtist" class="text-xs text-pink-200/75 truncate">Karun</p>
                                 </div>
-                                <div id="musicEqualizerBars" class="flex items-end gap-1 h-7 shrink-0 opacity-50">
-                                    <span class="w-1 bg-pink-400 rounded-full h-2 transition-all duration-150"></span>
-                                    <span class="w-1 bg-rose-400 rounded-full h-4 transition-all duration-150"></span>
-                                    <span class="w-1 bg-fuchsia-400 rounded-full h-3 transition-all duration-150"></span>
-                                    <span class="w-1 bg-pink-300 rounded-full h-5 transition-all duration-150"></span>
-                                </div>
+                                <a id="musicYoutubeOpenLink" href="https://www.youtube.com/watch?v=3n8IMQbicBA&t=24s" target="_blank" rel="noopener noreferrer"
+                                    class="shrink-0 text-[11px] px-3 py-1.5 rounded-full bg-pink-500/20 hover:bg-pink-500/35 border border-pink-400/35 text-pink-100 transition flex items-center gap-1">
+                                    <span>YouTube ↗</span>
+                                </a>
                             </div>
 
-                            <!-- Track Selector Pills -->
-                            <div id="musicTrackSelector" class="flex flex-wrap gap-1.5"></div>
+                            <!-- Embedded YouTube Audio/Video Stage -->
+                            <div id="ytPlayerWrapper" class="relative w-full aspect-video rounded-2xl overflow-hidden bg-thermal-900/90 border border-pink-400/30 shadow-inner">
+                                <iframe id="ytMusicIframe"
+                                    class="w-full h-full"
+                                    src="https://www.youtube.com/embed/3n8IMQbicBA?start=24&enablejsapi=1&rel=0&modestbranding=1"
+                                    title="Our Song Player"
+                                    frameborder="0"
+                                    referrerpolicy="strict-origin-when-cross-origin"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen></iframe>
+                            </div>
+
+                            <!-- Custom Local Audio Status (shown only when a local MP3 is loaded) -->
+                            <div id="customAudioBanner" class="hidden px-3.5 py-2.5 rounded-xl bg-pink-500/20 border border-pink-400/40 flex items-center justify-between gap-2 text-xs text-pink-100">
+                                <span id="customAudioLabel" class="truncate">Playing custom audio file</span>
+                                <button type="button" onclick="clearCustomAudioFile()" class="text-pink-300 hover:text-white underline shrink-0">Back to YouTube</button>
+                            </div>
 
                             <!-- Progress / Seek Bar -->
                             <div class="space-y-1.5">
-                                <input type="range" id="musicSeekSlider" min="0" max="100" value="0" step="0.1"
+                                <input type="range" id="musicSeekSlider" min="0" max="126" value="24" step="0.5"
                                     class="w-full accent-pink-500 cursor-pointer h-1.5 rounded-lg bg-pink-950/80" />
                                 <div class="flex justify-between text-[11px] font-mono text-pink-300/80">
-                                    <span id="musicCurrentTime">0:00</span>
-                                    <span id="musicTotalDuration">0:00</span>
+                                    <span id="musicCurrentTime">0:24</span>
+                                    <span id="musicTotalDuration">2:06</span>
                                 </div>
                             </div>
 
-                            <!-- Playback Buttons -->
-                            <div class="flex items-center justify-center gap-3 pt-1">
-                                <button type="button" onclick="prevMusicTrack()" class="w-9 h-9 rounded-full liquid-glass-subtle border border-pink-400/30 hover:border-pink-400 flex items-center justify-center text-pink-200 hover:text-white transition" title="Previous Track">
-                                    <i data-lucide="skip-back" class="w-4 h-4"></i>
-                                </button>
-                                <button type="button" onclick="toggleMusicPlayback()" id="musicPlayPauseBtn" class="w-12 h-12 rounded-full bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-400 hover:to-fuchsia-500 text-white shadow-lg shadow-pink-500/40 flex items-center justify-center transition transform active:scale-95" title="Play / Pause">
-                                    <i data-lucide="play" id="musicPlayIcon" class="w-5 h-5 ml-0.5"></i>
-                                </button>
-                                <button type="button" onclick="nextMusicTrack()" class="w-9 h-9 rounded-full liquid-glass-subtle border border-pink-400/30 hover:border-pink-400 flex items-center justify-center text-pink-200 hover:text-white transition" title="Next Track">
-                                    <i data-lucide="skip-forward" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-
-                            <!-- Volume & Custom Audio Upload -->
-                            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-pink-400/15">
-                                <div class="flex items-center gap-2 flex-1 min-w-[120px]">
-                                    <i data-lucide="volume-2" class="w-3.5 h-3.5 text-pink-300 shrink-0"></i>
-                                    <input type="range" id="musicVolumeSlider" min="0" max="1" step="0.02" value="0.7"
-                                        class="w-full accent-pink-400 cursor-pointer h-1 bg-pink-950/80 rounded-lg" />
-                                </div>
-                                <label class="cursor-pointer text-[11px] px-3 py-1.5 rounded-full bg-pink-500/20 hover:bg-pink-500/35 border border-pink-400/30 text-pink-100 transition flex items-center gap-1.5">
-                                    <i data-lucide="upload" class="w-3 h-3"></i>
-                                    <span>Load MP3/Audio</span>
-                                    <input type="file" id="musicCustomFileInput" accept="audio/*" class="hidden" onchange="handleCustomAudioFile(event)" />
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Pacific Time Auto-Start Scheduler Card -->
-                        <div class="liquid-glass-subtle rounded-2xl p-5 border border-pink-400/25 space-y-3">
-                            <div class="flex items-center justify-between gap-2">
+                            <!-- Playback Buttons + Jump To Start Time -->
+                            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
                                 <div class="flex items-center gap-2">
-                                    <i data-lucide="clock" class="w-4 h-4 text-pink-400"></i>
-                                    <span class="text-xs sm:text-sm font-semibold text-white">Pacific Time Auto-Start</span>
+                                    <button type="button" onclick="prevMusicTrack()" class="w-9 h-9 rounded-full liquid-glass-subtle border border-pink-400/30 hover:border-pink-400 flex items-center justify-center text-pink-200 hover:text-white transition" title="Previous Song">
+                                        <i data-lucide="skip-back" class="w-4 h-4"></i>
+                                    </button>
+                                    <button type="button" onclick="toggleMusicPlayback()" id="musicPlayPauseBtn" class="w-11 h-11 rounded-full bg-gradient-to-r from-pink-500 to-fuchsia-600 hover:from-pink-400 hover:to-fuchsia-500 text-white shadow-lg shadow-pink-500/40 flex items-center justify-center transition transform active:scale-95" title="Play / Pause">
+                                        <i data-lucide="play" id="musicPlayIcon" class="w-5 h-5 ml-0.5"></i>
+                                    </button>
+                                    <button type="button" onclick="nextMusicTrack()" class="w-9 h-9 rounded-full liquid-glass-subtle border border-pink-400/30 hover:border-pink-400 flex items-center justify-center text-pink-200 hover:text-white transition" title="Next Song">
+                                        <i data-lucide="skip-forward" class="w-4 h-4"></i>
+                                    </button>
                                 </div>
-                                <button type="button" onclick="togglePacificAutoStart()" id="pacificAutoToggleBtn"
-                                    class="px-3 py-1 rounded-full text-[11px] font-medium border transition bg-pink-500/30 border-pink-400/60 text-white">
-                                    On
+
+                                <button type="button" onclick="playFromConfiguredStart()" id="playFromStartBtn"
+                                    class="px-4 py-2 rounded-full bg-pink-500/30 hover:bg-pink-500/45 border border-pink-400/60 text-xs font-semibold text-white transition flex items-center gap-1.5">
+                                    <i data-lucide="play-circle" class="w-3.5 h-3.5 text-pink-200"></i>
+                                    <span id="playFromStartLabel">Play From 0:24 ♥</span>
                                 </button>
                             </div>
-                            <p class="text-[11px] text-pink-200/75 leading-relaxed">
-                                Pick the exact Pacific Time (PT) you want the music &amp; lyrics to start automatically:
-                            </p>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <input type="time" id="pacificStartTimeInput" value="21:00"
-                                    class="px-3 py-2 rounded-xl bg-thermal-900/90 border border-pink-400/40 text-white text-xs sm:text-sm font-mono focus:outline-none focus:border-pink-400" />
-                                <span id="pacificCountdownLabel" class="text-[11px] text-pink-300 font-mono flex-1 text-right">
-                                    Calculating PT...
-                                </span>
+
+                            <!-- Specific Start Time Picker + Video Mode + Local Audio Upload -->
+                            <div class="pt-3 border-t border-pink-400/15 flex flex-wrap items-center justify-between gap-2">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-[11px] text-pink-200/80">Start at:</span>
+                                    <input type="text" id="musicStartTimeInput" value="0:24" placeholder="0:24" aria-label="Song start timestamp"
+                                        class="w-16 px-2.5 py-1 rounded-lg bg-thermal-900/90 border border-pink-400/40 text-white text-xs font-mono text-center focus:outline-none focus:border-pink-400" />
+                                    <button type="button" onclick="applyCustomStartTime()" class="px-2.5 py-1 rounded-lg bg-pink-500/20 hover:bg-pink-500/35 border border-pink-400/30 text-[11px] text-pink-100 transition">
+                                        Set
+                                    </button>
+                                </div>
+
+                                <div class="flex items-center gap-1.5">
+                                    <button type="button" onclick="toggleYoutubeSourceVariant()" id="musicVideoVariantBtn"
+                                        class="text-[11px] px-2.5 py-1.5 rounded-full bg-pink-500/15 hover:bg-pink-500/30 border border-pink-400/30 text-pink-100 transition">
+                                        Lyrics Video
+                                    </button>
+                                    <label class="cursor-pointer text-[11px] px-2.5 py-1.5 rounded-full bg-pink-500/20 hover:bg-pink-500/35 border border-pink-400/30 text-pink-100 transition flex items-center gap-1">
+                                        <i data-lucide="upload" class="w-3 h-3"></i>
+                                        <span>MP3</span>
+                                        <input type="file" id="musicCustomFileInput" accept="audio/*" class="hidden" onchange="handleCustomAudioFile(event)" />
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right: Synced Lyrics Stage -->
-                    <div class="lg:col-span-7 liquid-glass-subtle rounded-2xl p-5 border border-pink-400/25 flex flex-col">
-                        <div class="flex items-center justify-between pb-3 mb-3 border-b border-pink-400/15">
+                    <!-- Right: Synced Lyrics Stage (with Optional Custom Lyrics Editor) -->
+                    <div class="lg:col-span-6 liquid-glass-subtle rounded-2xl p-5 border border-pink-400/25 flex flex-col" data-no-slide="true">
+                        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-pink-400/15">
                             <span class="text-xs font-serif italic text-pink-200 flex items-center gap-1.5">
                                 <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-400"></i>
-                                <span>Live Synced Lyrics (Tap any line to jump)</span>
+                                <span>Synced Lyrics &amp; Moments (Tap to jump)</span>
                             </span>
-                            <span id="musicLyricStatusPill" class="text-[11px] px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-200 border border-pink-400/30">
-                                Ready ♥
-                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="toggleLyricsEditor()" id="musicLyricsEditBtn"
+                                    class="text-[11px] px-2.5 py-0.5 rounded-full bg-pink-500/20 hover:bg-pink-500/35 text-pink-100 border border-pink-400/35 transition">
+                                    Edit Lyrics
+                                </button>
+                                <span id="musicLyricStatusPill" class="text-[11px] px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-200 border border-pink-400/30">
+                                    Ready ♥
+                                </span>
+                            </div>
                         </div>
-                        <div id="musicLyricsContainer" class="flex-1 min-h-[260px] max-h-[340px] overflow-y-auto pr-2 space-y-3 py-4 text-center scroll-smooth">
+
+                        <!-- Inline Custom Lyrics Editor (supports [MM:SS] LRC or plain lines) -->
+                        <div id="musicLyricsEditorWrap" class="hidden mb-3 space-y-2">
+                            <textarea id="musicLyricsTextarea" rows="5"
+                                placeholder="Paste lyrics here — optional timestamps like:&#10;[0:24] Favorite line here&#10;[0:32] Next line here"
+                                class="w-full p-3 rounded-xl bg-thermal-900/90 border border-pink-400/40 text-pink-100 text-xs font-mono focus:outline-none focus:border-pink-400 selectable"></textarea>
+                            <div class="flex items-center justify-end gap-2">
+                                <button type="button" onclick="resetTrackLyricsToDefault()" class="px-3 py-1 rounded-full text-[11px] text-pink-300 hover:text-white transition">Reset</button>
+                                <button type="button" onclick="saveCustomTrackLyrics()" class="px-3.5 py-1 rounded-full bg-pink-500 hover:bg-pink-400 text-white text-[11px] font-semibold transition">Save Lyrics ♥</button>
+                            </div>
+                        </div>
+
+                        <div id="musicLyricsContainer" class="flex-1 min-h-[260px] max-h-[340px] overflow-y-auto pr-2 space-y-2.5 py-3 text-center scroll-smooth">
                             <!-- Populated dynamically via JS -->
                         </div>
                     </div>
@@ -1210,57 +1222,41 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 ]
             },
 
-            // Music Player & Pacific Time Auto-Start Configuration
+            // Music Player Configuration (Each song starts at the exact timestamp you choose!)
             MUSIC: {
-                DEFAULT_PACIFIC_START_TIME: '21:00', // 24h HH:MM in America/Los_Angeles (Pacific Time)
                 TRACKS: [
                     {
-                        id: 'midnight-in-your-arms',
-                        title: 'Midnight In Your Arms',
-                        artist: 'Our Song · Dreamy Music Box ♥',
-                        duration: 48,
-                        audioUrl: '', // Optional: paste an MP3 URL or load a local file in the player
-                        chords: [
-                            [261.63, 329.63, 392.00, 493.88], // Cmaj7
-                            [220.00, 261.63, 329.63, 392.00], // Am7
-                            [174.61, 220.00, 261.63, 329.63], // Fmaj7
-                            [196.00, 246.94, 293.66, 392.00]  // G6
-                        ],
-                        melody: [523.25, 659.25, 587.33, 523.25, 493.88, 523.25, 440.00, 392.00],
+                        id: 'mrignaini-karun',
+                        heading: 'A Song That Reminds Me Of You',
+                        title: 'Mrignaini',
+                        artist: 'Karun',
+                        startTime: 24, // 0:24
+                        duration: 126, // 2:06
+                        youtubeIds: ['3n8IMQbicBA', 'DVjQlDlApXQ'], // [0] Official Audio, [1] Lyrics Video
+                        audioUrl: '', // Optional: direct MP3 URL
                         lyrics: [
-                            { time: 0, text: '♪ Softly, the stars begin to glow tonight ♪' },
-                            { time: 5, text: 'Every quiet second feels so right' },
-                            { time: 10, text: 'When your hand is resting here in mine,' },
-                            { time: 15, text: 'Even time slows down and turns divine ♥' },
-                            { time: 21, text: 'You are every wish I ever made,' },
-                            { time: 26, text: 'The warmest light that never fades' },
-                            { time: 32, text: 'No matter how far the miles may be,' },
-                            { time: 37, text: 'My heart is always where you’ll be ✨' },
-                            { time: 43, text: 'Forever yours, under this same sky ♥' }
+                            { time: 0, text: '♪ Intro — Mrignaini (Karun) ♪' },
+                            { time: 24, text: '♥ 0:24 — The exact moment that reminds me of you ♥' },
+                            { time: 45, text: 'Every time this beat drops, all I think about is your eyes ✨' },
+                            { time: 72, text: 'Just pure magic, just like you 💕' },
+                            { time: 100, text: 'Tip: Tap "Lyrics Video" or "Edit Lyrics" to add custom synced lines ♥' }
                         ]
                     },
                     {
-                        id: 'golden-hour-promise',
-                        title: 'Golden Hour Promise',
-                        artist: 'For My Favorite Person ✨',
-                        duration: 44,
-                        audioUrl: '',
-                        chords: [
-                            [293.66, 369.99, 440.00, 523.25], // Dmaj7/9
-                            [246.94, 293.66, 369.99, 440.00], // Bm7
-                            [196.00, 246.94, 293.66, 369.99], // Gmaj7
-                            [220.00, 277.18, 329.63, 440.00]  // A6
-                        ],
-                        melody: [587.33, 659.25, 739.99, 659.25, 587.33, 554.37, 493.88, 440.00],
+                        id: 'maharani-karun',
+                        heading: 'A Song That I Like',
+                        title: 'Maharani',
+                        artist: 'Karun, Lambo Drive, Arpit Bala & ReVo LEKHAK',
+                        startTime: 76, // 1:16
+                        duration: 389, // 6:29
+                        youtubeIds: ['VhRJ-3T4Rcw', 'GIK0r6WWbDQ', 'N1s-GN1SWqY'], // [0] Official Audio, [1] Lyrics Video, [2] Official MV
+                        audioUrl: '', // Optional: direct MP3 URL
                         lyrics: [
-                            { time: 0, text: '♪ Sunlight dancing in your eyes ♪' },
-                            { time: 5, text: 'Painting pink across the evening skies' },
-                            { time: 11, text: 'Every laugh you share becomes my song,' },
-                            { time: 17, text: 'Right beside you is where I belong 💕' },
-                            { time: 23, text: 'Hold me close and never let me go,' },
-                            { time: 29, text: 'You’re my favorite chapter that I know' },
-                            { time: 35, text: 'Today, tomorrow, and all of time,' },
-                            { time: 40, text: 'So grateful that I get to call you mine ♥' }
+                            { time: 0, text: '♪ Intro — Maharani (Karun, Lambo Drive, Arpit Bala & ReVo LEKHAK) ♪' },
+                            { time: 76, text: '♪ 1:16 — My favorite part starts right here ✨' },
+                            { time: 130, text: 'Turn the volume up and vibe with me ♥' },
+                            { time: 210, text: 'One of my all-time favorite tracks to share with you 💕' },
+                            { time: 300, text: 'Tip: Tap "Lyrics Video" or "Edit Lyrics" to add custom synced lines ♪' }
                         ]
                     }
                 ]
@@ -2482,6 +2478,10 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 }
             }
 
+            if (tabName === 'music' && typeof ensureYoutubeApiLoaded === 'function') {
+                ensureYoutubeApiLoaded();
+            }
+
             if (tabName === 'letter') {
                 startTypewriterEffect();
             } else {
@@ -2665,24 +2665,23 @@ No matter where life takes us next, my heart will always choose you—today, tom
         }
 
         /* =====================================================================
-         * 9B. OUR MUSIC PLAYER, SYNCED LYRICS & PACIFIC TIME SCHEDULER
+         * 9B. OUR MUSIC PLAYER (YOUTUBE EMBED, EXACT START TIMES & SYNCED LYRICS)
          * ===================================================================== */
         const musicState = {
             trackIdx: 0,
+            sourceVariantIdx: 0,
             isPlaying: false,
-            currentTime: 0,
-            volume: 0.7,
+            currentTime: 24,
             customAudioUrl: null,
             customTitle: null,
             audioEl: null,
-            synthTimer: null,
-            synthStep: 0,
-            rafId: null,
-            lastTickAt: 0,
+            ytPlayer: null,
+            ytReady: false,
+            ytApiRequested: false,
+            pollTimer: null,
             lastActiveLyricIdx: -1,
-            pacificAutoEnabled: true,
-            pacificTargetTime: '21:00',
-            lastTriggeredPtKey: ''
+            startTimeOverrides: {},
+            customLyricsByTrack: {}
         };
 
         function formatTrackTime(sec) {
@@ -2692,21 +2691,148 @@ No matter where life takes us next, my heart will always choose you—today, tom
             return `${m}:${r}`;
         }
 
+        function parseTimeStringToSeconds(str, fallback = 0) {
+            const cleaned = String(str || '').trim();
+            if (!cleaned) return fallback;
+            if (/^\d+$/.test(cleaned)) return Math.max(0, parseInt(cleaned, 10));
+            const parts = cleaned.split(':').map((p) => parseInt(p, 10));
+            if (parts.some((n) => isNaN(n) || n < 0)) return fallback;
+            if (parts.length === 2) return parts[0] * 60 + parts[1];
+            if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            return fallback;
+        }
+
         function getActiveMusicTrack() {
             const tracks = (CONFIG.MUSIC && CONFIG.MUSIC.TRACKS) ? CONFIG.MUSIC.TRACKS : [];
             return tracks[musicState.trackIdx] || tracks[0];
         }
 
+        function getTrackStartTime(track) {
+            if (!track) return 0;
+            const override = musicState.startTimeOverrides[track.id];
+            return typeof override === 'number' && !isNaN(override) ? override : (track.startTime || 0);
+        }
+
+        function getTrackLyrics(track) {
+            if (!track) return [];
+            const custom = musicState.customLyricsByTrack[track.id];
+            return (Array.isArray(custom) && custom.length > 0) ? custom : (track.lyrics || []);
+        }
+
+        function getActiveYoutubeId(track) {
+            if (!track || !Array.isArray(track.youtubeIds) || track.youtubeIds.length === 0) return '';
+            const safeIdx = musicState.sourceVariantIdx % track.youtubeIds.length;
+            return track.youtubeIds[safeIdx];
+        }
+
+        function buildYoutubeEmbedUrl(videoId, startSec, autoplay) {
+            const params = new URLSearchParams({
+                start: String(Math.max(0, Math.floor(startSec || 0))),
+                enablejsapi: '1',
+                rel: '0',
+                modestbranding: '1'
+            });
+            if (autoplay) params.set('autoplay', '1');
+            if (window.location && /^https?:/.test(window.location.protocol)) {
+                params.set('origin', window.location.origin);
+            }
+            return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+        }
+
+        function ensureYoutubeApiLoaded() {
+            if (musicState.ytApiRequested) return;
+            musicState.ytApiRequested = true;
+
+            const initPlayer = () => {
+                if (musicState.ytPlayer || !window.YT || !window.YT.Player) return;
+                const iframe = document.getElementById('ytMusicIframe');
+                if (!iframe) return;
+                try {
+                    musicState.ytPlayer = new window.YT.Player('ytMusicIframe', {
+                        events: {
+                            onReady: () => {
+                                musicState.ytReady = true;
+                                updateMusicUI();
+                            },
+                            onStateChange: (event) => {
+                                if (!window.YT || !window.YT.PlayerState) return;
+                                const st = event.data;
+                                if (st === window.YT.PlayerState.PLAYING) {
+                                    musicState.isPlaying = true;
+                                    startMusicPollLoop();
+                                    updateMusicUI();
+                                } else if (st === window.YT.PlayerState.PAUSED) {
+                                    musicState.isPlaying = false;
+                                    stopMusicPollLoop();
+                                    updateMusicUI();
+                                } else if (st === window.YT.PlayerState.ENDED) {
+                                    musicState.isPlaying = false;
+                                    stopMusicPollLoop();
+                                    nextMusicTrack(true);
+                                }
+                            },
+                            onError: () => {
+                                // Automatically fall back to next YouTube video ID (e.g., Lyrics Video / Official MV)
+                                const track = getActiveMusicTrack();
+                                if (track && track.youtubeIds && musicState.sourceVariantIdx + 1 < track.youtubeIds.length) {
+                                    musicState.sourceVariantIdx += 1;
+                                    loadActiveTrackInPlayer(getTrackStartTime(track), true);
+                                }
+                            }
+                        }
+                    });
+                } catch (e) {}
+            };
+
+            if (window.YT && window.YT.Player) {
+                initPlayer();
+                return;
+            }
+
+            const prevReady = window.onYouTubeIframeAPIReady;
+            window.onYouTubeIframeAPIReady = () => {
+                if (typeof prevReady === 'function') prevReady();
+                initPlayer();
+            };
+
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            tag.async = true;
+            document.head.appendChild(tag);
+        }
+
         function renderMusicTrackSelector() {
             const container = document.getElementById('musicTrackSelector');
             if (!container || !CONFIG.MUSIC) return;
+
             container.innerHTML = CONFIG.MUSIC.TRACKS.map((tr, idx) => {
                 const active = idx === musicState.trackIdx;
-                return `<button type="button" onclick="selectMusicTrack(${idx})" class="px-3 py-1 rounded-full text-[11px] border transition ${
-                    active
-                        ? 'bg-pink-500/35 border-pink-400 text-white font-semibold'
-                        : 'bg-pink-500/10 border-pink-400/25 text-pink-200/80 hover:text-white hover:border-pink-400/50'
-                }">${escapeHtml(tr.title)}</button>`;
+                const startLabel = formatTrackTime(getTrackStartTime(tr));
+                return `
+                    <button type="button" onclick="selectMusicTrack(${idx}, true)"
+                        class="text-left p-4 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between gap-2 ${
+                            active
+                                ? 'liquid-glass border-pink-400 shadow-lg shadow-pink-500/20'
+                                : 'liquid-glass-subtle border-pink-400/20 hover:border-pink-400/55'
+                        }">
+                        <div class="flex items-center justify-between gap-2 w-full">
+                            <span class="text-[11px] font-semibold uppercase tracking-wider ${active ? 'text-pink-300' : 'text-pink-300/75'}">
+                                ${escapeHtml(tr.heading)}
+                            </span>
+                            <span class="shrink-0 text-[10px] font-mono px-2.5 py-0.5 rounded-full ${
+                                active
+                                    ? 'bg-pink-500/40 text-white border border-pink-300/60'
+                                    : 'bg-pink-500/15 text-pink-200 border border-pink-400/25'
+                            }">
+                                ▶ ${startLabel}
+                            </span>
+                        </div>
+                        <div>
+                            <div class="text-base sm:text-lg font-serif italic font-bold text-white leading-tight">${escapeHtml(tr.title)}</div>
+                            <div class="text-xs text-pink-200/75 truncate mt-0.5">${escapeHtml(tr.artist)}</div>
+                        </div>
+                    </button>
+                `;
             }).join('');
         }
 
@@ -2715,10 +2841,12 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const track = getActiveMusicTrack();
             if (!container || !track) return;
 
-            container.innerHTML = track.lyrics.map((line, idx) => `
-                <button type="button" onclick="seekMusicTo(${line.time})" data-lyric-idx="${idx}"
-                    class="lyric-line block w-full text-center px-3 py-1.5 rounded-xl text-xs sm:text-sm text-pink-200/55 hover:text-pink-100 hover:bg-pink-500/10 cursor-pointer">
-                    ${escapeHtml(line.text)}
+            const lines = getTrackLyrics(track);
+            container.innerHTML = lines.map((line, idx) => `
+                <button type="button" onclick="seekMusicTo(${line.time}, true)" data-lyric-idx="${idx}"
+                    class="lyric-line block w-full text-center px-3 py-2 rounded-xl text-xs sm:text-sm text-pink-200/60 hover:text-pink-100 hover:bg-pink-500/10 cursor-pointer">
+                    <span class="font-mono text-[10px] text-pink-400/75 mr-1.5">${formatTrackTime(line.time)}</span>
+                    <span>${escapeHtml(line.text)}</span>
                 </button>
             `).join('');
             musicState.lastActiveLyricIdx = -1;
@@ -2730,9 +2858,12 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const container = document.getElementById('musicLyricsContainer');
             if (!track || !container) return;
 
+            const lines = getTrackLyrics(track);
+            if (!lines.length) return;
+
             let activeIdx = 0;
-            for (let i = 0; i < track.lyrics.length; i++) {
-                if (timeSec >= track.lyrics[i].time) {
+            for (let i = 0; i < lines.length; i++) {
+                if (timeSec >= lines[i].time) {
                     activeIdx = i;
                 } else {
                     break;
@@ -2745,27 +2876,42 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const nodes = container.querySelectorAll('[data-lyric-idx]');
             nodes.forEach((node, idx) => {
                 if (idx === activeIdx) {
-                    node.classList.add('is-active', 'font-semibold', 'text-base', 'sm:text-lg', 'bg-pink-500/15');
-                    node.classList.remove('text-pink-200/55', 'text-pink-300/35');
+                    node.classList.add('is-active', 'font-semibold', 'text-sm', 'sm:text-base', 'bg-pink-500/15');
+                    node.classList.remove('text-pink-200/60', 'text-pink-300/40');
                     const offsetTop = node.offsetTop - container.offsetTop - (container.clientHeight * 0.36);
                     container.scrollTo({ top: Math.max(0, offsetTop), behavior: 'smooth' });
                 } else if (idx < activeIdx) {
-                    node.classList.remove('is-active', 'font-semibold', 'text-base', 'sm:text-lg', 'bg-pink-500/15', 'text-pink-200/55');
-                    node.classList.add('text-pink-300/35');
+                    node.classList.remove('is-active', 'font-semibold', 'text-sm', 'sm:text-base', 'bg-pink-500/15', 'text-pink-200/60');
+                    node.classList.add('text-pink-300/40');
                 } else {
-                    node.classList.remove('is-active', 'font-semibold', 'text-base', 'sm:text-lg', 'bg-pink-500/15', 'text-pink-300/35');
-                    node.classList.add('text-pink-200/55');
+                    node.classList.remove('is-active', 'font-semibold', 'text-sm', 'sm:text-base', 'bg-pink-500/15', 'text-pink-300/40');
+                    node.classList.add('text-pink-200/60');
                 }
             });
+        }
+
+        function getActiveTrackDuration() {
+            const track = getActiveMusicTrack();
+            if (musicState.audioEl && isFinite(musicState.audioEl.duration) && musicState.audioEl.duration > 0) {
+                return musicState.audioEl.duration;
+            }
+            if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.getDuration === 'function') {
+                const ytDur = musicState.ytPlayer.getDuration();
+                if (isFinite(ytDur) && ytDur > 0) return ytDur;
+            }
+            return track ? (track.duration || 180) : 180;
         }
 
         function updateMusicUI() {
             const track = getActiveMusicTrack();
             if (!track) return;
-            const totalDur = (musicState.audioEl && isFinite(musicState.audioEl.duration) && musicState.audioEl.duration > 0)
-                ? musicState.audioEl.duration
-                : track.duration;
 
+            const startSec = getTrackStartTime(track);
+            const startLabel = formatTrackTime(startSec);
+            const totalDur = getActiveTrackDuration();
+            const videoId = getActiveYoutubeId(track);
+
+            const headingText = document.getElementById('musicHeadingText');
             const badge = document.getElementById('musicTrackBadge');
             const titleEl = document.getElementById('musicTrackTitle');
             const artistEl = document.getElementById('musicTrackArtist');
@@ -2775,10 +2921,15 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const playIcon = document.getElementById('musicPlayIcon');
             const eq = document.getElementById('musicEqualizerBars');
             const statusPill = document.getElementById('musicLyricStatusPill');
+            const startBtnLabel = document.getElementById('playFromStartLabel');
+            const startInput = document.getElementById('musicStartTimeInput');
+            const ytLink = document.getElementById('musicYoutubeOpenLink');
+            const variantBtn = document.getElementById('musicVideoVariantBtn');
 
-            if (badge) badge.textContent = `Track ${musicState.trackIdx + 1} of ${CONFIG.MUSIC.TRACKS.length}`;
+            if (headingText) headingText.textContent = track.heading;
+            if (badge) badge.textContent = track.heading;
             if (titleEl) titleEl.textContent = musicState.customTitle || track.title;
-            if (artistEl) artistEl.textContent = musicState.customTitle ? 'Custom Audio ♥' : track.artist;
+            if (artistEl) artistEl.textContent = musicState.customTitle ? 'Local Audio File ♥' : track.artist;
             if (curEl) curEl.textContent = formatTrackTime(musicState.currentTime);
             if (durEl) durEl.textContent = formatTrackTime(totalDur);
             if (slider) {
@@ -2790,188 +2941,252 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 if (window.lucide) lucide.createIcons();
             }
             if (eq) eq.style.opacity = musicState.isPlaying ? '1' : '0.45';
-            if (statusPill) statusPill.textContent = musicState.isPlaying ? 'Playing ♪' : 'Paused ♥';
-        }
-
-        function playRomanticSynthStep() {
-            if (!musicState.isPlaying || !soundEnabled) return;
-            const track = getActiveMusicTrack();
-            if (!track || musicState.audioEl) return;
-
-            try {
-                const ctx = getAudioContext();
-                if (!ctx) return;
-                if (ctx.state === 'suspended') {
-                    const banner = document.getElementById('musicAutoplayBanner');
-                    if (banner) banner.classList.remove('hidden');
-                    return;
-                }
-                const banner = document.getElementById('musicAutoplayBanner');
-                if (banner) banner.classList.add('hidden');
-
-                const now = ctx.currentTime;
-                const vol = Math.max(0.02, musicState.volume * 0.14);
-                const step = musicState.synthStep++;
-                const chords = track.chords || [[261.63, 329.63, 392.00, 493.88]];
-                const melody = track.melody || [523.25, 659.25, 587.33, 523.25];
-
-                // Play warm pad chord on every 4th beat
-                if (step % 4 === 0) {
-                    const chord = chords[Math.floor(step / 4) % chords.length];
-                    chord.forEach((freq) => {
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
-                        osc.type = 'sine';
-                        osc.frequency.setValueAtTime(freq, now);
-                        gain.gain.setValueAtTime(0.001, now);
-                        gain.gain.linearRampToValueAtTime(vol * 0.42, now + 0.18);
-                        gain.gain.exponentialRampToValueAtTime(0.001, now + 2.3);
-                        osc.connect(gain);
-                        gain.connect(ctx.destination);
-                        osc.start(now);
-                        osc.stop(now + 2.35);
-                    });
-                }
-
-                // Gentle music-box melody note each beat
-                const melFreq = melody[step % melody.length];
-                const mOsc = ctx.createOscillator();
-                const mGain = ctx.createGain();
-                mOsc.type = 'triangle';
-                mOsc.frequency.setValueAtTime(melFreq, now);
-                mGain.gain.setValueAtTime(0.001, now);
-                mGain.gain.linearRampToValueAtTime(vol * 0.65, now + 0.03);
-                mGain.gain.exponentialRampToValueAtTime(0.001, now + 0.72);
-                mOsc.connect(mGain);
-                mGain.connect(ctx.destination);
-                mOsc.start(now);
-                mOsc.stop(now + 0.75);
-
-                // Animate equalizer bars
-                const eqBars = document.querySelectorAll('#musicEqualizerBars span');
-                eqBars.forEach((b) => {
-                    b.style.height = `${6 + Math.floor(Math.random() * 18)}px`;
-                });
-            } catch (e) {}
-        }
-
-        function stopMusicEngineTimers() {
-            if (musicState.synthTimer) {
-                clearInterval(musicState.synthTimer);
-                musicState.synthTimer = null;
+            if (statusPill) statusPill.textContent = musicState.isPlaying ? 'Playing ♪' : `Starts at ${startLabel} ♥`;
+            if (startBtnLabel) startBtnLabel.textContent = `Play From ${startLabel} ♥`;
+            if (startInput && document.activeElement !== startInput) startInput.value = startLabel;
+            if (ytLink && videoId) {
+                ytLink.href = `https://www.youtube.com/watch?v=${videoId}&t=${Math.floor(startSec)}s`;
             }
-            if (musicState.rafId) {
-                cancelAnimationFrame(musicState.rafId);
-                musicState.rafId = null;
+            if (variantBtn) {
+                variantBtn.textContent = musicState.sourceVariantIdx === 0 ? 'Lyrics Video' : 'Official Audio';
             }
         }
 
-        function startMusicPlayback() {
-            const track = getActiveMusicTrack();
-            if (!track) return;
-            stopMusicEngineTimers();
-            musicState.isPlaying = true;
-            musicState.lastTickAt = performance.now();
-
-            const sourceUrl = musicState.customAudioUrl || track.audioUrl;
-            if (sourceUrl) {
-                if (!musicState.audioEl || musicState.audioEl.dataset.src !== sourceUrl) {
-                    if (musicState.audioEl) musicState.audioEl.pause();
-                    musicState.audioEl = new Audio(sourceUrl);
-                    musicState.audioEl.dataset.src = sourceUrl;
-                }
-                musicState.audioEl.volume = musicState.volume;
-                musicState.audioEl.currentTime = musicState.currentTime;
-                musicState.audioEl.play().catch(() => {
-                    const banner = document.getElementById('musicAutoplayBanner');
-                    if (banner) banner.classList.remove('hidden');
-                });
-            } else {
-                if (musicState.audioEl) {
-                    musicState.audioEl.pause();
-                    musicState.audioEl = null;
-                }
-                playRomanticSynthStep();
-                musicState.synthTimer = setInterval(playRomanticSynthStep, 600);
+        function stopMusicPollLoop() {
+            if (musicState.pollTimer) {
+                clearInterval(musicState.pollTimer);
+                musicState.pollTimer = null;
             }
+        }
 
-            function tickMusic(now) {
+        function startMusicPollLoop() {
+            stopMusicPollLoop();
+            musicState.pollTimer = setInterval(() => {
                 if (!musicState.isPlaying) return;
-                const dt = (now - musicState.lastTickAt) / 1000;
-                musicState.lastTickAt = now;
 
                 if (musicState.audioEl) {
-                    musicState.currentTime = musicState.audioEl.currentTime;
+                    musicState.currentTime = musicState.audioEl.currentTime || 0;
                     if (musicState.audioEl.ended) {
                         nextMusicTrack(true);
                         return;
                     }
-                } else {
-                    musicState.currentTime += dt;
-                    if (musicState.currentTime >= track.duration) {
-                        nextMusicTrack(true);
-                        return;
-                    }
+                } else if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.getCurrentTime === 'function') {
+                    const t = musicState.ytPlayer.getCurrentTime();
+                    if (isFinite(t)) musicState.currentTime = t;
                 }
 
                 updateMusicLyricsHighlight(musicState.currentTime);
                 const curEl = document.getElementById('musicCurrentTime');
                 const slider = document.getElementById('musicSeekSlider');
                 if (curEl) curEl.textContent = formatTrackTime(musicState.currentTime);
-                if (slider) slider.value = String(musicState.currentTime);
+                if (slider) {
+                    slider.max = String(getActiveTrackDuration());
+                    slider.value = String(musicState.currentTime);
+                }
 
-                musicState.rafId = requestAnimationFrame(tickMusic);
+                const eqBars = document.querySelectorAll('#musicEqualizerBars span');
+                eqBars.forEach((b) => {
+                    b.style.height = `${6 + Math.floor(Math.random() * 18)}px`;
+                });
+            }, 280);
+        }
+
+        function loadActiveTrackInPlayer(startSec, autoPlay) {
+            const track = getActiveMusicTrack();
+            if (!track) return;
+            const targetSec = Math.max(0, Number(startSec) || 0);
+            musicState.currentTime = targetSec;
+
+            // Custom local audio mode
+            const sourceUrl = musicState.customAudioUrl || track.audioUrl;
+            const ytWrap = document.getElementById('ytPlayerWrapper');
+            const customBanner = document.getElementById('customAudioBanner');
+            if (sourceUrl) {
+                if (ytWrap) ytWrap.classList.add('hidden');
+                if (customBanner) customBanner.classList.remove('hidden');
+                if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.pauseVideo === 'function') {
+                    musicState.ytPlayer.pauseVideo();
+                }
+                if (!musicState.audioEl || musicState.audioEl.dataset.src !== sourceUrl) {
+                    if (musicState.audioEl) musicState.audioEl.pause();
+                    musicState.audioEl = new Audio(sourceUrl);
+                    musicState.audioEl.dataset.src = sourceUrl;
+                }
+                const applySeekAndPlay = () => {
+                    try { musicState.audioEl.currentTime = targetSec; } catch (e) {}
+                    if (autoPlay) {
+                        musicState.audioEl.play().then(() => {
+                            musicState.isPlaying = true;
+                            startMusicPollLoop();
+                            updateMusicUI();
+                        }).catch(() => {});
+                    }
+                };
+                if (musicState.audioEl.readyState >= 1) {
+                    applySeekAndPlay();
+                } else {
+                    musicState.audioEl.addEventListener('loadedmetadata', applySeekAndPlay, { once: true });
+                }
+                updateMusicLyricsHighlight(targetSec);
+                updateMusicUI();
+                return;
             }
-            musicState.rafId = requestAnimationFrame(tickMusic);
+
+            // YouTube embedded mode
+            if (musicState.audioEl) {
+                musicState.audioEl.pause();
+                musicState.audioEl = null;
+            }
+            if (ytWrap) ytWrap.classList.remove('hidden');
+            if (customBanner) customBanner.classList.add('hidden');
+
+            const videoId = getActiveYoutubeId(track);
+            if (!videoId) return;
+
+            if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.loadVideoById === 'function') {
+                if (autoPlay) {
+                    musicState.ytPlayer.loadVideoById({ videoId, startSeconds: targetSec });
+                    musicState.isPlaying = true;
+                    startMusicPollLoop();
+                } else {
+                    musicState.ytPlayer.cueVideoById({ videoId, startSeconds: targetSec });
+                    musicState.isPlaying = false;
+                    stopMusicPollLoop();
+                }
+            } else {
+                const iframe = document.getElementById('ytMusicIframe');
+                if (iframe) {
+                    iframe.src = buildYoutubeEmbedUrl(videoId, targetSec, autoPlay);
+                }
+                musicState.isPlaying = Boolean(autoPlay);
+                if (autoPlay) startMusicPollLoop();
+                else stopMusicPollLoop();
+            }
+
+            updateMusicLyricsHighlight(targetSec);
             updateMusicUI();
         }
 
-        function pauseMusicPlayback() {
-            musicState.isPlaying = false;
-            stopMusicEngineTimers();
-            if (musicState.audioEl) musicState.audioEl.pause();
-            updateMusicUI();
+        function playFromConfiguredStart() {
+            const track = getActiveMusicTrack();
+            if (!track) return;
+            loadActiveTrackInPlayer(getTrackStartTime(track), true);
         }
 
         function toggleMusicPlayback() {
-            if (musicState.isPlaying) {
-                pauseMusicPlayback();
+            const track = getActiveMusicTrack();
+            if (!track) return;
+
+            if (musicState.audioEl) {
+                if (musicState.isPlaying) {
+                    musicState.audioEl.pause();
+                    musicState.isPlaying = false;
+                    stopMusicPollLoop();
+                } else {
+                    musicState.audioEl.play().catch(() => {});
+                    musicState.isPlaying = true;
+                    startMusicPollLoop();
+                }
+                updateMusicUI();
+                return;
+            }
+
+            if (musicState.ytReady && musicState.ytPlayer) {
+                if (musicState.isPlaying && typeof musicState.ytPlayer.pauseVideo === 'function') {
+                    musicState.ytPlayer.pauseVideo();
+                    musicState.isPlaying = false;
+                    stopMusicPollLoop();
+                } else if (typeof musicState.ytPlayer.playVideo === 'function') {
+                    const cur = typeof musicState.ytPlayer.getCurrentTime === 'function' ? musicState.ytPlayer.getCurrentTime() : 0;
+                    if (!cur || cur < 1) {
+                        loadActiveTrackInPlayer(getTrackStartTime(track), true);
+                        return;
+                    }
+                    musicState.ytPlayer.playVideo();
+                    musicState.isPlaying = true;
+                    startMusicPollLoop();
+                }
+                updateMusicUI();
             } else {
-                startMusicPlayback();
+                loadActiveTrackInPlayer(musicState.currentTime || getTrackStartTime(track), !musicState.isPlaying);
             }
         }
 
-        function seekMusicTo(timeSec) {
-            const track = getActiveMusicTrack();
-            const maxDur = (musicState.audioEl && isFinite(musicState.audioEl.duration)) ? musicState.audioEl.duration : (track ? track.duration : 45);
-            musicState.currentTime = Math.max(0, Math.min(maxDur, Number(timeSec) || 0));
-            if (musicState.audioEl) musicState.audioEl.currentTime = musicState.currentTime;
-            updateMusicLyricsHighlight(musicState.currentTime);
+        function seekMusicTo(timeSec, autoPlay = false) {
+            const target = Math.max(0, Math.min(getActiveTrackDuration(), Number(timeSec) || 0));
+            musicState.currentTime = target;
+
+            if (musicState.audioEl) {
+                musicState.audioEl.currentTime = target;
+                if (autoPlay) {
+                    musicState.audioEl.play().catch(() => {});
+                    musicState.isPlaying = true;
+                    startMusicPollLoop();
+                }
+            } else if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.seekTo === 'function') {
+                musicState.ytPlayer.seekTo(target, true);
+                if (autoPlay && typeof musicState.ytPlayer.playVideo === 'function') {
+                    musicState.ytPlayer.playVideo();
+                    musicState.isPlaying = true;
+                    startMusicPollLoop();
+                }
+            } else {
+                loadActiveTrackInPlayer(target, autoPlay || musicState.isPlaying);
+                return;
+            }
+
+            updateMusicLyricsHighlight(target);
             updateMusicUI();
         }
 
-        function selectMusicTrack(idx, autoPlay = false) {
-            const wasPlaying = musicState.isPlaying || autoPlay;
-            pauseMusicPlayback();
-            musicState.trackIdx = idx;
-            musicState.currentTime = 0;
+        function selectMusicTrack(idx, autoPlay = true) {
+            const tracks = (CONFIG.MUSIC && CONFIG.MUSIC.TRACKS) ? CONFIG.MUSIC.TRACKS : [];
+            if (!tracks.length) return;
+            musicState.trackIdx = ((idx % tracks.length) + tracks.length) % tracks.length;
+            musicState.sourceVariantIdx = 0;
             musicState.customAudioUrl = null;
             musicState.customTitle = null;
-            musicState.synthStep = 0;
+
+            const track = getActiveMusicTrack();
+            const startSec = getTrackStartTime(track);
+            musicState.currentTime = startSec;
+
+            const editorWrap = document.getElementById('musicLyricsEditorWrap');
+            if (editorWrap) editorWrap.classList.add('hidden');
+
             renderMusicTrackSelector();
             renderMusicLyrics();
-            updateMusicUI();
-            if (wasPlaying) startMusicPlayback();
+            loadActiveTrackInPlayer(startSec, autoPlay);
         }
 
-        function prevMusicTrack() {
-            const total = CONFIG.MUSIC.TRACKS.length;
-            selectMusicTrack((musicState.trackIdx - 1 + total) % total, musicState.isPlaying);
+        function prevMusicTrack(autoPlay = true) {
+            selectMusicTrack(musicState.trackIdx - 1, autoPlay);
         }
 
-        function nextMusicTrack(autoPlay = false) {
-            const total = CONFIG.MUSIC.TRACKS.length;
-            selectMusicTrack((musicState.trackIdx + 1) % total, autoPlay || musicState.isPlaying);
+        function nextMusicTrack(autoPlay = true) {
+            selectMusicTrack(musicState.trackIdx + 1, autoPlay);
+        }
+
+        function applyCustomStartTime() {
+            const track = getActiveMusicTrack();
+            const input = document.getElementById('musicStartTimeInput');
+            if (!track || !input) return;
+            const parsed = parseTimeStringToSeconds(input.value, getTrackStartTime(track));
+            musicState.startTimeOverrides[track.id] = parsed;
+            try {
+                localStorage.setItem('forMyLove_musicStartTimes', JSON.stringify(musicState.startTimeOverrides));
+            } catch (e) {}
+            input.value = formatTrackTime(parsed);
+            renderMusicTrackSelector();
+            loadActiveTrackInPlayer(parsed, true);
+        }
+
+        function toggleYoutubeSourceVariant() {
+            const track = getActiveMusicTrack();
+            if (!track || !Array.isArray(track.youtubeIds) || track.youtubeIds.length < 2) return;
+            musicState.sourceVariantIdx = musicState.sourceVariantIdx === 0 ? 1 : 0;
+            const resumeAt = musicState.isPlaying ? musicState.currentTime : getTrackStartTime(track);
+            loadActiveTrackInPlayer(resumeAt, true);
         }
 
         function handleCustomAudioFile(event) {
@@ -2980,165 +3195,112 @@ No matter where life takes us next, my heart will always choose you—today, tom
             if (musicState.customAudioUrl) URL.revokeObjectURL(musicState.customAudioUrl);
             musicState.customAudioUrl = URL.createObjectURL(file);
             musicState.customTitle = file.name.replace(/\.[^.]+$/, '');
-            musicState.currentTime = 0;
-            startMusicPlayback();
+            const label = document.getElementById('customAudioLabel');
+            if (label) label.textContent = `Playing: ${musicState.customTitle}`;
+            const track = getActiveMusicTrack();
+            loadActiveTrackInPlayer(getTrackStartTime(track), true);
         }
 
-        function resumeMusicAfterAutoplayBlock() {
-            const ctx = getAudioContext();
-            if (ctx && ctx.state === 'suspended') ctx.resume();
-            if (musicState.audioEl && musicState.isPlaying) {
-                musicState.audioEl.play().catch(() => {});
-            }
-            const banner = document.getElementById('musicAutoplayBanner');
-            if (banner) banner.classList.add('hidden');
+        function clearCustomAudioFile() {
+            if (musicState.customAudioUrl) URL.revokeObjectURL(musicState.customAudioUrl);
+            musicState.customAudioUrl = null;
+            musicState.customTitle = null;
+            const fileInput = document.getElementById('musicCustomFileInput');
+            if (fileInput) fileInput.value = '';
+            const track = getActiveMusicTrack();
+            loadActiveTrackInPlayer(getTrackStartTime(track), false);
         }
 
-        function getPacificTimeParts(date = new Date()) {
-            const parts = new Intl.DateTimeFormat('en-US', {
-                timeZone: 'America/Los_Angeles',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            }).formatToParts(date);
-            const map = {};
-            parts.forEach((p) => { map[p.type] = p.value; });
-            const h24 = parseInt(map.hour, 10) % 24;
-            const min = parseInt(map.minute, 10);
-            const sec = parseInt(map.second, 10);
-            const display = new Intl.DateTimeFormat('en-US', {
-                timeZone: 'America/Los_Angeles',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-            }).format(date);
+        function toggleLyricsEditor() {
+            const wrap = document.getElementById('musicLyricsEditorWrap');
+            const textarea = document.getElementById('musicLyricsTextarea');
+            const track = getActiveMusicTrack();
+            if (!wrap || !textarea || !track) return;
 
-            return {
-                dateKey: `${map.year}-${map.month}-${map.day}`,
-                hour24: h24,
-                minute: min,
-                second: sec,
-                hhmm: `${String(h24).padStart(2, '0')}:${String(min).padStart(2, '0')}`,
-                display: `${display} PT`
-            };
+            const willShow = wrap.classList.contains('hidden');
+            wrap.classList.toggle('hidden');
+            if (willShow) {
+                const lines = getTrackLyrics(track);
+                textarea.value = lines.map((l) => `[${formatTrackTime(l.time)}] ${l.text}`).join('\n');
+                textarea.focus();
+            }
         }
 
-        function togglePacificAutoStart() {
-            musicState.pacificAutoEnabled = !musicState.pacificAutoEnabled;
-            try { localStorage.setItem('forMyLove_ptAutoEnabled', String(musicState.pacificAutoEnabled)); } catch (e) {}
-            const btn = document.getElementById('pacificAutoToggleBtn');
-            if (btn) {
-                btn.textContent = musicState.pacificAutoEnabled ? 'On' : 'Off';
-                btn.className = musicState.pacificAutoEnabled
-                    ? 'px-3 py-1 rounded-full text-[11px] font-medium border transition bg-pink-500/30 border-pink-400/60 text-white'
-                    : 'px-3 py-1 rounded-full text-[11px] font-medium border transition bg-pink-950/50 border-pink-400/25 text-pink-300/70';
-            }
-            updatePacificClockAndScheduler();
-        }
+        function saveCustomTrackLyrics() {
+            const track = getActiveMusicTrack();
+            const textarea = document.getElementById('musicLyricsTextarea');
+            const wrap = document.getElementById('musicLyricsEditorWrap');
+            if (!track || !textarea) return;
 
-        function updatePacificClockAndScheduler() {
-            const pt = getPacificTimeParts(new Date());
-            const clockEl = document.getElementById('pacificClockDisplay');
-            if (clockEl) clockEl.textContent = pt.display;
+            const rawLines = textarea.value.split('\n').map((s) => s.trim()).filter(Boolean);
+            if (!rawLines.length) return;
 
-            const countdownEl = document.getElementById('pacificCountdownLabel');
-            if (!musicState.pacificAutoEnabled) {
-                if (countdownEl) countdownEl.textContent = 'Auto-start paused';
-                return;
-            }
-
-            const [targetH, targetM] = (musicState.pacificTargetTime || '21:00').split(':').map((n) => parseInt(n, 10));
-            if (isNaN(targetH) || isNaN(targetM)) return;
-
-            const nowSec = pt.hour24 * 3600 + pt.minute * 60 + pt.second;
-            const targetSec = targetH * 3600 + targetM * 60;
-            let diffSec = targetSec - nowSec;
-            if (diffSec < 0) diffSec += 86400;
-
-            if (countdownEl) {
-                const ch = Math.floor(diffSec / 3600);
-                const cm = Math.floor((diffSec % 3600) / 60);
-                const cs = diffSec % 60;
-                countdownEl.textContent = diffSec === 0
-                    ? 'Starting now! ♥'
-                    : `Starts in ${ch}h ${String(cm).padStart(2, '0')}m ${String(cs).padStart(2, '0')}s`;
-            }
-
-            // Trigger automatically when Pacific Time reaches the user's chosen HH:MM
-            const triggerKey = `${pt.dateKey} ${pt.hhmm}`;
-            if (pt.hour24 === targetH && pt.minute === targetM && musicState.lastTriggeredPtKey !== triggerKey) {
-                musicState.lastTriggeredPtKey = triggerKey;
-                musicState.currentTime = 0;
-
-                const dashboard = document.getElementById('dashboardContainer');
-                if (dashboard && !dashboard.classList.contains('hidden')) {
-                    switchTab('music', { silent: true });
+            const baseStart = getTrackStartTime(track);
+            const parsed = rawLines.map((raw, i) => {
+                const match = raw.match(/^\[(\d{1,2}:\d{2}(?:\.\d+)?)\]\s*(.*)$/);
+                if (match) {
+                    return { time: parseTimeStringToSeconds(match[1], baseStart), text: match[2] || '♪' };
                 }
-                startMusicPlayback();
-                if (typeof triggerHeartShower === 'function') {
-                    triggerHeartShower(window.innerWidth / 2, window.innerHeight / 2);
-                }
-                const toast = document.getElementById('pacificTriggerToast');
-                const toastText = document.getElementById('pacificTriggerToastText');
-                if (toastText) toastText.textContent = `✨ It's ${pt.display} — Playing our song ♥`;
-                if (toast) toast.classList.remove('hidden');
-            }
-        }
+                return { time: baseStart + i * 5, text: raw };
+            }).sort((a, b) => a.time - b.time);
 
-        function initMusicPlayerAndScheduler() {
+            musicState.customLyricsByTrack[track.id] = parsed;
             try {
-                const savedTime = localStorage.getItem('forMyLove_ptStartTime');
-                const savedEnabled = localStorage.getItem('forMyLove_ptAutoEnabled');
-                if (savedTime) musicState.pacificTargetTime = savedTime;
-                else if (CONFIG.MUSIC && CONFIG.MUSIC.DEFAULT_PACIFIC_START_TIME) {
-                    musicState.pacificTargetTime = CONFIG.MUSIC.DEFAULT_PACIFIC_START_TIME;
-                }
-                if (savedEnabled !== null) musicState.pacificAutoEnabled = savedEnabled === 'true';
+                localStorage.setItem('forMyLove_customLyrics', JSON.stringify(musicState.customLyricsByTrack));
+            } catch (e) {}
+            if (wrap) wrap.classList.add('hidden');
+            renderMusicLyrics();
+        }
+
+        function resetTrackLyricsToDefault() {
+            const track = getActiveMusicTrack();
+            const wrap = document.getElementById('musicLyricsEditorWrap');
+            if (!track) return;
+            delete musicState.customLyricsByTrack[track.id];
+            try {
+                localStorage.setItem('forMyLove_customLyrics', JSON.stringify(musicState.customLyricsByTrack));
+            } catch (e) {}
+            if (wrap) wrap.classList.add('hidden');
+            renderMusicLyrics();
+        }
+
+        function initMusicPlayer() {
+            try {
+                const savedStarts = JSON.parse(localStorage.getItem('forMyLove_musicStartTimes') || '{}');
+                if (savedStarts && typeof savedStarts === 'object') musicState.startTimeOverrides = savedStarts;
+                const savedLyrics = JSON.parse(localStorage.getItem('forMyLove_customLyrics') || '{}');
+                if (savedLyrics && typeof savedLyrics === 'object') musicState.customLyricsByTrack = savedLyrics;
             } catch (e) {}
 
-            const timeInput = document.getElementById('pacificStartTimeInput');
-            if (timeInput) {
-                timeInput.value = musicState.pacificTargetTime;
-                timeInput.addEventListener('change', (e) => {
-                    if (e.target.value) {
-                        musicState.pacificTargetTime = e.target.value;
-                        musicState.lastTriggeredPtKey = '';
-                        try { localStorage.setItem('forMyLove_ptStartTime', musicState.pacificTargetTime); } catch (err) {}
-                        updatePacificClockAndScheduler();
-                    }
-                });
-            }
-
-            const autoBtn = document.getElementById('pacificAutoToggleBtn');
-            if (autoBtn) {
-                autoBtn.textContent = musicState.pacificAutoEnabled ? 'On' : 'Off';
-                autoBtn.className = musicState.pacificAutoEnabled
-                    ? 'px-3 py-1 rounded-full text-[11px] font-medium border transition bg-pink-500/30 border-pink-400/60 text-white'
-                    : 'px-3 py-1 rounded-full text-[11px] font-medium border transition bg-pink-950/50 border-pink-400/25 text-pink-300/70';
+            const track = getActiveMusicTrack();
+            if (track) {
+                musicState.currentTime = getTrackStartTime(track);
+                const iframe = document.getElementById('ytMusicIframe');
+                const videoId = getActiveYoutubeId(track);
+                if (iframe && videoId) {
+                    iframe.src = buildYoutubeEmbedUrl(videoId, musicState.currentTime, false);
+                }
             }
 
             const seekSlider = document.getElementById('musicSeekSlider');
             if (seekSlider) {
-                seekSlider.addEventListener('input', (e) => seekMusicTo(e.target.value));
+                seekSlider.addEventListener('change', (e) => seekMusicTo(e.target.value, musicState.isPlaying));
+                seekSlider.addEventListener('input', (e) => {
+                    const curEl = document.getElementById('musicCurrentTime');
+                    if (curEl) curEl.textContent = formatTrackTime(e.target.value);
+                });
             }
-            const volSlider = document.getElementById('musicVolumeSlider');
-            if (volSlider) {
-                volSlider.addEventListener('input', (e) => {
-                    musicState.volume = parseFloat(e.target.value);
-                    if (musicState.audioEl) musicState.audioEl.volume = musicState.volume;
+
+            const startInput = document.getElementById('musicStartTimeInput');
+            if (startInput) {
+                startInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') applyCustomStartTime();
                 });
             }
 
             renderMusicTrackSelector();
             renderMusicLyrics();
             updateMusicUI();
-            updatePacificClockAndScheduler();
-            setInterval(updatePacificClockAndScheduler, 1000);
         }
 
         const lastUptimeVals = { d: '', h: '', m: '', s: '' };
@@ -4074,7 +4236,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
             initLoveQuestionInteractions();
             initScrollTopBlur();
             initTabSlideInteractions();
-            initMusicPlayerAndScheduler();
+            initMusicPlayer();
             updateUptimeCounter();
             setInterval(updateUptimeCounter, 1000);
 
