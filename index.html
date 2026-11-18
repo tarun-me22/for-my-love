@@ -777,22 +777,17 @@
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                    <!-- Left: MP3 Vinyl Player (Primary) / YouTube Fallback + Controls -->
+                    <!-- Left: MP3 Vinyl Player + Clean Controls -->
                     <div class="lg:col-span-6 space-y-4">
                         <div class="liquid-glass-subtle rounded-2xl p-4 sm:p-5 border border-pink-400/25 space-y-4">
                             <!-- Current Song Heading & Title -->
-                            <div class="flex items-start justify-between gap-3">
-                                <div class="min-w-0">
-                                    <div id="musicTrackBadge" class="text-[11px] font-semibold uppercase tracking-wider text-pink-300 mb-0.5">A Song That Reminds Me Of You</div>
-                                    <h4 id="musicTrackTitle" class="text-lg sm:text-xl font-serif italic font-bold text-white truncate">Mrignaini</h4>
-                                    <p id="musicTrackArtist" class="text-xs text-pink-200/75 truncate">Karun</p>
-                                </div>
-                                <span id="musicSourceBadge" class="shrink-0 text-[10px] font-mono px-2.5 py-1 rounded-full bg-pink-500/20 border border-pink-400/35 text-pink-100">
-                                    MP3 Ready
-                                </span>
+                            <div class="min-w-0">
+                                <div id="musicTrackBadge" class="text-[11px] font-semibold uppercase tracking-wider text-pink-300 mb-0.5">A Song That Reminds Me Of You</div>
+                                <h4 id="musicTrackTitle" class="text-lg sm:text-xl font-serif italic font-bold text-white truncate">Mrignaini</h4>
+                                <p id="musicTrackArtist" class="text-xs text-pink-200/75 truncate">Karun (feat. Nanku)</p>
                             </div>
 
-                            <!-- Sleek MP3 Vinyl Album Visualizer (shown when MP3 is loaded from music/ or local file) -->
+                            <!-- Sleek MP3 Vinyl Album Visualizer -->
                             <div id="mp3VisualPlayer" class="relative w-full py-6 px-4 rounded-2xl bg-gradient-to-br from-thermal-900/95 via-pink-950/60 to-fuchsia-950/70 border border-pink-400/30 flex flex-col sm:flex-row items-center justify-center gap-5 overflow-hidden">
                                 <div id="musicVinylDisc" class="vinyl-disc relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-thermal-900 via-pink-900/80 to-fuchsia-900/70 border-2 border-pink-400/50 shadow-xl shadow-pink-500/25 flex items-center justify-center shrink-0">
                                     <div class="w-20 h-20 rounded-full border border-pink-300/20 flex items-center justify-center">
@@ -804,11 +799,11 @@
                                 <div class="text-center sm:text-left space-y-1.5 min-w-0">
                                     <div id="mp3VisualHeading" class="text-[11px] uppercase tracking-widest text-pink-300">A Song That Reminds Me Of You</div>
                                     <div id="mp3VisualTitle" class="text-lg sm:text-xl font-serif italic font-bold text-white truncate">Mrignaini</div>
-                                    <div id="mp3VisualFileLabel" class="text-[11px] font-mono text-pink-200/75 truncate">music/mrignaini.mp3</div>
+                                    <div id="mp3VisualArtist" class="text-xs text-pink-200/80 truncate">Karun (feat. Nanku)</div>
                                 </div>
                             </div>
 
-                            <!-- Embedded YouTube Audio/Video Fallback (shown automatically only if MP3 fails to load) -->
+                            <!-- Silent YouTube Fallback (only shown automatically if MP3 ever fails to load) -->
                             <div id="ytPlayerWrapper" class="hidden relative w-full aspect-video rounded-2xl overflow-hidden bg-thermal-900/90 border border-pink-400/30 shadow-inner">
                                 <iframe id="ytMusicIframe"
                                     class="w-full h-full"
@@ -818,12 +813,6 @@
                                     referrerpolicy="strict-origin-when-cross-origin"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowfullscreen></iframe>
-                            </div>
-
-                            <!-- Helpful MP3 Hint (only visible when falling back to YouTube before user uploads MP3s) -->
-                            <div id="mp3UploadHintBar" class="hidden px-3 py-2 rounded-xl bg-pink-500/12 border border-pink-400/25 text-[11px] text-pink-200/85 flex flex-wrap items-center justify-between gap-2">
-                                <span id="mp3UploadHintText">Upload <code class="text-pink-100">music/mrignaini.mp3</code> to GitHub or pick a local file:</span>
-                                <a id="musicYoutubeOpenLink" href="https://www.youtube.com/watch?v=3n8IMQbicBA&t=24s" target="_blank" rel="noopener noreferrer" class="text-pink-300 hover:text-white underline shrink-0">Open YouTube ↗</a>
                             </div>
 
                             <!-- Progress / Seek Bar -->
@@ -836,9 +825,9 @@
                                 </div>
                             </div>
 
-                            <!-- Playback Buttons + Jump To Start Time -->
-                            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
-                                <div class="flex items-center gap-2">
+                            <!-- Clean Playback Controls + Volume -->
+                            <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+                                <div class="flex items-center gap-2.5">
                                     <button type="button" onclick="prevMusicTrack()" class="w-9 h-9 rounded-full liquid-glass-subtle border border-pink-400/30 hover:border-pink-400 flex items-center justify-center text-pink-200 hover:text-white transition" title="Previous Song">
                                         <i data-lucide="skip-back" class="w-4 h-4"></i>
                                     </button>
@@ -850,39 +839,10 @@
                                     </button>
                                 </div>
 
-                                <button type="button" onclick="playFromConfiguredStart()" id="playFromStartBtn"
-                                    class="px-4 py-2 rounded-full bg-pink-500/30 hover:bg-pink-500/45 border border-pink-400/60 text-xs font-semibold text-white transition flex items-center gap-1.5">
-                                    <i data-lucide="play-circle" class="w-3.5 h-3.5 text-pink-200"></i>
-                                    <span id="playFromStartLabel">Play From 0:24 ♥</span>
-                                </button>
-                            </div>
-
-                            <!-- Volume + Specific Start Time Picker + Load MP3 -->
-                            <div class="pt-3 border-t border-pink-400/15 flex flex-wrap items-center justify-between gap-2">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="text-[11px] text-pink-200/80">Start at:</span>
-                                    <input type="text" id="musicStartTimeInput" value="0:24" placeholder="0:24" aria-label="Song start timestamp"
-                                        class="w-16 px-2.5 py-1 rounded-lg bg-thermal-900/90 border border-pink-400/40 text-white text-xs font-mono text-center focus:outline-none focus:border-pink-400" />
-                                    <button type="button" onclick="applyCustomStartTime()" class="px-2.5 py-1 rounded-lg bg-pink-500/20 hover:bg-pink-500/35 border border-pink-400/30 text-[11px] text-pink-100 transition">
-                                        Set
-                                    </button>
-                                </div>
-
-                                <div class="flex items-center gap-2">
-                                    <div class="flex items-center gap-1.5 w-20 sm:w-24">
-                                        <i data-lucide="volume-2" class="w-3.5 h-3.5 text-pink-300 shrink-0"></i>
-                                        <input type="range" id="musicVolumeSlider" min="0" max="1" step="0.02" value="0.85" aria-label="Volume"
-                                            class="w-full accent-pink-400 cursor-pointer h-1 bg-pink-950/80 rounded-lg" />
-                                    </div>
-                                    <button type="button" onclick="toggleYoutubeSourceVariant()" id="musicVideoVariantBtn"
-                                        class="hidden text-[11px] px-2.5 py-1.5 rounded-full bg-pink-500/15 hover:bg-pink-500/30 border border-pink-400/30 text-pink-100 transition">
-                                        Lyrics Video
-                                    </button>
-                                    <label class="cursor-pointer text-[11px] px-2.5 py-1.5 rounded-full bg-pink-500/25 hover:bg-pink-500/40 border border-pink-400/40 text-white transition flex items-center gap-1">
-                                        <i data-lucide="upload" class="w-3 h-3"></i>
-                                        <span>Load MP3</span>
-                                        <input type="file" id="musicCustomFileInput" accept="audio/*" class="hidden" onchange="handleCustomAudioFile(event)" />
-                                    </label>
+                                <div class="flex items-center gap-2 w-28 sm:w-32">
+                                    <i data-lucide="volume-2" class="w-4 h-4 text-pink-300 shrink-0"></i>
+                                    <input type="range" id="musicVolumeSlider" min="0" max="1" step="0.02" value="0.85" aria-label="Volume"
+                                        class="w-full accent-pink-400 cursor-pointer h-1.5 bg-pink-950/80 rounded-lg" />
                                 </div>
                             </div>
                         </div>
@@ -895,26 +855,9 @@
                                 <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-400"></i>
                                 <span>Live Synced Lyrics (Tap any line to jump)</span>
                             </span>
-                            <div class="flex items-center gap-1.5">
-                                <button type="button" onclick="toggleLyricsEditor()" id="musicLyricsEditBtn"
-                                    class="text-[11px] px-2.5 py-0.5 rounded-full bg-pink-500/20 hover:bg-pink-500/35 text-pink-100 border border-pink-400/35 transition">
-                                    Edit Lyrics
-                                </button>
-                                <span id="musicLyricStatusPill" class="text-[11px] px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-200 border border-pink-400/30">
-                                    Starts at 0:24 ♥
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Inline Custom Lyrics Editor (supports [MM:SS] LRC or plain lines) -->
-                        <div id="musicLyricsEditorWrap" class="hidden mb-3 space-y-2">
-                            <textarea id="musicLyricsTextarea" rows="5"
-                                placeholder="Paste lyrics here — optional timestamps like:&#10;[0:24] Lyric line at 0:24&#10;[0:30] Next lyric line"
-                                class="w-full p-3 rounded-xl bg-thermal-900/90 border border-pink-400/40 text-pink-100 text-xs font-mono focus:outline-none focus:border-pink-400 selectable"></textarea>
-                            <div class="flex items-center justify-end gap-2">
-                                <button type="button" onclick="resetTrackLyricsToDefault()" class="px-3 py-1 rounded-full text-[11px] text-pink-300 hover:text-white transition">Reset</button>
-                                <button type="button" onclick="saveCustomTrackLyrics()" class="px-3.5 py-1 rounded-full bg-pink-500 hover:bg-pink-400 text-white text-[11px] font-semibold transition">Save Lyrics ♥</button>
-                            </div>
+                            <span id="musicLyricStatusPill" class="text-[11px] px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-200 border border-pink-400/30">
+                                Starts at 0:24 ♥
+                            </span>
                         </div>
 
                         <div id="musicLyricsContainer" class="lyrics-stage-mask flex-1 min-h-[290px] max-h-[370px] overflow-y-auto no-scrollbar px-2 space-y-3 py-16 text-center">
@@ -2158,6 +2101,10 @@ No matter where life takes us next, my heart will always choose you—today, tom
 
         function unlockWithSnap() {
             if (isSnapping) return;
+            // Prime audio synchronously inside the user's Unlock tap so autoplay works on Safari/iOS too
+            if (typeof primeMusicAudioForAutoplay === 'function') {
+                primeMusicAudioForAutoplay();
+            }
             const lockCard = document.getElementById('lockCard');
             const lockContainer = document.getElementById('lockScreenContainer');
             const dashboard = document.getElementById('dashboardContainer');
@@ -2206,6 +2153,9 @@ No matter where life takes us next, my heart will always choose you—today, tom
             stopTypewriterEffect();
             cancelAllTabAutoTimers();
             closeLoveFinale(true);
+            if (typeof pauseAndResetMusicForLock === 'function') {
+                pauseAndResetMusicForLock();
+            }
 
             const lockCard = document.getElementById('lockCard');
             const lockContainer = document.getElementById('lockScreenContainer');
@@ -2462,8 +2412,8 @@ No matter where life takes us next, my heart will always choose you—today, tom
                     tabSequenceStepTimers.push(tid);
                 }
             } else if (tabName === 'music') {
-                if (typeof musicState !== 'undefined' && musicState.isPlaying) {
-                    return; // Don't auto-scroll away while a song is actively playing
+                if (typeof musicState !== 'undefined' && (musicState.isPlaying || musicState.pendingAutoPlay)) {
+                    return; // Stay on Our Music while the song is actively playing
                 }
                 startTabAutoBar(8500, 'Listening to Our Music — scrolling next to Couple Games ♥', () => {
                     switchTab('games', { fromAuto: true });
@@ -2533,8 +2483,13 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 }
             }
 
-            if (tabName === 'music' && typeof musicState !== 'undefined' && musicState.mode === 'youtube' && typeof ensureYoutubeApiLoaded === 'function') {
-                ensureYoutubeApiLoaded();
+            if (tabName === 'music') {
+                if (typeof autoPlayMusicOnSectionEnter === 'function') {
+                    autoPlayMusicOnSectionEnter({ fromTabClick: !opts.fromAuto });
+                }
+                if (typeof musicState !== 'undefined' && musicState.mode === 'youtube' && typeof ensureYoutubeApiLoaded === 'function') {
+                    ensureYoutubeApiLoaded();
+                }
             }
 
             if (tabName === 'games') {
@@ -2586,8 +2541,13 @@ No matter where life takes us next, my heart will always choose you—today, tom
                     highlightDashboardTabButtons(detectedTab, true);
                     // Cancel stale auto-scroll progress bar if user manually scrolled to another section
                     cancelAllTabAutoTimers();
-                    if (detectedTab === 'music' && typeof musicState !== 'undefined' && musicState.mode === 'youtube' && typeof ensureYoutubeApiLoaded === 'function') {
-                        ensureYoutubeApiLoaded();
+                    if (detectedTab === 'music') {
+                        if (typeof autoPlayMusicOnSectionEnter === 'function') {
+                            autoPlayMusicOnSectionEnter({ fromTabClick: false });
+                        }
+                        if (typeof musicState !== 'undefined' && musicState.mode === 'youtube' && typeof ensureYoutubeApiLoaded === 'function') {
+                            ensureYoutubeApiLoaded();
+                        }
                     }
                 }
             };
@@ -2597,6 +2557,24 @@ No matter where life takes us next, my heart will always choose you—today, tom
                     spyRaf = requestAnimationFrame(updateActiveFromScroll);
                 }
             }, { passive: true });
+
+            // Also observe the Our Music card entering viewport so scrolling down autoplays reliably on all screen sizes
+            const musicSection = document.getElementById('tabContent-music');
+            if (musicSection && typeof IntersectionObserver !== 'undefined') {
+                const musicObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting && entry.intersectionRatio >= 0.35) {
+                            if (finaleActive || performance.now() < suppressScrollSpyUntil) return;
+                            const dashboard = document.getElementById('dashboardContainer');
+                            if (!dashboard || dashboard.classList.contains('hidden')) return;
+                            if (typeof autoPlayMusicOnSectionEnter === 'function') {
+                                autoPlayMusicOnSectionEnter({ fromTabClick: false });
+                            }
+                        }
+                    });
+                }, { threshold: [0.35, 0.55] });
+                musicObserver.observe(musicSection);
+            }
         }
 
         /* =====================================================================
@@ -2609,9 +2587,13 @@ No matter where life takes us next, my heart will always choose you—today, tom
             isPlaying: false,
             currentTime: 24,
             volume: 0.85,
-            customAudioUrl: null,
-            customTitle: null,
             audioEl: null,
+            audioUnlocked: false,
+            isPrimingAudio: false,
+            hasEverPlayed: false,
+            userPausedMusic: false,
+            hasAutoStartedInView: false,
+            pendingAutoPlay: false,
             ytPlayer: null,
             ytReady: false,
             ytApiRequested: false,
@@ -2622,8 +2604,6 @@ No matter where life takes us next, my heart will always choose you—today, tom
             lastSliderSyncAt: 0,
             mp3Availability: {}, // { [trackId]: true | false }
             lrcFetchedByTrack: {},
-            startTimeOverrides: {},
-            customLyricsByTrack: {},
             loadToken: 0
         };
 
@@ -2688,15 +2668,11 @@ No matter where life takes us next, my heart will always choose you—today, tom
         }
 
         function getTrackStartTime(track) {
-            if (!track) return 0;
-            const override = musicState.startTimeOverrides[track.id];
-            return typeof override === 'number' && !isNaN(override) ? override : (track.startTime || 0);
+            return track ? (track.startTime || 0) : 0;
         }
 
         function getTrackLyrics(track) {
             if (!track) return [];
-            const custom = musicState.customLyricsByTrack[track.id];
-            if (Array.isArray(custom) && custom.length > 0) return custom;
             if (Array.isArray(track.loadedLrcLyrics) && track.loadedLrcLyrics.length > 0) return track.loadedLrcLyrics;
             return track.lyrics || [];
         }
@@ -2985,63 +2961,39 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const startSec = getTrackStartTime(track);
             const startLabel = formatTrackTime(startSec);
             const totalDur = getActiveTrackDuration();
-            const videoId = getActiveYoutubeId(track);
             const isMp3 = musicState.mode === 'mp3';
 
             const headingText = document.getElementById('musicHeadingText');
             const badge = document.getElementById('musicTrackBadge');
             const titleEl = document.getElementById('musicTrackTitle');
             const artistEl = document.getElementById('musicTrackArtist');
-            const sourceBadge = document.getElementById('musicSourceBadge');
             const mp3Panel = document.getElementById('mp3VisualPlayer');
             const vinylDisc = document.getElementById('musicVinylDisc');
             const mp3Heading = document.getElementById('mp3VisualHeading');
             const mp3Title = document.getElementById('mp3VisualTitle');
-            const mp3FileLabel = document.getElementById('mp3VisualFileLabel');
+            const mp3Artist = document.getElementById('mp3VisualArtist');
             const ytWrap = document.getElementById('ytPlayerWrapper');
-            const hintBar = document.getElementById('mp3UploadHintBar');
-            const hintText = document.getElementById('mp3UploadHintText');
             const curEl = document.getElementById('musicCurrentTime');
             const durEl = document.getElementById('musicTotalDuration');
             const slider = document.getElementById('musicSeekSlider');
             const playIcon = document.getElementById('musicPlayIcon');
             const eq = document.getElementById('musicEqualizerBars');
             const statusPill = document.getElementById('musicLyricStatusPill');
-            const startBtnLabel = document.getElementById('playFromStartLabel');
-            const startInput = document.getElementById('musicStartTimeInput');
-            const ytLink = document.getElementById('musicYoutubeOpenLink');
-            const variantBtn = document.getElementById('musicVideoVariantBtn');
 
             if (headingText) headingText.textContent = track.heading;
             if (badge) badge.textContent = track.heading;
-            if (titleEl) titleEl.textContent = musicState.customTitle || track.title;
-            if (artistEl) artistEl.textContent = musicState.customTitle ? 'Local MP3 File ♥' : track.artist;
-
-            if (sourceBadge) {
-                sourceBadge.textContent = isMp3
-                    ? (musicState.customTitle ? 'Local MP3 ♥' : 'MP3 Audio ♪')
-                    : 'YouTube';
-            }
+            if (titleEl) titleEl.textContent = track.title;
+            if (artistEl) artistEl.textContent = track.artist;
 
             if (mp3Panel) mp3Panel.classList.toggle('hidden', !isMp3);
             if (ytWrap) ytWrap.classList.toggle('hidden', isMp3);
-            if (hintBar) hintBar.classList.toggle('hidden', isMp3);
-            if (variantBtn) variantBtn.classList.toggle('hidden', isMp3);
 
             if (vinylDisc) {
                 vinylDisc.classList.toggle('is-spinning', isMp3 && musicState.isPlaying);
             }
             if (mp3Heading) mp3Heading.textContent = track.heading;
-            if (mp3Title) mp3Title.textContent = musicState.customTitle || track.title;
-            if (mp3FileLabel) {
-                mp3FileLabel.textContent = musicState.customTitle
-                    ? `Local file: ${musicState.customTitle}`
-                    : (track.audioUrl || 'MP3 Audio');
-            }
-            if (hintText) {
-                const expectedPath = escapeHtml(track.audioUrl || 'music/song.mp3');
-                hintText.innerHTML = `Upload <code class="text-pink-100">${expectedPath}</code> to GitHub or tap Load MP3:`;
-            }
+            if (mp3Title) mp3Title.textContent = track.title;
+            if (mp3Artist) mp3Artist.textContent = track.artist;
 
             if (curEl) curEl.textContent = formatTrackTime(musicState.currentTime);
             if (durEl) durEl.textContent = formatTrackTime(totalDur);
@@ -3055,14 +3007,6 @@ No matter where life takes us next, my heart will always choose you—today, tom
             }
             if (eq) eq.style.opacity = musicState.isPlaying ? '1' : '0.45';
             if (statusPill) statusPill.textContent = musicState.isPlaying ? 'Playing ♪' : `Starts at ${startLabel} ♥`;
-            if (startBtnLabel) startBtnLabel.textContent = `Play From ${startLabel} ♥`;
-            if (startInput && document.activeElement !== startInput) startInput.value = startLabel;
-            if (ytLink && videoId) {
-                ytLink.href = `https://www.youtube.com/watch?v=${videoId}&t=${Math.floor(startSec)}s`;
-            }
-            if (variantBtn) {
-                variantBtn.textContent = musicState.sourceVariantIdx === 0 ? 'Lyrics Video' : 'Official Audio';
-            }
         }
 
         function stopMusicSyncLoop() {
@@ -3123,9 +3067,9 @@ No matter where life takes us next, my heart will always choose you—today, tom
 
         function loadYoutubeFallback(track, targetSec, autoPlay) {
             if (!track) return;
+            musicState.pendingAutoPlay = false;
             if (musicState.audioEl) {
                 try { musicState.audioEl.pause(); } catch (e) {}
-                musicState.audioEl = null;
             }
             musicState.mode = 'youtube';
             musicState.currentTime = targetSec;
@@ -3159,6 +3103,137 @@ No matter where life takes us next, my heart will always choose you—today, tom
             updateMusicUI();
         }
 
+        function getOrCreateMusicAudioEl() {
+            if (!musicState.audioEl) {
+                const audio = new Audio();
+                audio.preload = 'auto';
+                audio.volume = musicState.volume;
+
+                audio.addEventListener('play', () => {
+                    if (musicState.isPrimingAudio) return;
+                    musicState.isPlaying = true;
+                    musicState.hasEverPlayed = true;
+                    musicState.pendingAutoPlay = false;
+                    startMusicSyncLoop();
+                    updateMusicUI();
+                });
+                audio.addEventListener('pause', () => {
+                    if (musicState.isPrimingAudio) return;
+                    musicState.isPlaying = false;
+                    stopMusicSyncLoop();
+                    updateMusicUI();
+                });
+                audio.addEventListener('ended', () => {
+                    if (musicState.isPrimingAudio) return;
+                    musicState.isPlaying = false;
+                    stopMusicSyncLoop();
+                    nextMusicTrack(true);
+                });
+
+                musicState.audioEl = audio;
+            }
+            return musicState.audioEl;
+        }
+
+        function primeMusicAudioForAutoplay() {
+            if (musicState.audioUnlocked || musicState.isPlaying) return;
+            const track = getActiveMusicTrack();
+            const audio = getOrCreateMusicAudioEl();
+            if (!audio || !track || !track.audioUrl) return;
+
+            if (audio.dataset.src !== track.audioUrl) {
+                audio.dataset.src = track.audioUrl;
+                audio.src = track.audioUrl;
+            }
+
+            musicState.isPrimingAudio = true;
+            const prevMuted = audio.muted;
+            audio.muted = true;
+            try {
+                const p = audio.play();
+                if (p && typeof p.then === 'function') {
+                    p.then(() => {
+                        musicState.audioUnlocked = true;
+                        // If real playback already took over before priming resolved, do not pause or re-mute it
+                        if (!musicState.isPrimingAudio) return;
+                        audio.pause();
+                        audio.muted = prevMuted;
+                        try { audio.currentTime = getTrackStartTime(track); } catch (e) {}
+                        musicState.isPrimingAudio = false;
+                    }).catch(() => {
+                        if (!musicState.isPrimingAudio) return;
+                        audio.muted = prevMuted;
+                        musicState.isPrimingAudio = false;
+                    });
+                } else {
+                    audio.muted = prevMuted;
+                    musicState.isPrimingAudio = false;
+                }
+            } catch (e) {
+                audio.muted = prevMuted;
+                musicState.isPrimingAudio = false;
+            }
+        }
+
+        function pauseAndResetMusicForLock() {
+            musicState.pendingAutoPlay = false;
+            musicState.hasAutoStartedInView = false;
+            musicState.userPausedMusic = false;
+            musicState.isPlaying = false;
+            stopMusicSyncLoop();
+            if (musicState.audioEl) {
+                try { musicState.audioEl.pause(); } catch (e) {}
+            }
+            if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.pauseVideo === 'function') {
+                try { musicState.ytPlayer.pauseVideo(); } catch (e) {}
+            }
+            updateMusicUI();
+        }
+
+        function armOneTimeMusicTapFallback() {
+            const musicSection = document.getElementById('tabContent-music');
+            if (!musicSection || musicSection.dataset.tapFallbackArmed === '1') return;
+            musicSection.dataset.tapFallbackArmed = '1';
+            const trigger = (e) => {
+                musicSection.dataset.tapFallbackArmed = '';
+                musicSection.removeEventListener('pointerdown', trigger);
+                if (e.target && e.target.closest('button, input')) return;
+                if (!musicState.isPlaying && !musicState.userPausedMusic) {
+                    const track = getActiveMusicTrack();
+                    const sec = musicState.hasEverPlayed && musicState.currentTime >= 1
+                        ? musicState.currentTime
+                        : getTrackStartTime(track);
+                    loadActiveTrackInPlayer(sec, true);
+                }
+            };
+            musicSection.addEventListener('pointerdown', trigger, { once: true });
+        }
+
+        function autoPlayMusicOnSectionEnter(opts = {}) {
+            const dashboard = document.getElementById('dashboardContainer');
+            if (!dashboard || dashboard.classList.contains('hidden') || finaleActive) return;
+            if (musicState.isPlaying) return;
+
+            const fromTabClick = Boolean(opts.fromTabClick);
+            if (!fromTabClick && (musicState.userPausedMusic || musicState.hasAutoStartedInView)) {
+                return;
+            }
+
+            const track = getActiveMusicTrack();
+            if (!track) return;
+
+            musicState.hasAutoStartedInView = true;
+            musicState.userPausedMusic = false;
+            musicState.pendingAutoPlay = true;
+            cancelAllTabAutoTimers();
+
+            const targetSec = (!musicState.hasEverPlayed || musicState.currentTime < 1)
+                ? getTrackStartTime(track)
+                : musicState.currentTime;
+
+            loadActiveTrackInPlayer(targetSec, true);
+        }
+
         function loadActiveTrackInPlayer(startSec, autoPlay) {
             const track = getActiveMusicTrack();
             if (!track) return;
@@ -3166,55 +3241,32 @@ No matter where life takes us next, my heart will always choose you—today, tom
             musicState.currentTime = targetSec;
             const token = ++musicState.loadToken;
 
-            const isLocalFile = Boolean(musicState.customAudioUrl);
-            const candidateMp3 = isLocalFile
-                ? musicState.customAudioUrl
-                : (track.audioUrl && musicState.mp3Availability[track.id] !== false ? track.audioUrl : '');
+            const candidateMp3 = (track.audioUrl && musicState.mp3Availability[track.id] !== false)
+                ? track.audioUrl
+                : '';
 
             if (candidateMp3) {
                 if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.pauseVideo === 'function') {
                     try { musicState.ytPlayer.pauseVideo(); } catch (e) {}
                 }
 
-                const reusingSameAudio = musicState.audioEl && musicState.audioEl.dataset.src === candidateMp3;
-                let audio = musicState.audioEl;
+                const audio = getOrCreateMusicAudioEl();
+                audio.volume = musicState.volume;
+                if (autoPlay) {
+                    musicState.isPrimingAudio = false;
+                    audio.muted = false;
+                }
+                const reusingSameAudio = audio.dataset.src === candidateMp3;
                 if (!reusingSameAudio) {
-                    if (musicState.audioEl) {
-                        try { musicState.audioEl.pause(); } catch (e) {}
-                    }
-                    audio = new Audio();
-                    audio.preload = 'metadata';
-                    audio.volume = musicState.volume;
+                    try { audio.pause(); } catch (e) {}
                     audio.dataset.src = candidateMp3;
                     audio.src = candidateMp3;
-                    musicState.audioEl = audio;
-
-                    audio.addEventListener('play', () => {
-                        if (musicState.audioEl !== audio) return;
-                        musicState.isPlaying = true;
-                        startMusicSyncLoop();
-                        updateMusicUI();
-                    });
-                    audio.addEventListener('pause', () => {
-                        if (musicState.audioEl !== audio) return;
-                        musicState.isPlaying = false;
-                        stopMusicSyncLoop();
-                        updateMusicUI();
-                    });
-                    audio.addEventListener('ended', () => {
-                        if (musicState.audioEl !== audio) return;
-                        musicState.isPlaying = false;
-                        stopMusicSyncLoop();
-                        nextMusicTrack(true);
-                    });
-                } else {
-                    audio.volume = musicState.volume;
                 }
 
                 const onMp3Ready = () => {
-                    if (token !== musicState.loadToken || musicState.audioEl !== audio) return;
+                    if (token !== musicState.loadToken) return;
                     musicState.mode = 'mp3';
-                    if (!isLocalFile) musicState.mp3Availability[track.id] = true;
+                    musicState.mp3Availability[track.id] = true;
 
                     const safeSeek = isFinite(audio.duration) && audio.duration > 1
                         ? Math.min(targetSec, audio.duration - 0.25)
@@ -3223,20 +3275,28 @@ No matter where life takes us next, my heart will always choose you—today, tom
                     musicState.currentTime = safeSeek;
 
                     if (autoPlay) {
+                        musicState.isPrimingAudio = false;
+                        audio.muted = false;
                         audio.play().then(() => {
                             if (token !== musicState.loadToken) return;
                             if (Math.abs((audio.currentTime || 0) - safeSeek) > 0.75) {
                                 try { audio.currentTime = safeSeek; } catch (e) {}
                             }
+                            musicState.audioUnlocked = true;
+                            musicState.hasEverPlayed = true;
+                            musicState.pendingAutoPlay = false;
                             musicState.isPlaying = true;
                             startMusicSyncLoop();
                             updateMusicUI();
                         }).catch(() => {
+                            musicState.pendingAutoPlay = false;
+                            musicState.hasAutoStartedInView = false;
                             musicState.isPlaying = false;
+                            armOneTimeMusicTapFallback();
                             updateMusicUI();
                         });
                     } else {
-                        audio.pause();
+                        if (!musicState.isPrimingAudio) audio.pause();
                         musicState.isPlaying = false;
                         stopMusicSyncLoop();
                     }
@@ -3246,30 +3306,25 @@ No matter where life takes us next, my heart will always choose you—today, tom
 
                 const onMp3Error = () => {
                     if (token !== musicState.loadToken) return;
-                    if (!isLocalFile) {
-                        musicState.mp3Availability[track.id] = false;
-                        loadYoutubeFallback(track, targetSec, autoPlay);
-                    }
+                    musicState.pendingAutoPlay = false;
+                    musicState.mp3Availability[track.id] = false;
+                    loadYoutubeFallback(track, targetSec, autoPlay);
                 };
 
-                if (audio.readyState >= 1) {
+                if (reusingSameAudio && audio.readyState >= 1) {
                     onMp3Ready();
                 } else {
                     audio.addEventListener('loadedmetadata', onMp3Ready, { once: true });
                     audio.addEventListener('error', onMp3Error, { once: true });
-                    audio.load();
+                    if (!reusingSameAudio || audio.networkState === 0 || audio.networkState === 3) {
+                        audio.load();
+                    }
                 }
                 return;
             }
 
-            // Fallback directly to YouTube when MP3 is known unavailable
+            // Fallback directly to YouTube when MP3 is unavailable
             loadYoutubeFallback(track, targetSec, autoPlay);
-        }
-
-        function playFromConfiguredStart() {
-            const track = getActiveMusicTrack();
-            if (!track) return;
-            loadActiveTrackInPlayer(getTrackStartTime(track), true);
         }
 
         function toggleMusicPlayback() {
@@ -3278,12 +3333,17 @@ No matter where life takes us next, my heart will always choose you—today, tom
 
             if (musicState.mode === 'mp3' && musicState.audioEl) {
                 if (musicState.isPlaying) {
+                    musicState.userPausedMusic = true;
                     musicState.audioEl.pause();
                     musicState.isPlaying = false;
                     stopMusicSyncLoop();
                 } else {
+                    musicState.userPausedMusic = false;
+                    musicState.hasAutoStartedInView = true;
+                    musicState.isPrimingAudio = false;
+                    musicState.audioEl.muted = false;
                     const desiredStart = getTrackStartTime(track);
-                    const needsStartSeek = musicState.audioEl.currentTime < 1 && desiredStart > 0;
+                    const needsStartSeek = (!musicState.hasEverPlayed || musicState.audioEl.currentTime < 1) && desiredStart > 0;
                     if (needsStartSeek) {
                         try { musicState.audioEl.currentTime = desiredStart; } catch (e) {}
                     }
@@ -3292,6 +3352,8 @@ No matter where life takes us next, my heart will always choose you—today, tom
                         if (needsStartSeek && Math.abs((audioRef.currentTime || 0) - desiredStart) > 0.75) {
                             try { audioRef.currentTime = desiredStart; } catch (e) {}
                         }
+                        musicState.audioUnlocked = true;
+                        musicState.hasEverPlayed = true;
                     }).catch(() => {});
                     musicState.isPlaying = true;
                     startMusicSyncLoop();
@@ -3302,10 +3364,13 @@ No matter where life takes us next, my heart will always choose you—today, tom
 
             if (musicState.mode === 'youtube' && musicState.ytReady && musicState.ytPlayer) {
                 if (musicState.isPlaying && typeof musicState.ytPlayer.pauseVideo === 'function') {
+                    musicState.userPausedMusic = true;
                     musicState.ytPlayer.pauseVideo();
                     musicState.isPlaying = false;
                     stopMusicSyncLoop();
                 } else if (typeof musicState.ytPlayer.playVideo === 'function') {
+                    musicState.userPausedMusic = false;
+                    musicState.hasAutoStartedInView = true;
                     const cur = typeof musicState.ytPlayer.getCurrentTime === 'function' ? musicState.ytPlayer.getCurrentTime() : 0;
                     if (!cur || cur < 1) {
                         loadYoutubeFallback(track, getTrackStartTime(track), true);
@@ -3317,6 +3382,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 }
                 updateMusicUI();
             } else {
+                musicState.userPausedMusic = musicState.isPlaying;
                 loadActiveTrackInPlayer(musicState.currentTime || getTrackStartTime(track), !musicState.isPlaying);
             }
         }
@@ -3328,6 +3394,10 @@ No matter where life takes us next, my heart will always choose you—today, tom
             if (musicState.mode === 'mp3' && musicState.audioEl) {
                 try { musicState.audioEl.currentTime = target; } catch (e) {}
                 if (autoPlay) {
+                    musicState.userPausedMusic = false;
+                    musicState.hasEverPlayed = true;
+                    musicState.isPrimingAudio = false;
+                    musicState.audioEl.muted = false;
                     musicState.audioEl.play().catch(() => {});
                     musicState.isPlaying = true;
                     startMusicSyncLoop();
@@ -3335,6 +3405,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
             } else if (musicState.mode === 'youtube' && musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.seekTo === 'function') {
                 musicState.ytPlayer.seekTo(target, true);
                 if (autoPlay && typeof musicState.ytPlayer.playVideo === 'function') {
+                    musicState.userPausedMusic = false;
                     musicState.ytPlayer.playVideo();
                     musicState.isPlaying = true;
                     startMusicSyncLoop();
@@ -3353,18 +3424,12 @@ No matter where life takes us next, my heart will always choose you—today, tom
             if (!tracks.length) return;
             musicState.trackIdx = ((idx % tracks.length) + tracks.length) % tracks.length;
             musicState.sourceVariantIdx = 0;
-            if (musicState.customAudioUrl) {
-                URL.revokeObjectURL(musicState.customAudioUrl);
-            }
-            musicState.customAudioUrl = null;
-            musicState.customTitle = null;
+            musicState.userPausedMusic = false;
+            musicState.hasAutoStartedInView = true;
 
             const track = getActiveMusicTrack();
             const startSec = getTrackStartTime(track);
             musicState.currentTime = startSec;
-
-            const editorWrap = document.getElementById('musicLyricsEditorWrap');
-            if (editorWrap) editorWrap.classList.add('hidden');
 
             tryFetchExternalLrc(track);
             renderMusicTrackSelector();
@@ -3380,90 +3445,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
             selectMusicTrack(musicState.trackIdx + 1, autoPlay);
         }
 
-        function applyCustomStartTime() {
-            const track = getActiveMusicTrack();
-            const input = document.getElementById('musicStartTimeInput');
-            if (!track || !input) return;
-            const parsed = parseTimeStringToSeconds(input.value, getTrackStartTime(track));
-            musicState.startTimeOverrides[track.id] = parsed;
-            try {
-                localStorage.setItem('forMyLove_musicStartTimes', JSON.stringify(musicState.startTimeOverrides));
-            } catch (e) {}
-            input.value = formatTrackTime(parsed);
-            renderMusicTrackSelector();
-            loadActiveTrackInPlayer(parsed, true);
-        }
-
-        function toggleYoutubeSourceVariant() {
-            const track = getActiveMusicTrack();
-            if (!track || !Array.isArray(track.youtubeIds) || track.youtubeIds.length < 2) return;
-            musicState.sourceVariantIdx = musicState.sourceVariantIdx === 0 ? 1 : 0;
-            const resumeAt = musicState.isPlaying ? musicState.currentTime : getTrackStartTime(track);
-            loadYoutubeFallback(track, resumeAt, true);
-        }
-
-        function handleCustomAudioFile(event) {
-            const file = event.target.files && event.target.files[0];
-            if (!file) return;
-            if (musicState.customAudioUrl) URL.revokeObjectURL(musicState.customAudioUrl);
-            musicState.customAudioUrl = URL.createObjectURL(file);
-            musicState.customTitle = file.name.replace(/\.[^.]+$/, '');
-            const track = getActiveMusicTrack();
-            loadActiveTrackInPlayer(getTrackStartTime(track), true);
-        }
-
-        function toggleLyricsEditor() {
-            const wrap = document.getElementById('musicLyricsEditorWrap');
-            const textarea = document.getElementById('musicLyricsTextarea');
-            const track = getActiveMusicTrack();
-            if (!wrap || !textarea || !track) return;
-
-            const willShow = wrap.classList.contains('hidden');
-            wrap.classList.toggle('hidden');
-            if (willShow) {
-                const lines = getTrackLyrics(track);
-                textarea.value = lines.map((l) => `[${formatTrackTime(l.time)}] ${l.text}`).join('\n');
-                textarea.focus();
-            }
-        }
-
-        function saveCustomTrackLyrics() {
-            const track = getActiveMusicTrack();
-            const textarea = document.getElementById('musicLyricsTextarea');
-            const wrap = document.getElementById('musicLyricsEditorWrap');
-            if (!track || !textarea) return;
-
-            const parsed = parseLyricsText(textarea.value, getTrackStartTime(track));
-            if (!parsed.length) return;
-
-            musicState.customLyricsByTrack[track.id] = parsed;
-            try {
-                localStorage.setItem('forMyLove_customLyrics', JSON.stringify(musicState.customLyricsByTrack));
-            } catch (e) {}
-            if (wrap) wrap.classList.add('hidden');
-            renderMusicLyrics();
-        }
-
-        function resetTrackLyricsToDefault() {
-            const track = getActiveMusicTrack();
-            const wrap = document.getElementById('musicLyricsEditorWrap');
-            if (!track) return;
-            delete musicState.customLyricsByTrack[track.id];
-            try {
-                localStorage.setItem('forMyLove_customLyrics', JSON.stringify(musicState.customLyricsByTrack));
-            } catch (e) {}
-            if (wrap) wrap.classList.add('hidden');
-            renderMusicLyrics();
-        }
-
         function initMusicPlayer() {
-            try {
-                const savedStarts = JSON.parse(localStorage.getItem('forMyLove_musicStartTimes') || '{}');
-                if (savedStarts && typeof savedStarts === 'object') musicState.startTimeOverrides = savedStarts;
-                const savedLyrics = JSON.parse(localStorage.getItem('forMyLove_customLyrics') || '{}');
-                if (savedLyrics && typeof savedLyrics === 'object') musicState.customLyricsByTrack = savedLyrics;
-            } catch (e) {}
-
             const seekSlider = document.getElementById('musicSeekSlider');
             if (seekSlider) {
                 seekSlider.addEventListener('change', (e) => seekMusicTo(e.target.value, musicState.isPlaying));
@@ -3487,13 +3469,6 @@ No matter where life takes us next, my heart will always choose you—today, tom
                             musicState.ytPlayer.setVolume(Math.round(vol * 100));
                         }
                     }
-                });
-            }
-
-            const startInput = document.getElementById('musicStartTimeInput');
-            if (startInput) {
-                startInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') applyCustomStartTime();
                 });
             }
 
