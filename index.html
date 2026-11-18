@@ -193,7 +193,7 @@
             transition: opacity 0.14s ease-out, visibility 0.14s ease-out;
         }
 
-        /* Smooth Tab Transition & Guided Card Spotlight */
+        /* Smooth Section Reveal & Guided Card Spotlight */
         @keyframes tabFadeIn {
             0% { opacity: 0; transform: translateY(8px); }
             100% { opacity: 1; transform: translateY(0); }
@@ -202,39 +202,94 @@
             animation: tabFadeIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
 
-        @keyframes tabSlideInRight {
-            0% { opacity: 0; transform: translateX(48px) scale(0.985); }
-            100% { opacity: 1; transform: translateX(0) scale(1); }
+        /* Clean single-row horizontal scroll strip for tabs */
+        .no-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        @keyframes tabSlideInLeft {
-            0% { opacity: 0; transform: translateX(-48px) scale(0.985); }
-            100% { opacity: 1; transform: translateX(0) scale(1); }
-        }
-        .tab-slide-in-right {
-            animation: tabSlideInRight 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-        .tab-slide-in-left {
-            animation: tabSlideInLeft 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
 
-        /* Hold-to-slide edge handles */
-        .slide-edge-handle {
-            transition: opacity 0.25s ease, transform 0.25s ease, background 0.25s ease;
+        /* Vinyl Disc Smooth Spin for MP3 Player */
+        @keyframes vinylSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
-        .slide-edge-handle.is-holding {
-            background: rgba(236, 72, 153, 0.28);
-            border-color: rgba(244, 114, 182, 0.75);
-            box-shadow: 0 0 22px rgba(236, 72, 153, 0.45);
+        .vinyl-disc {
+            animation: vinylSpin 11s linear infinite;
+            animation-play-state: paused;
+        }
+        .vinyl-disc.is-spinning {
+            animation-play-state: running;
         }
 
-        /* Synced Lyrics Styling */
+        /* Smooth Apple-Music-Style Synced Lyrics Stage & Animations */
+        .lyrics-stage-mask {
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%);
+        }
+
+        @keyframes lyricGlowPulse {
+            0%, 100% {
+                text-shadow: 0 0 14px rgba(244, 114, 182, 0.72), 0 0 28px rgba(236, 72, 153, 0.35);
+            }
+            50% {
+                text-shadow: 0 0 22px rgba(251, 113, 133, 0.95), 0 0 38px rgba(217, 70, 239, 0.55);
+            }
+        }
+
         .lyric-line {
-            transition: all 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            will-change: transform, opacity, filter;
+            transition:
+                transform 0.58s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.52s cubic-bezier(0.22, 1, 0.36, 1),
+                color 0.45s ease,
+                background-color 0.45s ease,
+                border-color 0.45s ease;
+            border: 1px solid transparent;
+        }
+        .lyric-line.is-upcoming {
+            opacity: 0.52;
+            filter: blur(0.45px);
+            transform: scale(0.97) translateY(3px);
+        }
+        .lyric-line.is-past {
+            opacity: 0.28;
+            filter: blur(0.75px);
+            transform: scale(0.95) translateY(-3px);
+        }
+        .lyric-line:hover {
+            opacity: 0.92;
+            filter: blur(0px);
         }
         .lyric-line.is-active {
+            opacity: 1;
+            filter: blur(0px);
             color: #ffffff;
-            transform: scale(1.03);
-            text-shadow: 0 0 18px rgba(244, 114, 182, 0.85);
+            transform: scale(1.045) translateY(0);
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.24), rgba(217, 70, 239, 0.14));
+            border-color: rgba(244, 114, 182, 0.42);
+            box-shadow: 0 8px 26px rgba(236, 72, 153, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+            animation: lyricGlowPulse 2.6s ease-in-out infinite;
+        }
+        .lyric-line-progress {
+            position: absolute;
+            left: 16%;
+            right: 16%;
+            bottom: 4px;
+            height: 2px;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #f472b6, #fbcfe8, #e879f9);
+            transform-origin: left center;
+            transform: scaleX(0);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .lyric-line.is-active .lyric-line-progress {
+            opacity: 0.9;
         }
 
         .story-spotlight {
@@ -536,48 +591,62 @@
                 </div>
             </div>
 
-            <!-- Interactive Navigation Tabs -->
-            <div id="dashboardTabsAnchor" class="scroll-mt-24 flex flex-wrap items-center justify-between gap-3">
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="switchTab('letter')" id="tabBtn-letter" class="tab-btn liquid-glass px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold text-white border-pink-400 flex items-center gap-2 transition">
-                        <i data-lucide="mail-heart" class="w-4 h-4 text-pink-300"></i>
-                        <span>A Letter For You</span>
-                    </button>
-                    <button onclick="switchTab('commits')" id="tabBtn-commits" class="tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
-                        <i data-lucide="sparkles" class="w-4 h-4 text-pink-400"></i>
-                        <span>Our Story & Memories</span>
-                    </button>
-                    <button onclick="switchTab('reasons')" id="tabBtn-reasons" class="tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
-                        <i data-lucide="stars" class="w-4 h-4 text-pink-400"></i>
-                        <span>Why I Love You</span>
-                    </button>
-                    <button onclick="switchTab('lab')" id="tabBtn-lab" class="tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
-                        <i data-lucide="heart" class="w-4 h-4 text-pink-400"></i>
-                        <span>3D Heart Glow</span>
-                    </button>
-                    <button onclick="switchTab('music')" id="tabBtn-music" class="tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
-                        <i data-lucide="music" class="w-4 h-4 text-pink-400"></i>
-                        <span>Our Music</span>
-                    </button>
-                    <button onclick="switchTab('games')" id="tabBtn-games" class="tab-btn liquid-glass-subtle hover:border-pink-400 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/90 hover:text-white flex items-center gap-2 transition box-glow">
-                        <i data-lucide="gamepad-2" class="w-4 h-4 text-pink-400"></i>
-                        <span>Couple Games</span>
-                    </button>
-                </div>
+            <!-- Interactive Navigation Tabs (All tabs in one clean scrollable row; sections scroll smoothly down) -->
+            <div id="dashboardTabsAnchor" class="sticky top-[58px] sm:top-[64px] z-20 scroll-mt-24 liquid-glass-subtle rounded-2xl p-2 sm:p-2.5 border border-pink-400/25 shadow-lg shadow-pink-950/30">
+                <div class="flex items-center justify-between gap-2">
+                    <div id="tabsRowScroller" class="flex flex-nowrap items-center gap-2 overflow-x-auto no-scrollbar whitespace-nowrap py-0.5 flex-1">
+                        <button onclick="switchTab('letter')" id="tabBtn-letter" class="tab-btn shrink-0 liquid-glass px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white border-pink-400 flex items-center gap-2 transition">
+                            <i data-lucide="mail-heart" class="w-4 h-4 text-pink-300 shrink-0"></i>
+                            <span>A Letter For You</span>
+                        </button>
+                        <button onclick="switchTab('commits')" id="tabBtn-commits" class="tab-btn shrink-0 liquid-glass-subtle px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-pink-400 shrink-0"></i>
+                            <span>Our Story &amp; Memories</span>
+                        </button>
+                        <button onclick="switchTab('reasons')" id="tabBtn-reasons" class="tab-btn shrink-0 liquid-glass-subtle px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
+                            <i data-lucide="stars" class="w-4 h-4 text-pink-400 shrink-0"></i>
+                            <span>Why I Love You</span>
+                        </button>
+                        <button onclick="switchTab('lab')" id="tabBtn-lab" class="tab-btn shrink-0 liquid-glass-subtle px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
+                            <i data-lucide="heart" class="w-4 h-4 text-pink-400 shrink-0"></i>
+                            <span>3D Heart Glow</span>
+                        </button>
+                        <button onclick="switchTab('music')" id="tabBtn-music" class="tab-btn shrink-0 liquid-glass-subtle px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition">
+                            <i data-lucide="music" class="w-4 h-4 text-pink-400 shrink-0"></i>
+                            <span>Our Music</span>
+                        </button>
+                        <button onclick="switchTab('games')" id="tabBtn-games" class="tab-btn shrink-0 liquid-glass-subtle hover:border-pink-400 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-pink-200/90 hover:text-white flex items-center gap-2 transition box-glow">
+                            <i data-lucide="gamepad-2" class="w-4 h-4 text-pink-400 shrink-0"></i>
+                            <span>Couple Games</span>
+                        </button>
+                    </div>
 
-                <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="toggleAutoSwitch()" id="autoSwitchToggleBtn" class="liquid-glass-subtle hover:border-pink-400 px-3.5 py-2.5 rounded-2xl text-xs text-pink-200 hover:text-white transition flex items-center gap-1.5" title="Toggle automatic tab switching">
-                        <span id="autoSwitchDot" class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
-                        <span id="autoSwitchLabel">Auto-Switch: On</span>
-                    </button>
-                    <button onclick="triggerHeartShower()" class="liquid-glass-subtle hover:border-pink-400 px-4 py-2.5 rounded-2xl text-xs text-pink-100 hover:text-white transition flex items-center gap-2 box-glow">
-                        <i data-lucide="party-popper" class="w-4 h-4 text-pink-400"></i>
-                        <span>Shower With Hearts</span>
-                    </button>
+                    <div class="hidden xl:flex items-center gap-2 shrink-0 pl-2 border-l border-pink-400/20">
+                        <button onclick="toggleAutoSwitch()" id="autoSwitchToggleBtn" class="liquid-glass-subtle hover:border-pink-400 px-3 py-2 rounded-xl text-xs text-pink-200 hover:text-white transition flex items-center gap-1.5" title="Toggle automatic guided scroll">
+                            <span id="autoSwitchDot" class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
+                            <span id="autoSwitchLabel">Auto-Scroll: On</span>
+                        </button>
+                        <button onclick="triggerHeartShower()" class="liquid-glass-subtle hover:border-pink-400 px-3 py-2 rounded-xl text-xs text-pink-100 hover:text-white transition flex items-center gap-1.5 box-glow">
+                            <i data-lucide="party-popper" class="w-3.5 h-3.5 text-pink-400"></i>
+                            <span>Hearts</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Subtle Auto-Switch Progress Strip (Appears cleanly when a tab is advancing) -->
+            <!-- Compact action buttons on smaller screens -->
+            <div class="flex xl:hidden flex-wrap items-center justify-end gap-2 -mt-2">
+                <button onclick="toggleAutoSwitch()" class="liquid-glass-subtle hover:border-pink-400 px-3 py-1.5 rounded-full text-[11px] text-pink-200 hover:text-white transition flex items-center gap-1.5">
+                    <span id="autoSwitchDotMobile" class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
+                    <span id="autoSwitchLabelMobile">Auto-Scroll: On</span>
+                </button>
+                <button onclick="triggerHeartShower()" class="liquid-glass-subtle hover:border-pink-400 px-3.5 py-1.5 rounded-full text-[11px] text-pink-100 hover:text-white transition flex items-center gap-1.5 box-glow">
+                    <i data-lucide="party-popper" class="w-3.5 h-3.5 text-pink-400"></i>
+                    <span>Shower With Hearts</span>
+                </button>
+            </div>
+
+            <!-- Subtle Auto-Scroll Progress Strip (Appears cleanly when guided flow is advancing) -->
             <div id="tabAutoProgressWrap" class="hidden -mt-2 px-1 space-y-1.5">
                 <div class="flex items-center justify-between text-[11px] text-pink-200/80">
                     <span id="tabAutoProgressText" class="flex items-center gap-1.5">
@@ -593,38 +662,11 @@
                 </div>
             </div>
 
-            <!-- SLIDABLE TAB VIEWPORT (Hold left/right edge or drag left/right to slide tabs) -->
-            <div id="tabSlideViewport" class="relative group/slide">
-                <!-- Left Hold-to-Slide Edge Handle -->
-                <button type="button" id="tabSlideHoldLeft" aria-label="Hold or tap to slide to previous tab" title="Hold or tap for previous tab"
-                    class="slide-edge-handle hidden sm:flex absolute -left-3 md:-left-5 top-1/2 -translate-y-1/2 z-20 w-9 h-20 rounded-full liquid-glass-subtle border border-pink-400/30 items-center justify-center text-pink-200 hover:text-white hover:border-pink-400/70 opacity-75 hover:opacity-100 select-none touch-none cursor-pointer">
-                    <div class="flex flex-col items-center gap-1 pointer-events-none">
-                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
-                        <div class="w-4 h-1 rounded-full bg-pink-950/80 overflow-hidden">
-                            <div id="tabHoldProgressLeft" class="h-full w-0 bg-pink-400 rounded-full transition-none"></div>
-                        </div>
-                    </div>
-                </button>
+            <!-- ALL SECTIONS STACKED VERTICALLY FOR SMOOTH SCROLLING DOWN -->
+            <div id="dashboardSectionsStack" class="space-y-6">
 
-                <!-- Right Hold-to-Slide Edge Handle -->
-                <button type="button" id="tabSlideHoldRight" aria-label="Hold or tap to slide to next tab" title="Hold or tap for next tab"
-                    class="slide-edge-handle hidden sm:flex absolute -right-3 md:-right-5 top-1/2 -translate-y-1/2 z-20 w-9 h-20 rounded-full liquid-glass-subtle border border-pink-400/30 items-center justify-center text-pink-200 hover:text-white hover:border-pink-400/70 opacity-75 hover:opacity-100 select-none touch-none cursor-pointer">
-                    <div class="flex flex-col items-center gap-1 pointer-events-none">
-                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
-                        <div class="w-4 h-1 rounded-full bg-pink-950/80 overflow-hidden">
-                            <div id="tabHoldProgressRight" class="h-full w-0 bg-pink-400 rounded-full transition-none"></div>
-                        </div>
-                    </div>
-                </button>
-
-                <!-- Floating Drag/Hold Direction Indicator -->
-                <div id="tabDragIndicator" class="hidden pointer-events-none fixed sm:absolute top-4 left-1/2 -translate-x-1/2 z-30 px-4 py-1.5 rounded-full liquid-glass border border-pink-400/60 text-xs font-medium text-white shadow-lg shadow-pink-500/20 whitespace-nowrap">
-                    Slide Tab
-                </div>
-
-                <div id="tabSlideStage" class="transition-transform duration-150 ease-out will-change-transform">
-            <!-- TAB 1: A LETTER FOR YOU (Dreamy Liquid Glass Stationery) -->
-            <div id="tabContent-letter" class="liquid-glass rounded-3xl p-6 sm:p-10">
+            <!-- SECTION 1: A LETTER FOR YOU (Dreamy Liquid Glass Stationery) -->
+            <div id="tabContent-letter" data-section-tab="letter" class="scroll-mt-36 liquid-glass rounded-3xl p-6 sm:p-10">
                 <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-pink-300/15">
                     <div class="flex items-center gap-2 text-xs sm:text-sm text-pink-200">
                         <i data-lucide="feather" class="w-4 h-4 text-pink-400"></i>
@@ -647,13 +689,13 @@
                         </div>
                     </div>
                     <div class="mt-6 text-right font-serif italic text-base sm:text-lg text-pink-200">
-                        Forever & Always Yours ♥
+                        Forever &amp; Always Yours ♥
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 2: OUR STORY & MEMORIES (Romantic Timeline) -->
-            <div id="tabContent-commits" class="hidden liquid-glass rounded-3xl p-6 sm:p-8">
+            <!-- SECTION 2: OUR STORY & MEMORIES (Romantic Timeline) -->
+            <div id="tabContent-commits" data-section-tab="commits" class="scroll-mt-36 liquid-glass rounded-3xl p-6 sm:p-8">
                 <div class="flex items-center justify-between pb-4 mb-6 border-b border-pink-300/15">
                     <div class="flex items-center gap-2 text-sm text-pink-200">
                         <i data-lucide="book-heart" class="w-4 h-4 text-pink-400"></i>
@@ -667,8 +709,8 @@
                 </div>
             </div>
 
-            <!-- TAB 3: REASONS I LOVE YOU (Interactive Reveal Cards) -->
-            <div id="tabContent-reasons" class="hidden liquid-glass rounded-3xl p-6 sm:p-8">
+            <!-- SECTION 3: REASONS I LOVE YOU (Interactive Reveal Cards) -->
+            <div id="tabContent-reasons" data-section-tab="reasons" class="scroll-mt-36 liquid-glass rounded-3xl p-6 sm:p-8">
                 <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-pink-300/15">
                     <div class="flex items-center gap-2">
                         <i data-lucide="sparkles" class="w-4 h-4 text-pink-400"></i>
@@ -682,8 +724,8 @@
                 </div>
             </div>
 
-            <!-- TAB 4: 3D HEART GLOW (Interactive Spinning ASCII & Thermal Heart) -->
-            <div id="tabContent-lab" class="hidden liquid-glass rounded-3xl p-6 sm:p-8">
+            <!-- SECTION 4: 3D HEART GLOW (Interactive Spinning ASCII & Thermal Heart) -->
+            <div id="tabContent-lab" data-section-tab="lab" class="scroll-mt-36 liquid-glass rounded-3xl p-6 sm:p-8">
                 <div class="flex flex-wrap items-center justify-between gap-4 pb-4 mb-4 border-b border-pink-300/15">
                     <div>
                         <h3 class="text-base sm:text-lg font-serif italic font-bold text-white flex items-center gap-2">
@@ -711,8 +753,8 @@
                 </div>
             </div>
 
-            <!-- TAB 5: OUR MUSIC (Mrignaini & Maharani with Custom Start Times & Synced Lyrics) -->
-            <div id="tabContent-music" class="hidden liquid-glass rounded-3xl p-6 sm:p-8 space-y-6">
+            <!-- SECTION 5: OUR MUSIC (Mrignaini at 0:24 & Maharani at 1:16 — MP3-First + Smooth Synced Lyrics) -->
+            <div id="tabContent-music" data-section-tab="music" class="scroll-mt-36 liquid-glass rounded-3xl p-6 sm:p-8 space-y-6">
                 <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-pink-300/15">
                     <div>
                         <h3 id="musicActiveSectionHeading" class="text-base sm:text-xl font-serif italic font-bold text-white flex items-center gap-2">
@@ -730,13 +772,13 @@
                 </div>
 
                 <!-- Two Dedicated Song Cards with Exact Headings -->
-                <div id="musicTrackSelector" class="grid grid-cols-1 sm:grid-cols-2 gap-3" data-no-slide="true">
+                <div id="musicTrackSelector" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <!-- Populated dynamically from CONFIG.MUSIC.TRACKS -->
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
-                    <!-- Left: Embedded Player & Exact Start-Time Controls -->
-                    <div class="lg:col-span-6 space-y-4" data-no-slide="true">
+                    <!-- Left: MP3 Vinyl Player (Primary) / YouTube Fallback + Controls -->
+                    <div class="lg:col-span-6 space-y-4">
                         <div class="liquid-glass-subtle rounded-2xl p-4 sm:p-5 border border-pink-400/25 space-y-4">
                             <!-- Current Song Heading & Title -->
                             <div class="flex items-start justify-between gap-3">
@@ -745,13 +787,28 @@
                                     <h4 id="musicTrackTitle" class="text-lg sm:text-xl font-serif italic font-bold text-white truncate">Mrignaini</h4>
                                     <p id="musicTrackArtist" class="text-xs text-pink-200/75 truncate">Karun</p>
                                 </div>
-                                <a id="musicYoutubeOpenLink" href="https://www.youtube.com/watch?v=3n8IMQbicBA&t=24s" target="_blank" rel="noopener noreferrer"
-                                    class="shrink-0 text-[11px] px-3 py-1.5 rounded-full bg-pink-500/20 hover:bg-pink-500/35 border border-pink-400/35 text-pink-100 transition flex items-center gap-1">
-                                    <span>YouTube ↗</span>
-                                </a>
+                                <span id="musicSourceBadge" class="shrink-0 text-[10px] font-mono px-2.5 py-1 rounded-full bg-pink-500/20 border border-pink-400/35 text-pink-100">
+                                    MP3 Ready
+                                </span>
                             </div>
 
-                            <!-- Embedded YouTube Audio/Video Stage -->
+                            <!-- Sleek MP3 Vinyl Album Visualizer (shown when MP3 is loaded from music/ or local file) -->
+                            <div id="mp3VisualPlayer" class="hidden relative w-full py-6 px-4 rounded-2xl bg-gradient-to-br from-thermal-900/95 via-pink-950/60 to-fuchsia-950/70 border border-pink-400/30 flex flex-col sm:flex-row items-center justify-center gap-5 overflow-hidden">
+                                <div id="musicVinylDisc" class="vinyl-disc relative w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-gradient-to-tr from-thermal-900 via-pink-900/80 to-fuchsia-900/70 border-2 border-pink-400/50 shadow-xl shadow-pink-500/25 flex items-center justify-center shrink-0">
+                                    <div class="w-20 h-20 rounded-full border border-pink-300/20 flex items-center justify-center">
+                                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-fuchsia-600 border-2 border-pink-200/70 flex items-center justify-center shadow-inner">
+                                            <i data-lucide="heart" class="w-4 h-4 text-white fill-white"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center sm:text-left space-y-1.5 min-w-0">
+                                    <div id="mp3VisualHeading" class="text-[11px] uppercase tracking-widest text-pink-300">A Song That Reminds Me Of You</div>
+                                    <div id="mp3VisualTitle" class="text-lg sm:text-xl font-serif italic font-bold text-white truncate">Mrignaini</div>
+                                    <div id="mp3VisualFileLabel" class="text-[11px] font-mono text-pink-200/75 truncate">music/mrignaini.mp3</div>
+                                </div>
+                            </div>
+
+                            <!-- Embedded YouTube Audio/Video Fallback (shown automatically if MP3 isn't uploaded to music/ yet) -->
                             <div id="ytPlayerWrapper" class="relative w-full aspect-video rounded-2xl overflow-hidden bg-thermal-900/90 border border-pink-400/30 shadow-inner">
                                 <iframe id="ytMusicIframe"
                                     class="w-full h-full"
@@ -763,15 +820,15 @@
                                     allowfullscreen></iframe>
                             </div>
 
-                            <!-- Custom Local Audio Status (shown only when a local MP3 is loaded) -->
-                            <div id="customAudioBanner" class="hidden px-3.5 py-2.5 rounded-xl bg-pink-500/20 border border-pink-400/40 flex items-center justify-between gap-2 text-xs text-pink-100">
-                                <span id="customAudioLabel" class="truncate">Playing custom audio file</span>
-                                <button type="button" onclick="clearCustomAudioFile()" class="text-pink-300 hover:text-white underline shrink-0">Back to YouTube</button>
+                            <!-- Helpful MP3 Hint (only visible when falling back to YouTube before user uploads MP3s) -->
+                            <div id="mp3UploadHintBar" class="hidden px-3 py-2 rounded-xl bg-pink-500/12 border border-pink-400/25 text-[11px] text-pink-200/85 flex flex-wrap items-center justify-between gap-2">
+                                <span id="mp3UploadHintText">Upload <code class="text-pink-100">music/mrignaini.mp3</code> to GitHub or pick a local file:</span>
+                                <a id="musicYoutubeOpenLink" href="https://www.youtube.com/watch?v=3n8IMQbicBA&t=24s" target="_blank" rel="noopener noreferrer" class="text-pink-300 hover:text-white underline shrink-0">Open YouTube ↗</a>
                             </div>
 
                             <!-- Progress / Seek Bar -->
                             <div class="space-y-1.5">
-                                <input type="range" id="musicSeekSlider" min="0" max="126" value="24" step="0.5"
+                                <input type="range" id="musicSeekSlider" min="0" max="126" value="24" step="0.25"
                                     class="w-full accent-pink-500 cursor-pointer h-1.5 rounded-lg bg-pink-950/80" />
                                 <div class="flex justify-between text-[11px] font-mono text-pink-300/80">
                                     <span id="musicCurrentTime">0:24</span>
@@ -800,7 +857,7 @@
                                 </button>
                             </div>
 
-                            <!-- Specific Start Time Picker + Video Mode + Local Audio Upload -->
+                            <!-- Volume + Specific Start Time Picker + Load MP3 -->
                             <div class="pt-3 border-t border-pink-400/15 flex flex-wrap items-center justify-between gap-2">
                                 <div class="flex items-center gap-1.5">
                                     <span class="text-[11px] text-pink-200/80">Start at:</span>
@@ -811,14 +868,19 @@
                                     </button>
                                 </div>
 
-                                <div class="flex items-center gap-1.5">
+                                <div class="flex items-center gap-2">
+                                    <div class="flex items-center gap-1.5 w-20 sm:w-24">
+                                        <i data-lucide="volume-2" class="w-3.5 h-3.5 text-pink-300 shrink-0"></i>
+                                        <input type="range" id="musicVolumeSlider" min="0" max="1" step="0.02" value="0.85" aria-label="Volume"
+                                            class="w-full accent-pink-400 cursor-pointer h-1 bg-pink-950/80 rounded-lg" />
+                                    </div>
                                     <button type="button" onclick="toggleYoutubeSourceVariant()" id="musicVideoVariantBtn"
                                         class="text-[11px] px-2.5 py-1.5 rounded-full bg-pink-500/15 hover:bg-pink-500/30 border border-pink-400/30 text-pink-100 transition">
                                         Lyrics Video
                                     </button>
-                                    <label class="cursor-pointer text-[11px] px-2.5 py-1.5 rounded-full bg-pink-500/20 hover:bg-pink-500/35 border border-pink-400/30 text-pink-100 transition flex items-center gap-1">
+                                    <label class="cursor-pointer text-[11px] px-2.5 py-1.5 rounded-full bg-pink-500/25 hover:bg-pink-500/40 border border-pink-400/40 text-white transition flex items-center gap-1">
                                         <i data-lucide="upload" class="w-3 h-3"></i>
-                                        <span>MP3</span>
+                                        <span>Load MP3</span>
                                         <input type="file" id="musicCustomFileInput" accept="audio/*" class="hidden" onchange="handleCustomAudioFile(event)" />
                                     </label>
                                 </div>
@@ -826,12 +888,12 @@
                         </div>
                     </div>
 
-                    <!-- Right: Synced Lyrics Stage (with Optional Custom Lyrics Editor) -->
-                    <div class="lg:col-span-6 liquid-glass-subtle rounded-2xl p-5 border border-pink-400/25 flex flex-col" data-no-slide="true">
-                        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-pink-400/15">
+                    <!-- Right: Smooth Apple-Music-Style Synced Lyrics Stage -->
+                    <div class="lg:col-span-6 liquid-glass-subtle rounded-2xl p-5 border border-pink-400/25 flex flex-col">
+                        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-2 border-b border-pink-400/15">
                             <span class="text-xs font-serif italic text-pink-200 flex items-center gap-1.5">
                                 <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-400"></i>
-                                <span>Synced Lyrics &amp; Moments (Tap to jump)</span>
+                                <span>Live Synced Lyrics (Tap any line to jump)</span>
                             </span>
                             <div class="flex items-center gap-1.5">
                                 <button type="button" onclick="toggleLyricsEditor()" id="musicLyricsEditBtn"
@@ -839,7 +901,7 @@
                                     Edit Lyrics
                                 </button>
                                 <span id="musicLyricStatusPill" class="text-[11px] px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-200 border border-pink-400/30">
-                                    Ready ♥
+                                    Starts at 0:24 ♥
                                 </span>
                             </div>
                         </div>
@@ -847,7 +909,7 @@
                         <!-- Inline Custom Lyrics Editor (supports [MM:SS] LRC or plain lines) -->
                         <div id="musicLyricsEditorWrap" class="hidden mb-3 space-y-2">
                             <textarea id="musicLyricsTextarea" rows="5"
-                                placeholder="Paste lyrics here — optional timestamps like:&#10;[0:24] Favorite line here&#10;[0:32] Next line here"
+                                placeholder="Paste lyrics here — optional timestamps like:&#10;[0:24] Lyric line at 0:24&#10;[0:30] Next lyric line"
                                 class="w-full p-3 rounded-xl bg-thermal-900/90 border border-pink-400/40 text-pink-100 text-xs font-mono focus:outline-none focus:border-pink-400 selectable"></textarea>
                             <div class="flex items-center justify-end gap-2">
                                 <button type="button" onclick="resetTrackLyricsToDefault()" class="px-3 py-1 rounded-full text-[11px] text-pink-300 hover:text-white transition">Reset</button>
@@ -855,33 +917,17 @@
                             </div>
                         </div>
 
-                        <div id="musicLyricsContainer" class="flex-1 min-h-[260px] max-h-[340px] overflow-y-auto pr-2 space-y-2.5 py-3 text-center scroll-smooth">
+                        <div id="musicLyricsContainer" class="lyrics-stage-mask flex-1 min-h-[290px] max-h-[370px] overflow-y-auto no-scrollbar px-2 space-y-3 py-16 text-center">
                             <!-- Populated dynamically via JS -->
                         </div>
                     </div>
                 </div>
             </div>
-                </div> <!-- end #tabSlideStage -->
 
-                <!-- Subtle Slide Navigation Dots & Hint -->
-                <div class="mt-3 flex flex-wrap items-center justify-between gap-2 px-2">
-                    <div id="tabSlideDots" class="flex items-center gap-2">
-                        <button type="button" onclick="switchTab('letter')" data-slide-dot="letter" class="w-5 h-1.5 rounded-full bg-pink-400 transition-all" title="A Letter For You"></button>
-                        <button type="button" onclick="switchTab('commits')" data-slide-dot="commits" class="w-2 h-1.5 rounded-full bg-pink-300/35 hover:bg-pink-300/60 transition-all" title="Our Story &amp; Memories"></button>
-                        <button type="button" onclick="switchTab('reasons')" data-slide-dot="reasons" class="w-2 h-1.5 rounded-full bg-pink-300/35 hover:bg-pink-300/60 transition-all" title="Why I Love You"></button>
-                        <button type="button" onclick="switchTab('lab')" data-slide-dot="lab" class="w-2 h-1.5 rounded-full bg-pink-300/35 hover:bg-pink-300/60 transition-all" title="3D Heart Glow"></button>
-                        <button type="button" onclick="switchTab('music')" data-slide-dot="music" class="w-2 h-1.5 rounded-full bg-pink-300/35 hover:bg-pink-300/60 transition-all" title="Our Music"></button>
-                    </div>
-                    <div class="flex items-center gap-2 text-[11px] text-pink-300/70">
-                        <button type="button" onclick="slideToAdjacentTab(-1)" class="sm:hidden px-2 py-0.5 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-200">‹ Prev</button>
-                        <span>Hold left/right edge or swipe to slide tabs ♥</span>
-                        <button type="button" onclick="slideToAdjacentTab(1)" class="sm:hidden px-2 py-0.5 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-200">Next ›</button>
-                    </div>
-                </div>
-            </div> <!-- end #tabSlideViewport -->
+            </div> <!-- end #dashboardSectionsStack -->
 
             <!-- GENTLE SCROLL DIVIDER INTO COUPLE GAMES -->
-            <div class="pt-4 pb-1 flex flex-col items-center justify-center text-center">
+            <div class="pt-2 pb-1 flex flex-col items-center justify-center text-center">
                 <button type="button" onclick="scrollToGames()" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-500/15 border border-pink-400/25 text-xs text-pink-200/90 hover:text-white hover:border-pink-400/50 transition">
                     <span>Scroll Down To Play Our Couple Games ♥</span>
                     <i data-lucide="chevrons-down" class="w-3.5 h-3.5 text-pink-400 animate-bounce"></i>
@@ -891,7 +937,7 @@
             <!-- ==========================================
                  COUPLE GAMES LOUNGE (Q&A · THIS OR THAT · WHO IS MORE LIKELY TO?)
                  ========================================== -->
-            <div id="coupleGamesSection" class="scroll-mt-24 liquid-glass rounded-3xl p-6 sm:p-9 space-y-6">
+            <div id="coupleGamesSection" data-section-tab="games" class="scroll-mt-36 liquid-glass rounded-3xl p-6 sm:p-9 space-y-6">
                 
                 <!-- Games Header -->
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-pink-300/15">
@@ -1222,7 +1268,11 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 ]
             },
 
-            // Music Player Configuration (Each song starts at the exact timestamp you choose!)
+            // Music Player Configuration
+            // Put your MP3 files in the `music/` folder as:
+            //   - music/mrignaini.mp3  (starts at 0:24)
+            //   - music/maharani.mp3   (starts at 1:16)
+            // Optional synced lyric files: music/mrignaini.lrc & music/maharani.lrc
             MUSIC: {
                 TRACKS: [
                     {
@@ -1232,14 +1282,20 @@ No matter where life takes us next, my heart will always choose you—today, tom
                         artist: 'Karun',
                         startTime: 24, // 0:24
                         duration: 126, // 2:06
-                        youtubeIds: ['3n8IMQbicBA', 'DVjQlDlApXQ'], // [0] Official Audio, [1] Lyrics Video
-                        audioUrl: '', // Optional: direct MP3 URL
+                        audioUrl: 'music/mrignaini.mp3',
+                        lrcUrl: 'music/mrignaini.lrc',
+                        youtubeIds: ['3n8IMQbicBA', 'DVjQlDlApXQ'], // Automatic fallback if MP3 isn't uploaded yet
                         lyrics: [
                             { time: 0, text: '♪ Intro — Mrignaini (Karun) ♪' },
+                            { time: 12, text: 'Close your eyes and feel this melody drift in...' },
                             { time: 24, text: '♥ 0:24 — The exact moment that reminds me of you ♥' },
-                            { time: 45, text: 'Every time this beat drops, all I think about is your eyes ✨' },
-                            { time: 72, text: 'Just pure magic, just like you 💕' },
-                            { time: 100, text: 'Tip: Tap "Lyrics Video" or "Edit Lyrics" to add custom synced lines ♥' }
+                            { time: 34, text: 'Every time this part plays, all I see is your smile ✨' },
+                            { time: 45, text: 'Soft, dreamy, and impossible to ever forget...' },
+                            { time: 58, text: 'Like moonlight glowing gently in your eyes 🌙' },
+                            { time: 72, text: 'You turn every ordinary second into pure magic 💕' },
+                            { time: 86, text: 'Stay right here in this beat with me forever ♥' },
+                            { time: 100, text: 'Every note feels warmer when I think of you ✨' },
+                            { time: 114, text: 'Tip: Upload music/mrignaini.lrc or tap "Edit Lyrics" to sync full lyrics ♪' }
                         ]
                     },
                     {
@@ -1249,14 +1305,20 @@ No matter where life takes us next, my heart will always choose you—today, tom
                         artist: 'Karun, Lambo Drive, Arpit Bala & ReVo LEKHAK',
                         startTime: 76, // 1:16
                         duration: 389, // 6:29
-                        youtubeIds: ['VhRJ-3T4Rcw', 'GIK0r6WWbDQ', 'N1s-GN1SWqY'], // [0] Official Audio, [1] Lyrics Video, [2] Official MV
-                        audioUrl: '', // Optional: direct MP3 URL
+                        audioUrl: 'music/maharani.mp3',
+                        lrcUrl: 'music/maharani.lrc',
+                        youtubeIds: ['VhRJ-3T4Rcw', 'GIK0r6WWbDQ', 'N1s-GN1SWqY'], // Automatic fallback if MP3 isn't uploaded yet
                         lyrics: [
                             { time: 0, text: '♪ Intro — Maharani (Karun, Lambo Drive, Arpit Bala & ReVo LEKHAK) ♪' },
+                            { time: 38, text: 'Building up the vibe right into my favorite verse...' },
                             { time: 76, text: '♪ 1:16 — My favorite part starts right here ✨' },
-                            { time: 130, text: 'Turn the volume up and vibe with me ♥' },
-                            { time: 210, text: 'One of my all-time favorite tracks to share with you 💕' },
-                            { time: 300, text: 'Tip: Tap "Lyrics Video" or "Edit Lyrics" to add custom synced lines ♪' }
+                            { time: 92, text: 'Turn the volume up and vibe along with me ♥' },
+                            { time: 112, text: 'That smooth flow hits different every single time...' },
+                            { time: 136, text: 'One of those tracks I could replay all night long 🌙' },
+                            { time: 168, text: 'Sharing my favorite songs with my favorite person 💕' },
+                            { time: 210, text: 'Let the rhythm carry us through the whole night ✨' },
+                            { time: 265, text: 'Still hits just as hard every time I hear it ♥' },
+                            { time: 325, text: 'Tip: Upload music/maharani.lrc or tap "Edit Lyrics" to sync full lyrics ♪' }
                         ]
                     }
                 ]
@@ -2123,7 +2185,16 @@ No matter where life takes us next, my heart will always choose you—today, tom
                         // Begin smooth typewriter once the glass dashboard fade is underway
                         setTimeout(() => {
                             dashboard.style.willChange = 'auto';
-                            switchTab('letter', { silent: true, fromAuto: true });
+                            switchTab('letter', { silent: true, fromAuto: true, noScroll: true });
+                            if (typeof musicState !== 'undefined') {
+                                musicState.lastActiveLyricIdx = -1;
+                                if (typeof updateMusicLyricsHighlight === 'function') {
+                                    updateMusicLyricsHighlight(musicState.currentTime, true);
+                                }
+                                if (musicState.mode === 'youtube' && typeof ensureYoutubeApiLoaded === 'function') {
+                                    ensureYoutubeApiLoaded();
+                                }
+                            }
                         }, 280);
                     });
                 });
@@ -2244,14 +2315,19 @@ No matter where life takes us next, my heart will always choose you—today, tom
         function toggleAutoSwitch() {
             autoSwitchEnabled = !autoSwitchEnabled;
             playUiBeep(autoSwitchEnabled ? 660 : 420, 0.06);
-            const label = document.getElementById('autoSwitchLabel');
-            const dot = document.getElementById('autoSwitchDot');
-            if (label) label.textContent = autoSwitchEnabled ? 'Auto-Switch: On' : 'Auto-Switch: Off';
-            if (dot) {
-                dot.className = autoSwitchEnabled
-                    ? 'w-2 h-2 rounded-full bg-pink-400 animate-pulse'
-                    : 'w-2 h-2 rounded-full bg-pink-300/35';
-            }
+            const labelText = autoSwitchEnabled ? 'Auto-Scroll: On' : 'Auto-Scroll: Off';
+            const dotClass = autoSwitchEnabled
+                ? 'w-2 h-2 rounded-full bg-pink-400 animate-pulse'
+                : 'w-2 h-2 rounded-full bg-pink-300/35';
+
+            ['autoSwitchLabel', 'autoSwitchLabelMobile'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = labelText;
+            });
+            ['autoSwitchDot', 'autoSwitchDotMobile'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) el.className = dotClass;
+            });
 
             if (!autoSwitchEnabled) {
                 cancelAllTabAutoTimers();
@@ -2327,14 +2403,8 @@ No matter where life takes us next, my heart will always choose you—today, tom
             startTypewriterEffect();
         }
 
-        const SLIDABLE_TOP_TABS = ['letter', 'commits', 'reasons', 'lab', 'music'];
-        const TAB_DISPLAY_NAMES = {
-            letter: 'A Letter For You',
-            commits: 'Our Story & Memories',
-            reasons: 'Why I Love You',
-            lab: '3D Heart Glow',
-            music: 'Our Music'
-        };
+        const DASHBOARD_SECTION_TABS = ['letter', 'commits', 'reasons', 'lab', 'music', 'games'];
+        let suppressScrollSpyUntil = 0;
 
         function scheduleAutoFlowForTab(tabName) {
             if (!autoSwitchEnabled || finaleActive) return;
@@ -2344,7 +2414,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 const stepMs = 2300;
                 const totalMs = Math.max(1, cards.length) * stepMs;
 
-                startTabAutoBar(totalMs, 'Reading Our Story — next up: Why I Love You ♥', () => {
+                startTabAutoBar(totalMs, 'Reading Our Story — scrolling next to Why I Love You ♥', () => {
                     switchTab('reasons', { fromAuto: true });
                 });
 
@@ -2360,7 +2430,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 const stepMs = 1800;
                 const totalMs = Math.max(1, cards.length) * stepMs;
 
-                startTabAutoBar(totalMs, 'Every reason I love you — next up: 3D Heart Glow ✨', () => {
+                startTabAutoBar(totalMs, 'Every reason I love you — scrolling next to 3D Heart Glow ✨', () => {
                     switchTab('lab', { fromAuto: true });
                 });
 
@@ -2379,7 +2449,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 const modeLabel = document.getElementById('asciiModeLabel');
                 if (modeLabel) modeLabel.textContent = asciiModes[0];
 
-                startTabAutoBar(totalMs, 'Enjoying 3D Heart Glow — next up: Our Music ♪', () => {
+                startTabAutoBar(totalMs, 'Enjoying 3D Heart Glow — scrolling next to Our Music ♪', () => {
                     switchTab('music', { fromAuto: true });
                 });
 
@@ -2393,38 +2463,46 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 }
             } else if (tabName === 'music') {
                 if (typeof musicState !== 'undefined' && musicState.isPlaying) {
-                    return; // Don't auto-advance away while a song is actively playing
+                    return; // Don't auto-scroll away while a song is actively playing
                 }
-                startTabAutoBar(8500, 'Listening to Our Music — next up: Couple Games ♥', () => {
+                startTabAutoBar(8500, 'Listening to Our Music — scrolling next to Couple Games ♥', () => {
                     switchTab('games', { fromAuto: true });
                 });
             }
         }
 
-        function highlightDashboardTabButtons(activeName) {
-            const allTabs = ['letter', 'commits', 'reasons', 'lab', 'music', 'games'];
-            allTabs.forEach((t) => {
+        function highlightDashboardTabButtons(activeName, centerInRow = true) {
+            let activeBtn = null;
+            DASHBOARD_SECTION_TABS.forEach((t) => {
                 const btn = document.getElementById(`tabBtn-${t}`);
                 if (!btn) return;
                 if (t === activeName) {
-                    btn.className = 'tab-btn liquid-glass px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold text-white border-pink-400 flex items-center gap-2 transition';
+                    activeBtn = btn;
+                    btn.className = 'tab-btn shrink-0 liquid-glass px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white border-pink-400 flex items-center gap-2 transition';
                 } else {
-                    btn.className = 'tab-btn liquid-glass-subtle px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition';
+                    btn.className = 'tab-btn shrink-0 liquid-glass-subtle px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-pink-200/80 hover:text-white flex items-center gap-2 transition';
                 }
             });
 
-            document.querySelectorAll('[data-slide-dot]').forEach((dot) => {
-                const isCurrent = dot.getAttribute('data-slide-dot') === activeName;
-                dot.className = isCurrent
-                    ? 'w-5 h-1.5 rounded-full bg-pink-400 transition-all'
-                    : 'w-2 h-1.5 rounded-full bg-pink-300/35 hover:bg-pink-300/60 transition-all';
-            });
+            // Gently center the active tab horizontally inside #tabsRowScroller without interfering with vertical scroll
+            if (centerInRow && activeBtn) {
+                const scroller = document.getElementById('tabsRowScroller');
+                const dashboard = document.getElementById('dashboardContainer');
+                if (scroller && dashboard && !dashboard.classList.contains('hidden')) {
+                    const targetLeft = activeBtn.offsetLeft - (scroller.clientWidth * 0.5) + (activeBtn.offsetWidth * 0.5);
+                    scroller.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+                }
+            }
+        }
+
+        function getSectionElementForTab(tabName) {
+            if (tabName === 'games') return document.getElementById('coupleGamesSection');
+            return document.getElementById(`tabContent-${tabName}`);
         }
 
         function activateGamesTabSilently() {
             if (activeDashboardTab !== 'games') {
                 activeDashboardTab = 'games';
-                stopTypewriterEffect();
                 cancelAllTabAutoTimers();
                 highlightDashboardTabButtons('games');
             }
@@ -2433,255 +2511,120 @@ No matter where life takes us next, my heart will always choose you—today, tom
         function switchTab(tabName, opts = {}) {
             if (!opts.silent) playUiBeep(540, 0.05);
             cancelAllTabAutoTimers();
-            stopTypewriterEffect();
-
-            const prevIdx = SLIDABLE_TOP_TABS.indexOf(activeDashboardTab);
-            const nextIdx = SLIDABLE_TOP_TABS.indexOf(tabName);
-            let slideAnimClass = 'tab-fade-in';
-            if (opts.slideDir === 1) {
-                slideAnimClass = 'tab-slide-in-right';
-            } else if (opts.slideDir === -1) {
-                slideAnimClass = 'tab-slide-in-left';
-            } else if (prevIdx !== -1 && nextIdx !== -1 && prevIdx !== nextIdx) {
-                slideAnimClass = nextIdx > prevIdx ? 'tab-slide-in-right' : 'tab-slide-in-left';
+            if (tabName !== 'letter') {
+                stopTypewriterEffect();
             }
 
             activeDashboardTab = tabName;
-            highlightDashboardTabButtons(tabName);
+            highlightDashboardTabButtons(tabName, true);
 
-            if (tabName === 'games') {
-                const section = document.getElementById('coupleGamesSection');
-                if (section) {
-                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-                return;
-            }
-
-            SLIDABLE_TOP_TABS.forEach((t) => {
-                const content = document.getElementById(`tabContent-${t}`);
-                if (!content) return;
-                if (t === tabName) {
-                    content.classList.remove('hidden', 'tab-fade-in', 'tab-slide-in-right', 'tab-slide-in-left');
-                    void content.offsetWidth;
-                    content.classList.add(slideAnimClass);
+            const targetSection = getSectionElementForTab(tabName);
+            if (!opts.noScroll && targetSection) {
+                suppressScrollSpyUntil = performance.now() + 900;
+                if (opts.scrollTop && tabName === 'letter') {
+                    const anchor = document.getElementById('dashboardTabsAnchor');
+                    if (anchor) {
+                        anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
                 } else {
-                    content.classList.add('hidden');
-                }
-            });
-
-            if (opts.scrollTop) {
-                const anchor = document.getElementById('dashboardTabsAnchor');
-                if (anchor) {
-                    anchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                } else {
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }
 
-            if (tabName === 'music' && typeof ensureYoutubeApiLoaded === 'function') {
+            if (tabName === 'music' && typeof musicState !== 'undefined' && musicState.mode === 'youtube' && typeof ensureYoutubeApiLoaded === 'function') {
                 ensureYoutubeApiLoaded();
             }
 
+            if (tabName === 'games') {
+                return;
+            }
+
             if (tabName === 'letter') {
-                startTypewriterEffect();
+                const out = document.getElementById('typewriterOutput');
+                const isEmpty = !out || !out.textContent || out.textContent.trim().length === 0;
+                if (isEmpty || opts.fromAuto || opts.scrollTop || opts.restartLetter) {
+                    startTypewriterEffect();
+                }
             } else {
                 scheduleAutoFlowForTab(tabName);
             }
         }
 
-        function slideToAdjacentTab(direction) {
-            const currentIdx = SLIDABLE_TOP_TABS.indexOf(activeDashboardTab);
-            const baseIdx = currentIdx === -1 ? 0 : currentIdx;
-            const targetIdx = (baseIdx + direction + SLIDABLE_TOP_TABS.length) % SLIDABLE_TOP_TABS.length;
-            const targetTab = SLIDABLE_TOP_TABS[targetIdx];
-            switchTab(targetTab, { slideDir: direction >= 0 ? 1 : -1 });
-        }
+        function initSectionScrollSpy() {
+            let spyRaf = null;
 
-        function initTabSlideInteractions() {
-            const viewport = document.getElementById('tabSlideViewport');
-            const stage = document.getElementById('tabSlideStage');
-            const dragIndicator = document.getElementById('tabDragIndicator');
-            const leftBtn = document.getElementById('tabSlideHoldLeft');
-            const rightBtn = document.getElementById('tabSlideHoldRight');
-            const leftProgress = document.getElementById('tabHoldProgressLeft');
-            const rightProgress = document.getElementById('tabHoldProgressRight');
-            if (!viewport || !stage) return;
+            const updateActiveFromScroll = () => {
+                spyRaf = null;
+                if (finaleActive || performance.now() < suppressScrollSpyUntil) return;
+                const dashboard = document.getElementById('dashboardContainer');
+                if (!dashboard || dashboard.classList.contains('hidden')) return;
 
-            // 1. Edge Button Hold-to-Slide (and quick tap)
-            function attachEdgeHold(btn, progressEl, direction) {
-                if (!btn) return;
-                let holdRaf = null;
-                let repeatTimer = null;
-                let holdTriggered = false;
-                let isDown = false;
-                const HOLD_MS = 420;
-                const REPEAT_MS = 950;
+                const sections = Array.from(document.querySelectorAll('[data-section-tab]'));
+                if (!sections.length) return;
 
-                const clearHold = () => {
-                    isDown = false;
-                    if (holdRaf) { cancelAnimationFrame(holdRaf); holdRaf = null; }
-                    if (repeatTimer) { clearInterval(repeatTimer); repeatTimer = null; }
-                    btn.classList.remove('is-holding');
-                    if (progressEl) progressEl.style.width = '0%';
-                    if (dragIndicator) dragIndicator.classList.add('hidden');
-                };
+                const anchorLine = Math.min(260, window.innerHeight * 0.34);
+                let detectedTab = sections[0].getAttribute('data-section-tab');
 
-                btn.addEventListener('pointerdown', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    isDown = true;
-                    holdTriggered = false;
-                    btn.classList.add('is-holding');
-                    const start = performance.now();
-
-                    const step = (now) => {
-                        if (!isDown) return;
-                        const pct = Math.min(100, ((now - start) / HOLD_MS) * 100);
-                        if (progressEl) progressEl.style.width = `${pct}%`;
-                        if (pct >= 100 && !holdTriggered) {
-                            holdTriggered = true;
-                            slideToAdjacentTab(direction);
-                            if (progressEl) progressEl.style.width = '0%';
-                            repeatTimer = setInterval(() => {
-                                if (isDown) slideToAdjacentTab(direction);
-                            }, REPEAT_MS);
-                            return;
-                        }
-                        if (!holdTriggered) {
-                            holdRaf = requestAnimationFrame(step);
-                        }
-                    };
-                    holdRaf = requestAnimationFrame(step);
-                });
-
-                btn.addEventListener('pointerup', () => {
-                    if (isDown && !holdTriggered) {
-                        slideToAdjacentTab(direction);
-                    }
-                    clearHold();
-                });
-                btn.addEventListener('pointercancel', clearHold);
-                btn.addEventListener('pointerleave', clearHold);
-            }
-
-            attachEdgeHold(leftBtn, leftProgress, -1);
-            attachEdgeHold(rightBtn, rightProgress, 1);
-
-            // 2. Hold Left/Right Side OR Drag Left/Right Anywhere on the Tab Stage
-            let ptrActive = false;
-            let startX = 0;
-            let startY = 0;
-            let currentDx = 0;
-            let isHorizontalDrag = false;
-            let edgeHoldTimer = null;
-            let edgeHoldFired = false;
-
-            const showDirectionPill = (dir) => {
-                if (!dragIndicator) return;
-                const curIdx = Math.max(0, SLIDABLE_TOP_TABS.indexOf(activeDashboardTab));
-                const nextIdx = (curIdx + dir + SLIDABLE_TOP_TABS.length) % SLIDABLE_TOP_TABS.length;
-                const label = TAB_DISPLAY_NAMES[SLIDABLE_TOP_TABS[nextIdx]] || 'Next';
-                dragIndicator.textContent = dir < 0 ? `← ${label}` : `${label} →`;
-                dragIndicator.classList.remove('hidden');
-            };
-
-            const resetDragState = () => {
-                ptrActive = false;
-                isHorizontalDrag = false;
-                currentDx = 0;
-                if (edgeHoldTimer) { clearTimeout(edgeHoldTimer); edgeHoldTimer = null; }
-                stage.style.transform = '';
-                if (dragIndicator) dragIndicator.classList.add('hidden');
-            };
-
-            viewport.addEventListener('pointerdown', (e) => {
-                if (e.button !== undefined && e.button !== 0) return;
-                if (e.target.closest('button, input, textarea, select, a, label, [data-no-slide]')) return;
-
-                ptrActive = true;
-                edgeHoldFired = false;
-                isHorizontalDrag = false;
-                startX = e.clientX;
-                startY = e.clientY;
-                currentDx = 0;
-
-                // If user presses and holds on the left 14% or right 14% edge of the card, slide after 460ms hold
-                const rect = viewport.getBoundingClientRect();
-                const relX = (e.clientX - rect.left) / Math.max(1, rect.width);
-                if (relX <= 0.14 || relX >= 0.86) {
-                    const holdDir = relX <= 0.14 ? -1 : 1;
-                    edgeHoldTimer = setTimeout(() => {
-                        if (!ptrActive || isHorizontalDrag) return;
-                        edgeHoldFired = true;
-                        slideToAdjacentTab(holdDir);
-                        resetDragState();
-                    }, 460);
-                }
-            });
-
-            viewport.addEventListener('pointermove', (e) => {
-                if (!ptrActive) return;
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
-
-                if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
-                    if (edgeHoldTimer) { clearTimeout(edgeHoldTimer); edgeHoldTimer = null; }
-                }
-
-                if (!isHorizontalDrag) {
-                    if (Math.abs(dx) > 22 && Math.abs(dx) > Math.abs(dy) * 1.35) {
-                        // Respect active text selection inside letters
-                        const sel = window.getSelection ? window.getSelection().toString() : '';
-                        if (sel && sel.length > 0) {
-                            resetDragState();
-                            return;
-                        }
-                        isHorizontalDrag = true;
-                    } else if (Math.abs(dy) > 24) {
-                        resetDragState();
-                        return;
+                for (let i = 0; i < sections.length; i++) {
+                    const rect = sections[i].getBoundingClientRect();
+                    if (rect.top <= anchorLine) {
+                        detectedTab = sections[i].getAttribute('data-section-tab');
+                    } else {
+                        break;
                     }
                 }
 
-                if (isHorizontalDrag) {
-                    currentDx = dx;
-                    const damped = Math.max(-110, Math.min(110, dx * 0.42));
-                    stage.style.transform = `translateX(${damped}px)`;
-                    showDirectionPill(dx > 0 ? -1 : 1);
+                // If scrolled all the way to the bottom, highlight Couple Games
+                if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 28) {
+                    detectedTab = sections[sections.length - 1].getAttribute('data-section-tab');
                 }
-            });
 
-            const finishPointer = () => {
-                if (!ptrActive) return;
-                if (isHorizontalDrag && Math.abs(currentDx) >= 60 && !edgeHoldFired) {
-                    // Dragging right reveals previous tab (-1); dragging left reveals next tab (+1)
-                    slideToAdjacentTab(currentDx > 0 ? -1 : 1);
+                if (detectedTab && detectedTab !== activeDashboardTab) {
+                    activeDashboardTab = detectedTab;
+                    highlightDashboardTabButtons(detectedTab, true);
+                    // Cancel stale auto-scroll progress bar if user manually scrolled to another section
+                    cancelAllTabAutoTimers();
+                    if (detectedTab === 'music' && typeof musicState !== 'undefined' && musicState.mode === 'youtube' && typeof ensureYoutubeApiLoaded === 'function') {
+                        ensureYoutubeApiLoaded();
+                    }
                 }
-                resetDragState();
             };
 
-            viewport.addEventListener('pointerup', finishPointer);
-            viewport.addEventListener('pointercancel', resetDragState);
+            window.addEventListener('scroll', () => {
+                if (spyRaf === null) {
+                    spyRaf = requestAnimationFrame(updateActiveFromScroll);
+                }
+            }, { passive: true });
         }
 
         /* =====================================================================
-         * 9B. OUR MUSIC PLAYER (YOUTUBE EMBED, EXACT START TIMES & SYNCED LYRICS)
+         * 9B. OUR MUSIC PLAYER (MP3-FIRST + YOUTUBE FALLBACK + SMOOTH SYNCED LYRICS)
          * ===================================================================== */
         const musicState = {
             trackIdx: 0,
             sourceVariantIdx: 0,
+            mode: 'mp3', // 'mp3' or 'youtube'
             isPlaying: false,
             currentTime: 24,
+            volume: 0.85,
             customAudioUrl: null,
             customTitle: null,
             audioEl: null,
             ytPlayer: null,
             ytReady: false,
             ytApiRequested: false,
-            pollTimer: null,
+            syncRafId: null,
+            lyricsScrollRafId: null,
             lastActiveLyricIdx: -1,
+            lastEqUpdateAt: 0,
+            lastSliderSyncAt: 0,
+            mp3Availability: {}, // { [trackId]: true | false }
+            lrcFetchedByTrack: {},
             startTimeOverrides: {},
-            customLyricsByTrack: {}
+            customLyricsByTrack: {},
+            loadToken: 0
         };
 
         function formatTrackTime(sec) {
@@ -2694,12 +2637,49 @@ No matter where life takes us next, my heart will always choose you—today, tom
         function parseTimeStringToSeconds(str, fallback = 0) {
             const cleaned = String(str || '').trim();
             if (!cleaned) return fallback;
-            if (/^\d+$/.test(cleaned)) return Math.max(0, parseInt(cleaned, 10));
-            const parts = cleaned.split(':').map((p) => parseInt(p, 10));
-            if (parts.some((n) => isNaN(n) || n < 0)) return fallback;
-            if (parts.length === 2) return parts[0] * 60 + parts[1];
-            if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+            if (/^\d+(?:\.\d+)?$/.test(cleaned)) return Math.max(0, parseFloat(cleaned));
+            const parts = cleaned.split(':');
+            if (parts.length === 2) {
+                const m = parseInt(parts[0], 10);
+                const s = parseFloat(parts[1]);
+                if (!isNaN(m) && !isNaN(s) && m >= 0 && s >= 0) return m * 60 + s;
+            } else if (parts.length === 3) {
+                const h = parseInt(parts[0], 10);
+                const m = parseInt(parts[1], 10);
+                const s = parseFloat(parts[2]);
+                if (!isNaN(h) && !isNaN(m) && !isNaN(s) && h >= 0 && m >= 0 && s >= 0) return h * 3600 + m * 60 + s;
+            }
             return fallback;
+        }
+
+        function parseLyricsText(rawText, baseStartSec = 0) {
+            const rawLines = String(rawText || '').split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
+            const parsed = [];
+            let plainIdx = 0;
+
+            rawLines.forEach((raw) => {
+                // Skip LRC metadata tags like [ar:...], [ti:...], [al:...], [by:...]
+                if (/^\[[a-zA-Z]+:.*\]$/.test(raw)) return;
+
+                const timeMatches = [...raw.matchAll(/\[(\d{1,2}:\d{2}(?:\.\d+)?)\]/g)];
+                if (timeMatches.length > 0) {
+                    const text = raw.replace(/\[(\d{1,2}:\d{2}(?:\.\d+)?)\]/g, '').trim() || '♪';
+                    timeMatches.forEach((m) => {
+                        parsed.push({
+                            time: parseTimeStringToSeconds(m[1], baseStartSec),
+                            text
+                        });
+                    });
+                } else {
+                    parsed.push({
+                        time: baseStartSec + plainIdx * 5,
+                        text: raw
+                    });
+                    plainIdx += 1;
+                }
+            });
+
+            return parsed.sort((a, b) => a.time - b.time);
         }
 
         function getActiveMusicTrack() {
@@ -2716,7 +2696,9 @@ No matter where life takes us next, my heart will always choose you—today, tom
         function getTrackLyrics(track) {
             if (!track) return [];
             const custom = musicState.customLyricsByTrack[track.id];
-            return (Array.isArray(custom) && custom.length > 0) ? custom : (track.lyrics || []);
+            if (Array.isArray(custom) && custom.length > 0) return custom;
+            if (Array.isArray(track.loadedLrcLyrics) && track.loadedLrcLyrics.length > 0) return track.loadedLrcLyrics;
+            return track.lyrics || [];
         }
 
         function getActiveYoutubeId(track) {
@@ -2739,8 +2721,32 @@ No matter where life takes us next, my heart will always choose you—today, tom
             return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
         }
 
+        function tryFetchExternalLrc(track) {
+            if (!track || !track.lrcUrl || musicState.lrcFetchedByTrack[track.id]) return;
+            if (!window.location || !/^https?:/.test(window.location.protocol)) return;
+
+            musicState.lrcFetchedByTrack[track.id] = true;
+            fetch(track.lrcUrl)
+                .then((res) => (res.ok ? res.text() : null))
+                .then((text) => {
+                    if (!text || !text.trim()) return;
+                    const parsed = parseLyricsText(text, getTrackStartTime(track));
+                    if (parsed.length > 0) {
+                        track.loadedLrcLyrics = parsed;
+                        const activeTrack = getActiveMusicTrack();
+                        if (activeTrack && activeTrack.id === track.id) {
+                            renderMusicLyrics();
+                        }
+                    }
+                })
+                .catch(() => {});
+        }
+
         function ensureYoutubeApiLoaded() {
             if (musicState.ytApiRequested) return;
+            const dashboard = document.getElementById('dashboardContainer');
+            if (dashboard && dashboard.classList.contains('hidden')) return;
+
             musicState.ytApiRequested = true;
 
             const initPlayer = () => {
@@ -2752,31 +2758,34 @@ No matter where life takes us next, my heart will always choose you—today, tom
                         events: {
                             onReady: () => {
                                 musicState.ytReady = true;
+                                if (typeof musicState.ytPlayer.setVolume === 'function') {
+                                    musicState.ytPlayer.setVolume(Math.round(musicState.volume * 100));
+                                }
                                 updateMusicUI();
                             },
                             onStateChange: (event) => {
-                                if (!window.YT || !window.YT.PlayerState) return;
+                                if (!window.YT || !window.YT.PlayerState || musicState.mode !== 'youtube') return;
                                 const st = event.data;
                                 if (st === window.YT.PlayerState.PLAYING) {
                                     musicState.isPlaying = true;
-                                    startMusicPollLoop();
+                                    startMusicSyncLoop();
                                     updateMusicUI();
                                 } else if (st === window.YT.PlayerState.PAUSED) {
                                     musicState.isPlaying = false;
-                                    stopMusicPollLoop();
+                                    stopMusicSyncLoop();
                                     updateMusicUI();
                                 } else if (st === window.YT.PlayerState.ENDED) {
                                     musicState.isPlaying = false;
-                                    stopMusicPollLoop();
+                                    stopMusicSyncLoop();
                                     nextMusicTrack(true);
                                 }
                             },
                             onError: () => {
-                                // Automatically fall back to next YouTube video ID (e.g., Lyrics Video / Official MV)
+                                if (musicState.mode !== 'youtube') return;
                                 const track = getActiveMusicTrack();
                                 if (track && track.youtubeIds && musicState.sourceVariantIdx + 1 < track.youtubeIds.length) {
                                     musicState.sourceVariantIdx += 1;
-                                    loadActiveTrackInPlayer(getTrackStartTime(track), true);
+                                    loadYoutubeFallback(track, getTrackStartTime(track), true);
                                 }
                             }
                         }
@@ -2836,6 +2845,41 @@ No matter where life takes us next, my heart will always choose you—today, tom
             }).join('');
         }
 
+        function smoothScrollLyricsTo(container, targetTop) {
+            if (!container || container.clientHeight <= 0) return;
+            if (musicState.lyricsScrollRafId !== null) {
+                cancelAnimationFrame(musicState.lyricsScrollRafId);
+                musicState.lyricsScrollRafId = null;
+            }
+
+            const startTop = container.scrollTop;
+            const maxScroll = Math.max(0, container.scrollHeight - container.clientHeight);
+            const clampedTarget = Math.max(0, Math.min(maxScroll, targetTop));
+            const delta = clampedTarget - startTop;
+            if (Math.abs(delta) < 1) {
+                container.scrollTop = clampedTarget;
+                return;
+            }
+
+            const duration = 520;
+            const startTime = performance.now();
+
+            function stepScroll(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(1, elapsed / duration);
+                // Cubic ease-out for silky Apple-Music-like deceleration
+                const eased = 1 - Math.pow(1 - progress, 3);
+                container.scrollTop = startTop + delta * eased;
+                if (progress < 1) {
+                    musicState.lyricsScrollRafId = requestAnimationFrame(stepScroll);
+                } else {
+                    musicState.lyricsScrollRafId = null;
+                }
+            }
+
+            musicState.lyricsScrollRafId = requestAnimationFrame(stepScroll);
+        }
+
         function renderMusicLyrics() {
             const container = document.getElementById('musicLyricsContainer');
             const track = getActiveMusicTrack();
@@ -2844,16 +2888,17 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const lines = getTrackLyrics(track);
             container.innerHTML = lines.map((line, idx) => `
                 <button type="button" onclick="seekMusicTo(${line.time}, true)" data-lyric-idx="${idx}"
-                    class="lyric-line block w-full text-center px-3 py-2 rounded-xl text-xs sm:text-sm text-pink-200/60 hover:text-pink-100 hover:bg-pink-500/10 cursor-pointer">
-                    <span class="font-mono text-[10px] text-pink-400/75 mr-1.5">${formatTrackTime(line.time)}</span>
-                    <span>${escapeHtml(line.text)}</span>
+                    class="lyric-line is-upcoming block w-full text-center px-4 py-3 rounded-2xl text-xs sm:text-sm text-pink-200/70 hover:text-white hover:bg-pink-500/10 cursor-pointer">
+                    <span class="font-mono text-[10px] text-pink-400/75 mr-1.5 align-middle">${formatTrackTime(line.time)}</span>
+                    <span class="align-middle leading-relaxed">${escapeHtml(line.text)}</span>
+                    <span class="lyric-line-progress"></span>
                 </button>
             `).join('');
             musicState.lastActiveLyricIdx = -1;
-            updateMusicLyricsHighlight(musicState.currentTime);
+            updateMusicLyricsHighlight(musicState.currentTime, true);
         }
 
-        function updateMusicLyricsHighlight(timeSec) {
+        function updateMusicLyricsHighlight(timeSec, immediateScroll = false) {
             const track = getActiveMusicTrack();
             const container = document.getElementById('musicLyricsContainer');
             if (!track || !container) return;
@@ -2863,39 +2908,70 @@ No matter where life takes us next, my heart will always choose you—today, tom
 
             let activeIdx = 0;
             for (let i = 0; i < lines.length; i++) {
-                if (timeSec >= lines[i].time) {
+                if (timeSec + 0.12 >= lines[i].time) {
                     activeIdx = i;
                 } else {
                     break;
                 }
             }
 
-            if (activeIdx === musicState.lastActiveLyricIdx) return;
-            musicState.lastActiveLyricIdx = activeIdx;
-
             const nodes = container.querySelectorAll('[data-lyric-idx]');
-            nodes.forEach((node, idx) => {
-                if (idx === activeIdx) {
-                    node.classList.add('is-active', 'font-semibold', 'text-sm', 'sm:text-base', 'bg-pink-500/15');
-                    node.classList.remove('text-pink-200/60', 'text-pink-300/40');
-                    const offsetTop = node.offsetTop - container.offsetTop - (container.clientHeight * 0.36);
-                    container.scrollTo({ top: Math.max(0, offsetTop), behavior: 'smooth' });
-                } else if (idx < activeIdx) {
-                    node.classList.remove('is-active', 'font-semibold', 'text-sm', 'sm:text-base', 'bg-pink-500/15', 'text-pink-200/60');
-                    node.classList.add('text-pink-300/40');
-                } else {
-                    node.classList.remove('is-active', 'font-semibold', 'text-sm', 'sm:text-base', 'bg-pink-500/15', 'text-pink-300/40');
-                    node.classList.add('text-pink-200/60');
+            if (!nodes.length) return;
+
+            if (activeIdx !== musicState.lastActiveLyricIdx) {
+                musicState.lastActiveLyricIdx = activeIdx;
+
+                nodes.forEach((node, idx) => {
+                    const progEl = node.querySelector('.lyric-line-progress');
+                    if (idx === activeIdx) {
+                        node.classList.add('is-active', 'font-semibold', 'text-sm', 'sm:text-base');
+                        node.classList.remove('is-past', 'is-upcoming', 'text-pink-200/70');
+                    } else if (idx < activeIdx) {
+                        node.classList.remove('is-active', 'is-upcoming', 'font-semibold', 'text-sm', 'sm:text-base');
+                        node.classList.add('is-past', 'text-pink-200/70');
+                        if (progEl) progEl.style.transform = 'scaleX(1)';
+                    } else {
+                        node.classList.remove('is-active', 'is-past', 'font-semibold', 'text-sm', 'sm:text-base');
+                        node.classList.add('is-upcoming', 'text-pink-200/70');
+                        if (progEl) progEl.style.transform = 'scaleX(0)';
+                    }
+                });
+
+                const activeNode = nodes[activeIdx];
+                if (activeNode && container.clientHeight > 0) {
+                    const containerRect = container.getBoundingClientRect();
+                    const nodeRect = activeNode.getBoundingClientRect();
+                    const nodeTopInContainer = (nodeRect.top - containerRect.top) + container.scrollTop;
+                    const targetTop = Math.max(0, nodeTopInContainer - (container.clientHeight * 0.5) + (nodeRect.height * 0.5));
+                    if (immediateScroll) {
+                        container.scrollTop = targetTop;
+                    } else {
+                        smoothScrollLyricsTo(container, targetTop);
+                    }
                 }
-            });
+            }
+
+            // Update active line's smooth progress underline at 60fps
+            const activeNode = nodes[activeIdx];
+            if (activeNode) {
+                const progEl = activeNode.querySelector('.lyric-line-progress');
+                if (progEl) {
+                    const lineStart = lines[activeIdx].time;
+                    const lineEnd = (activeIdx + 1 < lines.length)
+                        ? lines[activeIdx + 1].time
+                        : Math.max(lineStart + 6, getActiveTrackDuration());
+                    const ratio = Math.max(0, Math.min(1, (timeSec - lineStart) / Math.max(0.5, lineEnd - lineStart)));
+                    progEl.style.transform = `scaleX(${ratio.toFixed(4)})`;
+                }
+            }
         }
 
         function getActiveTrackDuration() {
             const track = getActiveMusicTrack();
-            if (musicState.audioEl && isFinite(musicState.audioEl.duration) && musicState.audioEl.duration > 0) {
+            if (musicState.mode === 'mp3' && musicState.audioEl && isFinite(musicState.audioEl.duration) && musicState.audioEl.duration > 0) {
                 return musicState.audioEl.duration;
             }
-            if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.getDuration === 'function') {
+            if (musicState.mode === 'youtube' && musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.getDuration === 'function') {
                 const ytDur = musicState.ytPlayer.getDuration();
                 if (isFinite(ytDur) && ytDur > 0) return ytDur;
             }
@@ -2910,11 +2986,21 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const startLabel = formatTrackTime(startSec);
             const totalDur = getActiveTrackDuration();
             const videoId = getActiveYoutubeId(track);
+            const isMp3 = musicState.mode === 'mp3';
 
             const headingText = document.getElementById('musicHeadingText');
             const badge = document.getElementById('musicTrackBadge');
             const titleEl = document.getElementById('musicTrackTitle');
             const artistEl = document.getElementById('musicTrackArtist');
+            const sourceBadge = document.getElementById('musicSourceBadge');
+            const mp3Panel = document.getElementById('mp3VisualPlayer');
+            const vinylDisc = document.getElementById('musicVinylDisc');
+            const mp3Heading = document.getElementById('mp3VisualHeading');
+            const mp3Title = document.getElementById('mp3VisualTitle');
+            const mp3FileLabel = document.getElementById('mp3VisualFileLabel');
+            const ytWrap = document.getElementById('ytPlayerWrapper');
+            const hintBar = document.getElementById('mp3UploadHintBar');
+            const hintText = document.getElementById('mp3UploadHintText');
             const curEl = document.getElementById('musicCurrentTime');
             const durEl = document.getElementById('musicTotalDuration');
             const slider = document.getElementById('musicSeekSlider');
@@ -2929,7 +3015,34 @@ No matter where life takes us next, my heart will always choose you—today, tom
             if (headingText) headingText.textContent = track.heading;
             if (badge) badge.textContent = track.heading;
             if (titleEl) titleEl.textContent = musicState.customTitle || track.title;
-            if (artistEl) artistEl.textContent = musicState.customTitle ? 'Local Audio File ♥' : track.artist;
+            if (artistEl) artistEl.textContent = musicState.customTitle ? 'Local MP3 File ♥' : track.artist;
+
+            if (sourceBadge) {
+                sourceBadge.textContent = isMp3
+                    ? (musicState.customTitle ? 'Local MP3 ♥' : 'MP3 Audio ♪')
+                    : 'YouTube';
+            }
+
+            if (mp3Panel) mp3Panel.classList.toggle('hidden', !isMp3);
+            if (ytWrap) ytWrap.classList.toggle('hidden', isMp3);
+            if (hintBar) hintBar.classList.toggle('hidden', isMp3);
+            if (variantBtn) variantBtn.classList.toggle('hidden', isMp3);
+
+            if (vinylDisc) {
+                vinylDisc.classList.toggle('is-spinning', isMp3 && musicState.isPlaying);
+            }
+            if (mp3Heading) mp3Heading.textContent = track.heading;
+            if (mp3Title) mp3Title.textContent = musicState.customTitle || track.title;
+            if (mp3FileLabel) {
+                mp3FileLabel.textContent = musicState.customTitle
+                    ? `Local file: ${musicState.customTitle}`
+                    : (track.audioUrl || 'MP3 Audio');
+            }
+            if (hintText) {
+                const expectedPath = escapeHtml(track.audioUrl || 'music/song.mp3');
+                hintText.innerHTML = `Upload <code class="text-pink-100">${expectedPath}</code> to GitHub or tap Load MP3:`;
+            }
+
             if (curEl) curEl.textContent = formatTrackTime(musicState.currentTime);
             if (durEl) durEl.textContent = formatTrackTime(totalDur);
             if (slider) {
@@ -2952,43 +3065,98 @@ No matter where life takes us next, my heart will always choose you—today, tom
             }
         }
 
-        function stopMusicPollLoop() {
-            if (musicState.pollTimer) {
-                clearInterval(musicState.pollTimer);
-                musicState.pollTimer = null;
+        function stopMusicSyncLoop() {
+            if (musicState.syncRafId !== null) {
+                cancelAnimationFrame(musicState.syncRafId);
+                musicState.syncRafId = null;
             }
         }
 
-        function startMusicPollLoop() {
-            stopMusicPollLoop();
-            musicState.pollTimer = setInterval(() => {
-                if (!musicState.isPlaying) return;
+        function startMusicSyncLoop() {
+            stopMusicSyncLoop();
 
-                if (musicState.audioEl) {
+            function tickSync(now) {
+                if (!musicState.isPlaying) {
+                    musicState.syncRafId = null;
+                    return;
+                }
+
+                if (musicState.mode === 'mp3' && musicState.audioEl) {
                     musicState.currentTime = musicState.audioEl.currentTime || 0;
                     if (musicState.audioEl.ended) {
+                        musicState.isPlaying = false;
+                        stopMusicSyncLoop();
                         nextMusicTrack(true);
                         return;
                     }
-                } else if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.getCurrentTime === 'function') {
+                } else if (musicState.mode === 'youtube' && musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.getCurrentTime === 'function') {
                     const t = musicState.ytPlayer.getCurrentTime();
                     if (isFinite(t)) musicState.currentTime = t;
                 }
 
-                updateMusicLyricsHighlight(musicState.currentTime);
-                const curEl = document.getElementById('musicCurrentTime');
-                const slider = document.getElementById('musicSeekSlider');
-                if (curEl) curEl.textContent = formatTrackTime(musicState.currentTime);
-                if (slider) {
-                    slider.max = String(getActiveTrackDuration());
-                    slider.value = String(musicState.currentTime);
+                updateMusicLyricsHighlight(musicState.currentTime, false);
+
+                if (now - musicState.lastSliderSyncAt >= 120) {
+                    musicState.lastSliderSyncAt = now;
+                    const curEl = document.getElementById('musicCurrentTime');
+                    const slider = document.getElementById('musicSeekSlider');
+                    if (curEl) curEl.textContent = formatTrackTime(musicState.currentTime);
+                    if (slider && document.activeElement !== slider) {
+                        slider.max = String(getActiveTrackDuration());
+                        slider.value = String(musicState.currentTime);
+                    }
                 }
 
-                const eqBars = document.querySelectorAll('#musicEqualizerBars span');
-                eqBars.forEach((b) => {
-                    b.style.height = `${6 + Math.floor(Math.random() * 18)}px`;
-                });
-            }, 280);
+                if (now - musicState.lastEqUpdateAt >= 160) {
+                    musicState.lastEqUpdateAt = now;
+                    const eqBars = document.querySelectorAll('#musicEqualizerBars span');
+                    eqBars.forEach((b) => {
+                        b.style.height = `${6 + Math.floor(Math.random() * 18)}px`;
+                    });
+                }
+
+                musicState.syncRafId = requestAnimationFrame(tickSync);
+            }
+
+            musicState.syncRafId = requestAnimationFrame(tickSync);
+        }
+
+        function loadYoutubeFallback(track, targetSec, autoPlay) {
+            if (!track) return;
+            if (musicState.audioEl) {
+                try { musicState.audioEl.pause(); } catch (e) {}
+                musicState.audioEl = null;
+            }
+            musicState.mode = 'youtube';
+            musicState.currentTime = targetSec;
+
+            ensureYoutubeApiLoaded();
+
+            const videoId = getActiveYoutubeId(track);
+            if (videoId) {
+                if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.loadVideoById === 'function') {
+                    if (autoPlay) {
+                        musicState.ytPlayer.loadVideoById({ videoId, startSeconds: targetSec });
+                        musicState.isPlaying = true;
+                        startMusicSyncLoop();
+                    } else {
+                        musicState.ytPlayer.cueVideoById({ videoId, startSeconds: targetSec });
+                        musicState.isPlaying = false;
+                        stopMusicSyncLoop();
+                    }
+                } else {
+                    const iframe = document.getElementById('ytMusicIframe');
+                    if (iframe) {
+                        iframe.src = buildYoutubeEmbedUrl(videoId, targetSec, autoPlay);
+                    }
+                    musicState.isPlaying = Boolean(autoPlay);
+                    if (autoPlay) startMusicSyncLoop();
+                    else stopMusicSyncLoop();
+                }
+            }
+
+            updateMusicLyricsHighlight(targetSec, true);
+            updateMusicUI();
         }
 
         function loadActiveTrackInPlayer(startSec, autoPlay) {
@@ -2996,75 +3164,103 @@ No matter where life takes us next, my heart will always choose you—today, tom
             if (!track) return;
             const targetSec = Math.max(0, Number(startSec) || 0);
             musicState.currentTime = targetSec;
+            const token = ++musicState.loadToken;
 
-            // Custom local audio mode
-            const sourceUrl = musicState.customAudioUrl || track.audioUrl;
-            const ytWrap = document.getElementById('ytPlayerWrapper');
-            const customBanner = document.getElementById('customAudioBanner');
-            if (sourceUrl) {
-                if (ytWrap) ytWrap.classList.add('hidden');
-                if (customBanner) customBanner.classList.remove('hidden');
+            const isLocalFile = Boolean(musicState.customAudioUrl);
+            const candidateMp3 = isLocalFile
+                ? musicState.customAudioUrl
+                : (track.audioUrl && musicState.mp3Availability[track.id] !== false ? track.audioUrl : '');
+
+            if (candidateMp3) {
                 if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.pauseVideo === 'function') {
-                    musicState.ytPlayer.pauseVideo();
+                    try { musicState.ytPlayer.pauseVideo(); } catch (e) {}
                 }
-                if (!musicState.audioEl || musicState.audioEl.dataset.src !== sourceUrl) {
-                    if (musicState.audioEl) musicState.audioEl.pause();
-                    musicState.audioEl = new Audio(sourceUrl);
-                    musicState.audioEl.dataset.src = sourceUrl;
+
+                const reusingSameAudio = musicState.audioEl && musicState.audioEl.dataset.src === candidateMp3;
+                let audio = musicState.audioEl;
+                if (!reusingSameAudio) {
+                    if (musicState.audioEl) {
+                        try { musicState.audioEl.pause(); } catch (e) {}
+                    }
+                    audio = new Audio();
+                    audio.preload = 'metadata';
+                    audio.volume = musicState.volume;
+                    audio.dataset.src = candidateMp3;
+                    audio.src = candidateMp3;
+                    musicState.audioEl = audio;
+
+                    audio.addEventListener('play', () => {
+                        if (musicState.audioEl !== audio) return;
+                        musicState.isPlaying = true;
+                        startMusicSyncLoop();
+                        updateMusicUI();
+                    });
+                    audio.addEventListener('pause', () => {
+                        if (musicState.audioEl !== audio) return;
+                        musicState.isPlaying = false;
+                        stopMusicSyncLoop();
+                        updateMusicUI();
+                    });
+                    audio.addEventListener('ended', () => {
+                        if (musicState.audioEl !== audio) return;
+                        musicState.isPlaying = false;
+                        stopMusicSyncLoop();
+                        nextMusicTrack(true);
+                    });
+                } else {
+                    audio.volume = musicState.volume;
                 }
-                const applySeekAndPlay = () => {
-                    try { musicState.audioEl.currentTime = targetSec; } catch (e) {}
+
+                const onMp3Ready = () => {
+                    if (token !== musicState.loadToken || musicState.audioEl !== audio) return;
+                    musicState.mode = 'mp3';
+                    if (!isLocalFile) musicState.mp3Availability[track.id] = true;
+
+                    const safeSeek = isFinite(audio.duration) && audio.duration > 1
+                        ? Math.min(targetSec, audio.duration - 0.25)
+                        : targetSec;
+                    try { audio.currentTime = safeSeek; } catch (e) {}
+                    musicState.currentTime = safeSeek;
+
                     if (autoPlay) {
-                        musicState.audioEl.play().then(() => {
+                        audio.play().then(() => {
+                            if (token !== musicState.loadToken) return;
                             musicState.isPlaying = true;
-                            startMusicPollLoop();
+                            startMusicSyncLoop();
                             updateMusicUI();
-                        }).catch(() => {});
+                        }).catch(() => {
+                            musicState.isPlaying = false;
+                            updateMusicUI();
+                        });
+                    } else {
+                        audio.pause();
+                        musicState.isPlaying = false;
+                        stopMusicSyncLoop();
+                    }
+                    updateMusicLyricsHighlight(safeSeek, true);
+                    updateMusicUI();
+                };
+
+                const onMp3Error = () => {
+                    if (token !== musicState.loadToken) return;
+                    if (!isLocalFile) {
+                        musicState.mp3Availability[track.id] = false;
+                        loadYoutubeFallback(track, targetSec, autoPlay);
                     }
                 };
-                if (musicState.audioEl.readyState >= 1) {
-                    applySeekAndPlay();
+
+                if (audio.readyState >= 1) {
+                    onMp3Ready();
                 } else {
-                    musicState.audioEl.addEventListener('loadedmetadata', applySeekAndPlay, { once: true });
+                    audio.addEventListener('loadedmetadata', onMp3Ready, { once: true });
+                    audio.addEventListener('error', onMp3Error, { once: true });
+                    audio.load();
                 }
-                updateMusicLyricsHighlight(targetSec);
-                updateMusicUI();
                 return;
             }
 
-            // YouTube embedded mode
-            if (musicState.audioEl) {
-                musicState.audioEl.pause();
-                musicState.audioEl = null;
-            }
-            if (ytWrap) ytWrap.classList.remove('hidden');
-            if (customBanner) customBanner.classList.add('hidden');
-
-            const videoId = getActiveYoutubeId(track);
-            if (!videoId) return;
-
-            if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.loadVideoById === 'function') {
-                if (autoPlay) {
-                    musicState.ytPlayer.loadVideoById({ videoId, startSeconds: targetSec });
-                    musicState.isPlaying = true;
-                    startMusicPollLoop();
-                } else {
-                    musicState.ytPlayer.cueVideoById({ videoId, startSeconds: targetSec });
-                    musicState.isPlaying = false;
-                    stopMusicPollLoop();
-                }
-            } else {
-                const iframe = document.getElementById('ytMusicIframe');
-                if (iframe) {
-                    iframe.src = buildYoutubeEmbedUrl(videoId, targetSec, autoPlay);
-                }
-                musicState.isPlaying = Boolean(autoPlay);
-                if (autoPlay) startMusicPollLoop();
-                else stopMusicPollLoop();
-            }
-
-            updateMusicLyricsHighlight(targetSec);
-            updateMusicUI();
+            // Fallback directly to YouTube when MP3 is known unavailable
+            loadYoutubeFallback(track, targetSec, autoPlay);
         }
 
         function playFromConfiguredStart() {
@@ -3077,34 +3273,37 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const track = getActiveMusicTrack();
             if (!track) return;
 
-            if (musicState.audioEl) {
+            if (musicState.mode === 'mp3' && musicState.audioEl) {
                 if (musicState.isPlaying) {
                     musicState.audioEl.pause();
                     musicState.isPlaying = false;
-                    stopMusicPollLoop();
+                    stopMusicSyncLoop();
                 } else {
+                    if (musicState.audioEl.currentTime < 1 && getTrackStartTime(track) > 0) {
+                        try { musicState.audioEl.currentTime = getTrackStartTime(track); } catch (e) {}
+                    }
                     musicState.audioEl.play().catch(() => {});
                     musicState.isPlaying = true;
-                    startMusicPollLoop();
+                    startMusicSyncLoop();
                 }
                 updateMusicUI();
                 return;
             }
 
-            if (musicState.ytReady && musicState.ytPlayer) {
+            if (musicState.mode === 'youtube' && musicState.ytReady && musicState.ytPlayer) {
                 if (musicState.isPlaying && typeof musicState.ytPlayer.pauseVideo === 'function') {
                     musicState.ytPlayer.pauseVideo();
                     musicState.isPlaying = false;
-                    stopMusicPollLoop();
+                    stopMusicSyncLoop();
                 } else if (typeof musicState.ytPlayer.playVideo === 'function') {
                     const cur = typeof musicState.ytPlayer.getCurrentTime === 'function' ? musicState.ytPlayer.getCurrentTime() : 0;
                     if (!cur || cur < 1) {
-                        loadActiveTrackInPlayer(getTrackStartTime(track), true);
+                        loadYoutubeFallback(track, getTrackStartTime(track), true);
                         return;
                     }
                     musicState.ytPlayer.playVideo();
                     musicState.isPlaying = true;
-                    startMusicPollLoop();
+                    startMusicSyncLoop();
                 }
                 updateMusicUI();
             } else {
@@ -3116,26 +3315,26 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const target = Math.max(0, Math.min(getActiveTrackDuration(), Number(timeSec) || 0));
             musicState.currentTime = target;
 
-            if (musicState.audioEl) {
-                musicState.audioEl.currentTime = target;
+            if (musicState.mode === 'mp3' && musicState.audioEl) {
+                try { musicState.audioEl.currentTime = target; } catch (e) {}
                 if (autoPlay) {
                     musicState.audioEl.play().catch(() => {});
                     musicState.isPlaying = true;
-                    startMusicPollLoop();
+                    startMusicSyncLoop();
                 }
-            } else if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.seekTo === 'function') {
+            } else if (musicState.mode === 'youtube' && musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.seekTo === 'function') {
                 musicState.ytPlayer.seekTo(target, true);
                 if (autoPlay && typeof musicState.ytPlayer.playVideo === 'function') {
                     musicState.ytPlayer.playVideo();
                     musicState.isPlaying = true;
-                    startMusicPollLoop();
+                    startMusicSyncLoop();
                 }
             } else {
                 loadActiveTrackInPlayer(target, autoPlay || musicState.isPlaying);
                 return;
             }
 
-            updateMusicLyricsHighlight(target);
+            updateMusicLyricsHighlight(target, false);
             updateMusicUI();
         }
 
@@ -3144,6 +3343,9 @@ No matter where life takes us next, my heart will always choose you—today, tom
             if (!tracks.length) return;
             musicState.trackIdx = ((idx % tracks.length) + tracks.length) % tracks.length;
             musicState.sourceVariantIdx = 0;
+            if (musicState.customAudioUrl) {
+                URL.revokeObjectURL(musicState.customAudioUrl);
+            }
             musicState.customAudioUrl = null;
             musicState.customTitle = null;
 
@@ -3154,6 +3356,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const editorWrap = document.getElementById('musicLyricsEditorWrap');
             if (editorWrap) editorWrap.classList.add('hidden');
 
+            tryFetchExternalLrc(track);
             renderMusicTrackSelector();
             renderMusicLyrics();
             loadActiveTrackInPlayer(startSec, autoPlay);
@@ -3186,7 +3389,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
             if (!track || !Array.isArray(track.youtubeIds) || track.youtubeIds.length < 2) return;
             musicState.sourceVariantIdx = musicState.sourceVariantIdx === 0 ? 1 : 0;
             const resumeAt = musicState.isPlaying ? musicState.currentTime : getTrackStartTime(track);
-            loadActiveTrackInPlayer(resumeAt, true);
+            loadYoutubeFallback(track, resumeAt, true);
         }
 
         function handleCustomAudioFile(event) {
@@ -3195,20 +3398,8 @@ No matter where life takes us next, my heart will always choose you—today, tom
             if (musicState.customAudioUrl) URL.revokeObjectURL(musicState.customAudioUrl);
             musicState.customAudioUrl = URL.createObjectURL(file);
             musicState.customTitle = file.name.replace(/\.[^.]+$/, '');
-            const label = document.getElementById('customAudioLabel');
-            if (label) label.textContent = `Playing: ${musicState.customTitle}`;
             const track = getActiveMusicTrack();
             loadActiveTrackInPlayer(getTrackStartTime(track), true);
-        }
-
-        function clearCustomAudioFile() {
-            if (musicState.customAudioUrl) URL.revokeObjectURL(musicState.customAudioUrl);
-            musicState.customAudioUrl = null;
-            musicState.customTitle = null;
-            const fileInput = document.getElementById('musicCustomFileInput');
-            if (fileInput) fileInput.value = '';
-            const track = getActiveMusicTrack();
-            loadActiveTrackInPlayer(getTrackStartTime(track), false);
         }
 
         function toggleLyricsEditor() {
@@ -3232,17 +3423,8 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const wrap = document.getElementById('musicLyricsEditorWrap');
             if (!track || !textarea) return;
 
-            const rawLines = textarea.value.split('\n').map((s) => s.trim()).filter(Boolean);
-            if (!rawLines.length) return;
-
-            const baseStart = getTrackStartTime(track);
-            const parsed = rawLines.map((raw, i) => {
-                const match = raw.match(/^\[(\d{1,2}:\d{2}(?:\.\d+)?)\]\s*(.*)$/);
-                if (match) {
-                    return { time: parseTimeStringToSeconds(match[1], baseStart), text: match[2] || '♪' };
-                }
-                return { time: baseStart + i * 5, text: raw };
-            }).sort((a, b) => a.time - b.time);
+            const parsed = parseLyricsText(textarea.value, getTrackStartTime(track));
+            if (!parsed.length) return;
 
             musicState.customLyricsByTrack[track.id] = parsed;
             try {
@@ -3272,22 +3454,29 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 if (savedLyrics && typeof savedLyrics === 'object') musicState.customLyricsByTrack = savedLyrics;
             } catch (e) {}
 
-            const track = getActiveMusicTrack();
-            if (track) {
-                musicState.currentTime = getTrackStartTime(track);
-                const iframe = document.getElementById('ytMusicIframe');
-                const videoId = getActiveYoutubeId(track);
-                if (iframe && videoId) {
-                    iframe.src = buildYoutubeEmbedUrl(videoId, musicState.currentTime, false);
-                }
-            }
-
             const seekSlider = document.getElementById('musicSeekSlider');
             if (seekSlider) {
                 seekSlider.addEventListener('change', (e) => seekMusicTo(e.target.value, musicState.isPlaying));
                 seekSlider.addEventListener('input', (e) => {
+                    const previewSec = Number(e.target.value) || 0;
                     const curEl = document.getElementById('musicCurrentTime');
-                    if (curEl) curEl.textContent = formatTrackTime(e.target.value);
+                    if (curEl) curEl.textContent = formatTrackTime(previewSec);
+                    updateMusicLyricsHighlight(previewSec, false);
+                });
+            }
+
+            const volumeSlider = document.getElementById('musicVolumeSlider');
+            if (volumeSlider) {
+                volumeSlider.value = String(musicState.volume);
+                volumeSlider.addEventListener('input', (e) => {
+                    const vol = Math.max(0, Math.min(1, parseFloat(e.target.value)));
+                    if (!isNaN(vol)) {
+                        musicState.volume = vol;
+                        if (musicState.audioEl) musicState.audioEl.volume = vol;
+                        if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.setVolume === 'function') {
+                            musicState.ytPlayer.setVolume(Math.round(vol * 100));
+                        }
+                    }
                 });
             }
 
@@ -3298,9 +3487,14 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 });
             }
 
-            renderMusicTrackSelector();
-            renderMusicLyrics();
-            updateMusicUI();
+            const track = getActiveMusicTrack();
+            if (track) {
+                musicState.currentTime = getTrackStartTime(track);
+                tryFetchExternalLrc(track);
+                renderMusicTrackSelector();
+                renderMusicLyrics();
+                loadActiveTrackInPlayer(musicState.currentTime, false);
+            }
         }
 
         const lastUptimeVals = { d: '', h: '', m: '', s: '' };
@@ -3375,8 +3569,12 @@ No matter where life takes us next, my heart will always choose you—today, tom
         }
 
         function render3DAsciiHeartStage() {
+            const dashboard = document.getElementById('dashboardContainer');
+            const labSection = document.getElementById('tabContent-lab');
             const stage = document.getElementById('asciiHeart3DStage');
-            if (!stage || document.getElementById('tabContent-lab').classList.contains('hidden')) return;
+            if (!stage || !labSection || !dashboard || dashboard.classList.contains('hidden')) return;
+            const rect = labSection.getBoundingClientRect();
+            if (rect.bottom < -40 || rect.top > window.innerHeight + 40) return;
 
             const width = 56;
             const height = 22;
@@ -4235,7 +4433,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
             syncDataToUI();
             initLoveQuestionInteractions();
             initScrollTopBlur();
-            initTabSlideInteractions();
+            initSectionScrollSpy();
             initMusicPlayer();
             updateUptimeCounter();
             setInterval(updateUptimeCounter, 1000);
