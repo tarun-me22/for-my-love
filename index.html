@@ -2563,12 +2563,14 @@ No matter where life takes us next, my heart will always choose you—today, tom
             currentTime: 24,
             volume: 0.85,
             audioEl: null,
+            audioByTrack: {},
             audioUnlocked: false,
             isPrimingAudio: false,
             hasEverPlayed: false,
             userPausedMusic: false,
             hasAutoStartedInView: false,
             pendingAutoPlay: false,
+            wantAutoPlay: false,
             ytPlayer: null,
             ytReady: false,
             ytApiRequested: false,
@@ -3001,8 +3003,11 @@ No matter where life takes us next, my heart will always choose you—today, tom
                 }
 
                 if (musicState.mode === 'mp3' && musicState.audioEl) {
-                    musicState.currentTime = musicState.audioEl.currentTime || 0;
-                    if (musicState.audioEl.ended) {
+                    const a = musicState.audioEl;
+                    if (!a.seeking && !a._needsSeek && a.readyState >= 1) {
+                        musicState.currentTime = a.currentTime || 0;
+                    }
+                    if (a.ended) {
                         musicState.isPlaying = false;
                         stopMusicSyncLoop();
                         nextMusicTrack(true);
@@ -3040,12 +3045,20 @@ No matter where life takes us next, my heart will always choose you—today, tom
             musicState.syncRafId = requestAnimationFrame(tickSync);
         }
 
+        function pauseAllOtherTrackAudios(keepTrackId = '') {
+            const map = musicState.audioByTrack || {};
+            Object.keys(map).forEach((id) => {
+                if (id !== keepTrackId && map[id]) {
+                    map[id]._isPriming = false;
+                    try { map[id].pause(); } catch (e) {}
+                }
+            });
+        }
+
         function loadYoutubeFallback(track, targetSec, autoPlay) {
             if (!track) return;
             musicState.pendingAutoPlay = false;
-            if (musicState.audioEl) {
-                try { musicState.audioEl.pause(); } catch (e) {}
-            }
+            pauseAllOtherTrackAudios('');
             musicState.mode = 'youtube';
             musicState.currentTime = targetSec;
 
@@ -3078,87 +3091,171 @@ No matter where life takes us next, my heart will always choose you—today, tom
             updateMusicUI();
         }
 
-        function getOrCreateMusicAudioEl() {
-            if (!musicState.audioEl) {
+        function applyPendingTrackSeek(audio) {
+            if (!audio || audio.readyState < 1) return false;
+            const target = Math.max(0, Number(audio._targetSeekSec) || 0);
+            const safeSeek = (isFinite(audio.duration) && audio.duration > 1)
+                ? Math.min(target, audio.duration - 0.25)
+                : target;
+            try {
+                if (Math.abs((audio.currentTime || 0) - safeSeek) > 0.5) {
+                    audio.currentTime = safeSeek;
+                }
+                if (Math.abs((audio.currentTime || 0) - safeSeek) <= 1.5) {
+                    audio._needsSeek = false;
+                }
+                if (audio._mutedForPendingSeek && !audio._isPriming) {
+                    audio._mutedForPendingSeek = false;
+                    audio.muted = false;
+                }
+                if (musicState.audioEl === audio) {
+                    musicState.currentTime = safeSeek;
+                }
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function getOrCreateTrackAudioEl(track) {
+            if (!track || !track.id) return null;
+            if (!musicState.audioByTrack[track.id]) {
                 const audio = new Audio();
                 audio.preload = 'auto';
                 audio.volume = musicState.volume;
+                audio.dataset.trackId = track.id;
+                audio._targetSeekSec = getTrackStartTime(track);
+                audio._needsSeek = true;
+                audio._isPriming = false;
+                audio._mutedForPendingSeek = false;
+                audio.src = track.audioUrl;
+
+                audio.addEventListener('loadedmetadata', () => {
+                    musicState.mp3Availability[track.id] = true;
+                    if (audio._needsSeek) {
+                        applyPendingTrackSeek(audio);
+                    }
+                    if (musicState.audioEl === audio) {
+                        updateMusicUI();
+                    }
+                });
+
+                audio.addEventListener('canplay', () => {
+                    if (audio._needsSeek || (audio._targetSeekSec >= 5 && (audio.currentTime || 0) < 1.5)) {
+                        applyPendingTrackSeek(audio);
+                    }
+                    if (audio._mutedForPendingSeek && !audio._isPriming) {
+                        audio._mutedForPendingSeek = false;
+                        audio.muted = false;
+                    }
+                });
+
+                audio.addEventListener('playing', () => {
+                    if (audio._isPriming) return;
+                    if (audio._needsSeek || (audio._targetSeekSec >= 5 && (audio.currentTime || 0) < 1.5)) {
+                        applyPendingTrackSeek(audio);
+                    }
+                    if (audio._mutedForPendingSeek) {
+                        audio._mutedForPendingSeek = false;
+                        audio.muted = false;
+                    }
+                    if (musicState.audioEl === audio) {
+                        musicState.isPlaying = true;
+                        musicState.hasEverPlayed = true;
+                        musicState.pendingAutoPlay = false;
+                        startMusicSyncLoop();
+                        updateMusicUI();
+                    }
+                });
+
+                audio.addEventListener('seeked', () => {
+                    if (audio._mutedForPendingSeek && !audio._isPriming) {
+                        audio._mutedForPendingSeek = false;
+                        audio.muted = false;
+                    }
+                });
 
                 audio.addEventListener('play', () => {
-                    if (musicState.isPrimingAudio) return;
+                    if (audio._isPriming || musicState.audioEl !== audio) return;
                     musicState.isPlaying = true;
                     musicState.hasEverPlayed = true;
                     musicState.pendingAutoPlay = false;
                     startMusicSyncLoop();
                     updateMusicUI();
                 });
+
                 audio.addEventListener('pause', () => {
-                    if (musicState.isPrimingAudio) return;
+                    if (audio._isPriming || musicState.audioEl !== audio) return;
                     musicState.isPlaying = false;
                     stopMusicSyncLoop();
                     updateMusicUI();
                 });
+
                 audio.addEventListener('ended', () => {
-                    if (musicState.isPrimingAudio) return;
+                    if (audio._isPriming || musicState.audioEl !== audio) return;
                     musicState.isPlaying = false;
                     stopMusicSyncLoop();
                     nextMusicTrack(true);
                 });
 
-                musicState.audioEl = audio;
+                audio.addEventListener('error', () => {
+                    musicState.mp3Availability[track.id] = false;
+                    if (musicState.audioEl !== audio) return;
+                    musicState.pendingAutoPlay = false;
+                    loadYoutubeFallback(track, audio._targetSeekSec || getTrackStartTime(track), musicState.wantAutoPlay);
+                });
+
+                musicState.audioByTrack[track.id] = audio;
             }
-            return musicState.audioEl;
+            return musicState.audioByTrack[track.id];
         }
 
         function primeMusicAudioForAutoplay() {
-            if (musicState.audioUnlocked || musicState.isPlaying) return;
-            const track = getActiveMusicTrack();
-            const audio = getOrCreateMusicAudioEl();
-            if (!audio || !track || !track.audioUrl) return;
+            if (musicState.audioUnlocked) return;
+            const tracks = (CONFIG.MUSIC && Array.isArray(CONFIG.MUSIC.TRACKS)) ? CONFIG.MUSIC.TRACKS : [];
+            tracks.forEach((track) => {
+                if (!track || !track.audioUrl) return;
+                const audio = getOrCreateTrackAudioEl(track);
+                if (!audio || (musicState.audioEl === audio && musicState.isPlaying)) return;
 
-            if (audio.dataset.src !== track.audioUrl) {
-                audio.dataset.src = track.audioUrl;
-                audio.src = track.audioUrl;
-            }
-
-            musicState.isPrimingAudio = true;
-            const prevMuted = audio.muted;
-            audio.muted = true;
-            try {
-                const p = audio.play();
-                if (p && typeof p.then === 'function') {
-                    p.then(() => {
-                        musicState.audioUnlocked = true;
-                        // If real playback already took over before priming resolved, do not pause or re-mute it
-                        if (!musicState.isPrimingAudio) return;
-                        audio.pause();
-                        audio.muted = prevMuted;
-                        try { audio.currentTime = getTrackStartTime(track); } catch (e) {}
-                        musicState.isPrimingAudio = false;
-                    }).catch(() => {
-                        if (!musicState.isPrimingAudio) return;
-                        audio.muted = prevMuted;
-                        musicState.isPrimingAudio = false;
-                    });
-                } else {
-                    audio.muted = prevMuted;
-                    musicState.isPrimingAudio = false;
+                audio._isPriming = true;
+                audio.muted = true;
+                try {
+                    const p = audio.play();
+                    if (p && typeof p.then === 'function') {
+                        p.then(() => {
+                            musicState.audioUnlocked = true;
+                            if (!audio._isPriming) return;
+                            audio.pause();
+                            audio.muted = false;
+                            audio._isPriming = false;
+                            audio._targetSeekSec = getTrackStartTime(track);
+                            audio._needsSeek = true;
+                            applyPendingTrackSeek(audio);
+                        }).catch(() => {
+                            if (!audio._isPriming) return;
+                            audio.muted = false;
+                            audio._isPriming = false;
+                        });
+                    } else {
+                        audio.muted = false;
+                        audio._isPriming = false;
+                    }
+                } catch (e) {
+                    audio.muted = false;
+                    audio._isPriming = false;
                 }
-            } catch (e) {
-                audio.muted = prevMuted;
-                musicState.isPrimingAudio = false;
-            }
+            });
         }
 
         function pauseAndResetMusicForLock() {
             musicState.pendingAutoPlay = false;
+            musicState.wantAutoPlay = false;
             musicState.hasAutoStartedInView = false;
             musicState.userPausedMusic = false;
             musicState.isPlaying = false;
             stopMusicSyncLoop();
-            if (musicState.audioEl) {
-                try { musicState.audioEl.pause(); } catch (e) {}
-            }
+            pauseAllOtherTrackAudios('');
             if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.pauseVideo === 'function') {
                 try { musicState.ytPlayer.pauseVideo(); } catch (e) {}
             }
@@ -3214,6 +3311,7 @@ No matter where life takes us next, my heart will always choose you—today, tom
             if (!track) return;
             const targetSec = Math.max(0, Number(startSec) || 0);
             musicState.currentTime = targetSec;
+            musicState.wantAutoPlay = Boolean(autoPlay);
             const token = ++musicState.loadToken;
 
             const candidateMp3 = (track.audioUrl && musicState.mp3Availability[track.id] !== false)
@@ -3225,76 +3323,84 @@ No matter where life takes us next, my heart will always choose you—today, tom
                     try { musicState.ytPlayer.pauseVideo(); } catch (e) {}
                 }
 
-                const audio = getOrCreateMusicAudioEl();
+                const audio = getOrCreateTrackAudioEl(track);
+                // Switch active audioEl BEFORE pausing the previous track so the old track's pause event is ignored
+                musicState.audioEl = audio;
+                musicState.mode = 'mp3';
+                pauseAllOtherTrackAudios(track.id);
+
                 audio.volume = musicState.volume;
+                audio._targetSeekSec = targetSec;
+                audio._needsSeek = true;
+
+                if (audio.readyState >= 1) {
+                    applyPendingTrackSeek(audio);
+                } else if (audio.networkState === 0 || audio.networkState === 3) {
+                    audio.load();
+                }
+
                 if (autoPlay) {
                     musicState.isPrimingAudio = false;
-                    audio.muted = false;
-                }
-                const reusingSameAudio = audio.dataset.src === candidateMp3;
-                if (!reusingSameAudio) {
-                    try { audio.pause(); } catch (e) {}
-                    audio.dataset.src = candidateMp3;
-                    audio.src = candidateMp3;
-                }
-
-                const onMp3Ready = () => {
-                    if (token !== musicState.loadToken) return;
-                    musicState.mode = 'mp3';
-                    musicState.mp3Availability[track.id] = true;
-
-                    const safeSeek = isFinite(audio.duration) && audio.duration > 1
-                        ? Math.min(targetSec, audio.duration - 0.25)
-                        : targetSec;
-                    try { audio.currentTime = safeSeek; } catch (e) {}
-                    musicState.currentTime = safeSeek;
-
-                    if (autoPlay) {
-                        musicState.isPrimingAudio = false;
+                    audio._isPriming = false;
+                    if (audio.readyState >= 1) {
+                        audio._mutedForPendingSeek = false;
                         audio.muted = false;
-                        audio.play().then(() => {
-                            if (token !== musicState.loadToken) return;
-                            if (Math.abs((audio.currentTime || 0) - safeSeek) > 0.75) {
-                                try { audio.currentTime = safeSeek; } catch (e) {}
-                            }
-                            musicState.audioUnlocked = true;
-                            musicState.hasEverPlayed = true;
-                            musicState.pendingAutoPlay = false;
-                            musicState.isPlaying = true;
-                            startMusicSyncLoop();
-                            updateMusicUI();
-                        }).catch(() => {
-                            musicState.pendingAutoPlay = false;
-                            musicState.hasAutoStartedInView = false;
-                            musicState.isPlaying = false;
-                            armOneTimeMusicTapFallback();
-                            updateMusicUI();
-                        });
                     } else {
-                        if (!musicState.isPrimingAudio) audio.pause();
+                        // Mute briefly until loadedmetadata/canplay seeks to targetSec (e.g. 1:16 for Maharani)
+                        audio._mutedForPendingSeek = true;
+                        audio.muted = true;
+                    }
+
+                    musicState.isPlaying = true;
+                    startMusicSyncLoop();
+
+                    // Call audio.play() synchronously inside the click/scroll handler so user activation is never lost
+                    try {
+                        const playPromise = audio.play();
+                        if (playPromise && typeof playPromise.then === 'function') {
+                            playPromise.then(() => {
+                                if (token !== musicState.loadToken) return;
+                                if (audio.readyState >= 1) {
+                                    applyPendingTrackSeek(audio);
+                                }
+                                if (!audio._mutedForPendingSeek) {
+                                    audio.muted = false;
+                                }
+                                musicState.audioUnlocked = true;
+                                musicState.hasEverPlayed = true;
+                                musicState.pendingAutoPlay = false;
+                                musicState.isPlaying = true;
+                                startMusicSyncLoop();
+                                updateMusicUI();
+                            }).catch(() => {
+                                if (token !== musicState.loadToken) return;
+                                audio._mutedForPendingSeek = false;
+                                audio.muted = false;
+                                musicState.pendingAutoPlay = false;
+                                musicState.hasAutoStartedInView = false;
+                                musicState.isPlaying = false;
+                                stopMusicSyncLoop();
+                                armOneTimeMusicTapFallback();
+                                updateMusicUI();
+                            });
+                        }
+                    } catch (e) {
+                        audio._mutedForPendingSeek = false;
+                        audio.muted = false;
+                        musicState.pendingAutoPlay = false;
                         musicState.isPlaying = false;
                         stopMusicSyncLoop();
                     }
-                    updateMusicLyricsHighlight(safeSeek, true);
-                    updateMusicUI();
-                };
-
-                const onMp3Error = () => {
-                    if (token !== musicState.loadToken) return;
-                    musicState.pendingAutoPlay = false;
-                    musicState.mp3Availability[track.id] = false;
-                    loadYoutubeFallback(track, targetSec, autoPlay);
-                };
-
-                if (reusingSameAudio && audio.readyState >= 1) {
-                    onMp3Ready();
                 } else {
-                    audio.addEventListener('loadedmetadata', onMp3Ready, { once: true });
-                    audio.addEventListener('error', onMp3Error, { once: true });
-                    if (!reusingSameAudio || audio.networkState === 0 || audio.networkState === 3) {
-                        audio.load();
+                    if (!audio._isPriming) {
+                        try { audio.pause(); } catch (e) {}
                     }
+                    musicState.isPlaying = false;
+                    stopMusicSyncLoop();
                 }
+
+                updateMusicLyricsHighlight(targetSec, true);
+                updateMusicUI();
                 return;
             }
 
@@ -3306,34 +3412,25 @@ No matter where life takes us next, my heart will always choose you—today, tom
             const track = getActiveMusicTrack();
             if (!track) return;
 
-            if (musicState.mode === 'mp3' && musicState.audioEl) {
-                if (musicState.isPlaying) {
+            if (musicState.mode === 'mp3') {
+                const audio = getOrCreateTrackAudioEl(track);
+                musicState.audioEl = audio;
+                if (musicState.isPlaying && audio) {
                     musicState.userPausedMusic = true;
-                    musicState.audioEl.pause();
+                    musicState.wantAutoPlay = false;
+                    try { audio.pause(); } catch (e) {}
                     musicState.isPlaying = false;
                     stopMusicSyncLoop();
+                    updateMusicUI();
                 } else {
                     musicState.userPausedMusic = false;
                     musicState.hasAutoStartedInView = true;
-                    musicState.isPrimingAudio = false;
-                    musicState.audioEl.muted = false;
                     const desiredStart = getTrackStartTime(track);
-                    const needsStartSeek = (!musicState.hasEverPlayed || musicState.audioEl.currentTime < 1) && desiredStart > 0;
-                    if (needsStartSeek) {
-                        try { musicState.audioEl.currentTime = desiredStart; } catch (e) {}
-                    }
-                    const audioRef = musicState.audioEl;
-                    audioRef.play().then(() => {
-                        if (needsStartSeek && Math.abs((audioRef.currentTime || 0) - desiredStart) > 0.75) {
-                            try { audioRef.currentTime = desiredStart; } catch (e) {}
-                        }
-                        musicState.audioUnlocked = true;
-                        musicState.hasEverPlayed = true;
-                    }).catch(() => {});
-                    musicState.isPlaying = true;
-                    startMusicSyncLoop();
+                    const resumeSec = (audio && !audio._needsSeek && (audio.currentTime || 0) >= 1)
+                        ? audio.currentTime
+                        : (musicState.currentTime >= 1 ? musicState.currentTime : desiredStart);
+                    loadActiveTrackInPlayer(resumeSec, true);
                 }
-                updateMusicUI();
                 return;
             }
 
@@ -3367,15 +3464,15 @@ No matter where life takes us next, my heart will always choose you—today, tom
             musicState.currentTime = target;
 
             if (musicState.mode === 'mp3' && musicState.audioEl) {
-                try { musicState.audioEl.currentTime = target; } catch (e) {}
+                const audio = musicState.audioEl;
+                audio._targetSeekSec = target;
+                audio._needsSeek = true;
+                applyPendingTrackSeek(audio);
                 if (autoPlay) {
                     musicState.userPausedMusic = false;
                     musicState.hasEverPlayed = true;
-                    musicState.isPrimingAudio = false;
-                    musicState.audioEl.muted = false;
-                    musicState.audioEl.play().catch(() => {});
-                    musicState.isPlaying = true;
-                    startMusicSyncLoop();
+                    loadActiveTrackInPlayer(target, true);
+                    return;
                 }
             } else if (musicState.mode === 'youtube' && musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.seekTo === 'function') {
                 musicState.ytPlayer.seekTo(target, true);
@@ -3439,7 +3536,9 @@ No matter where life takes us next, my heart will always choose you—today, tom
                     const vol = Math.max(0, Math.min(1, parseFloat(e.target.value)));
                     if (!isNaN(vol)) {
                         musicState.volume = vol;
-                        if (musicState.audioEl) musicState.audioEl.volume = vol;
+                        Object.values(musicState.audioByTrack || {}).forEach((a) => {
+                            if (a) a.volume = vol;
+                        });
                         if (musicState.ytReady && musicState.ytPlayer && typeof musicState.ytPlayer.setVolume === 'function') {
                             musicState.ytPlayer.setVolume(Math.round(vol * 100));
                         }
@@ -3448,7 +3547,13 @@ No matter where life takes us next, my heart will always choose you—today, tom
             }
 
             if (CONFIG.MUSIC && Array.isArray(CONFIG.MUSIC.TRACKS)) {
-                CONFIG.MUSIC.TRACKS.forEach((tr) => tryFetchExternalLrc(tr));
+                CONFIG.MUSIC.TRACKS.forEach((tr) => {
+                    tryFetchExternalLrc(tr);
+                    if (tr.audioUrl) {
+                        const a = getOrCreateTrackAudioEl(tr);
+                        if (a) a.load();
+                    }
+                });
             }
 
             const track = getActiveMusicTrack();
