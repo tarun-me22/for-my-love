@@ -478,21 +478,48 @@
                 <!-- Password Input Form -->
                 <form id="unlockForm" onsubmit="handleUnlockAttempt(event)" class="space-y-4 text-left">
                     <div>
-                        <label for="keywordInput" class="block text-xs tracking-wide text-pink-200/90 mb-2 flex items-center justify-between">
-                            <span>Enter our secret word to unlock:</span>
-                            <span id="authAttemptStatus" class="text-rose-300 font-medium text-[11px] hidden">Try another sweet word ♥</span>
-                        </label>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <label for="keywordInput" class="block text-xs tracking-wide text-pink-200/90">
+                                Enter our secret word to unlock:
+                            </label>
+                            <button
+                                type="button"
+                                id="encryptionTogglePill"
+                                onclick="togglePasswordEncryption()"
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-pink-500/25 hover:bg-pink-500/40 border border-pink-400/40 text-[11px] font-medium text-pink-100 transition cursor-pointer"
+                                title="Toggle password encryption on or off"
+                            >
+                                <i id="encryptionPillIcon" data-lucide="lock" class="w-3 h-3 text-pink-300"></i>
+                                <span id="encryptionPillLabel">Encryption: On</span>
+                            </button>
+                        </div>
                         <div class="relative flex items-center">
                             <i data-lucide="heart" class="w-4 h-4 text-pink-400 absolute left-4 pointer-events-none"></i>
                             <input 
-                                type="text" 
+                                type="password" 
                                 id="keywordInput" 
                                 autocomplete="off"
                                 spellcheck="false"
+                                oninput="updateEncryptedPreview()"
                                 placeholder="Type secret word (e.g. my nickname)"
-                                class="w-full pl-10 pr-10 py-3.5 rounded-2xl liquid-glass-subtle text-pink-100 placeholder-pink-300/40 text-sm focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-500/30 transition selectable"
+                                class="w-full pl-10 pr-11 py-3.5 rounded-2xl liquid-glass-subtle text-pink-100 placeholder-pink-300/40 text-sm focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-500/30 transition selectable"
                             />
-                            <i data-lucide="key-round" class="w-4 h-4 text-pink-400/60 absolute right-4 pointer-events-none"></i>
+                            <button
+                                type="button"
+                                id="togglePasswordEyeBtn"
+                                onclick="togglePasswordEncryption()"
+                                aria-label="Toggle password encryption"
+                                title="Encrypt or show typed password"
+                                class="absolute right-3 p-1.5 rounded-xl text-pink-300/80 hover:text-white hover:bg-pink-500/20 transition cursor-pointer flex items-center justify-center"
+                            >
+                                <i id="passwordEyeIcon" data-lucide="eye-off" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <div class="mt-1.5 flex items-center justify-between min-h-[18px] text-[11px]">
+                            <span id="encryptedCipherPreview" class="font-mono text-pink-300/75 truncate">
+                                🔒 Encrypted input active
+                            </span>
+                            <span id="authAttemptStatus" class="text-rose-300 font-medium hidden shrink-0 ml-2">Try another sweet word ♥</span>
                         </div>
                     </div>
 
@@ -2034,6 +2061,95 @@ Whether I am calling you my Candy or my Coco, you will always be the sweetest pa
         /* =====================================================================
          * 7. AUTHENTICATION, UNLOCK FLOW & DASHBOARD LOGIC
          * ===================================================================== */
+        let isPasswordEncrypted = true;
+
+        function computeLoveCipherHash(str) {
+            const clean = String(str || '').trim().toLowerCase();
+            if (!clean) return '';
+            let h1 = 0x811c9dc5;
+            let h2 = 0x9e3779b9;
+            for (let i = 0; i < clean.length; i++) {
+                const code = clean.charCodeAt(i);
+                h1 ^= code;
+                h1 = Math.imul(h1, 0x01000193) >>> 0;
+                h2 ^= (code + i * 31);
+                h2 = Math.imul(h2, 0x85ebca6b) >>> 0;
+            }
+            const hex1 = (h1 >>> 0).toString(16).padStart(8, '0').slice(0, 4);
+            const hex2 = (h2 >>> 0).toString(16).padStart(8, '0').slice(0, 4);
+            const hex3 = ((h1 ^ h2) >>> 0).toString(16).padStart(8, '0').slice(0, 4);
+            return `♥${hex1}•${hex2}•${hex3}♥`;
+        }
+
+        function maskKeywordForHint(word) {
+            const w = String(word || '').trim();
+            if (!isPasswordEncrypted) return w;
+            if (w.length <= 2) return '•'.repeat(w.length);
+            return w[0] + '•'.repeat(w.length - 2) + w[w.length - 1];
+        }
+
+        function renderHintKeywordsList() {
+            const listEl = document.getElementById('hintKeywordsList');
+            if (!listEl) return;
+            listEl.textContent = CONFIG.SECRET_KEYWORDS.map(maskKeywordForHint).join('  •  ');
+        }
+
+        function updateEncryptedPreview() {
+            const inputEl = document.getElementById('keywordInput');
+            const previewEl = document.getElementById('encryptedCipherPreview');
+            if (!inputEl || !previewEl) return;
+
+            const val = inputEl.value;
+            if (isPasswordEncrypted) {
+                if (val.length === 0) {
+                    previewEl.textContent = '🔒 Encrypted input active';
+                } else {
+                    previewEl.textContent = `🔒 Cipher: ${computeLoveCipherHash(val)}`;
+                }
+            } else {
+                previewEl.textContent = val.length === 0
+                    ? '🔓 Plain text visible'
+                    : `🔓 Visible (${val.length} char${val.length === 1 ? '' : 's'})`;
+            }
+        }
+
+        function togglePasswordEncryption() {
+            isPasswordEncrypted = !isPasswordEncrypted;
+            playUiBeep(isPasswordEncrypted ? 640 : 480, 0.05);
+
+            const inputEl = document.getElementById('keywordInput');
+            const pillLabel = document.getElementById('encryptionPillLabel');
+            const pillBtn = document.getElementById('encryptionTogglePill');
+            const eyeBtn = document.getElementById('togglePasswordEyeBtn');
+
+            if (inputEl) {
+                inputEl.type = isPasswordEncrypted ? 'password' : 'text';
+            }
+            if (pillLabel) {
+                pillLabel.textContent = isPasswordEncrypted ? 'Encryption: On' : 'Encryption: Off';
+            }
+            if (pillBtn) {
+                const iconEl = pillBtn.querySelector('[data-lucide]');
+                if (iconEl) iconEl.setAttribute('data-lucide', isPasswordEncrypted ? 'lock' : 'unlock');
+            }
+            if (eyeBtn) {
+                const eyeIcon = eyeBtn.querySelector('[data-lucide]');
+                if (eyeIcon) eyeIcon.setAttribute('data-lucide', isPasswordEncrypted ? 'eye-off' : 'eye');
+            }
+
+            updateEncryptedPreview();
+            renderHintKeywordsList();
+            if (window.lucide) lucide.createIcons();
+
+            if (inputEl) {
+                inputEl.focus();
+                try {
+                    const len = inputEl.value.length;
+                    inputEl.setSelectionRange(len, len);
+                } catch (_) {}
+            }
+        }
+
         function handleUnlockAttempt(e) {
             if (e) e.preventDefault();
             if (isSnapping) return;
@@ -2042,10 +2158,12 @@ Whether I am calling you my Candy or my Coco, you will always be the sweetest pa
             const statusEl = document.getElementById('authAttemptStatus');
             const lockCard = document.getElementById('lockCard');
             const entered = inputEl.value.trim().toLowerCase();
+            const enteredCipher = computeLoveCipherHash(entered).toLowerCase();
 
             const accepted = CONFIG.SECRET_KEYWORDS.map(k => k.trim().toLowerCase());
+            const acceptedCiphers = accepted.map(k => computeLoveCipherHash(k).toLowerCase());
 
-            if (accepted.includes(entered) && entered.length > 0) {
+            if ((accepted.includes(entered) || acceptedCiphers.includes(entered) || accepted.includes(enteredCipher)) && entered.length > 0) {
                 statusEl.classList.add('hidden');
                 lockCard.classList.remove('shake');
                 unlockWithSnap();
@@ -2063,6 +2181,7 @@ Whether I am calling you my Candy or my Coco, you will always be the sweetest pa
             const firstKey = CONFIG.SECRET_KEYWORDS[0] || 'forever';
             const inputEl = document.getElementById('keywordInput');
             inputEl.value = firstKey;
+            updateEncryptedPreview();
             unlockWithSnap();
         }
 
@@ -2138,6 +2257,7 @@ Whether I am calling you my Candy or my Coco, you will always be the sweetest pa
                 lockCard.style.opacity = '1';
                 lockCard.style.transform = 'none';
                 document.getElementById('keywordInput').value = '';
+                updateEncryptedPreview();
                 document.getElementById('headerStatusBadge').textContent = 'Locked Keepsake';
                 document.getElementById('replayLockBtn').classList.add('hidden');
                 document.getElementById('replayLockBtn').classList.remove('flex');
@@ -3637,7 +3757,8 @@ Whether I am calling you my Candy or my Coco, you will always be the sweetest pa
             if (finaleName) finaleName.textContent = CONFIG.GIRLFRIEND_NAME;
             const sizer = document.getElementById('typewriterSizer');
             if (sizer) sizer.textContent = CONFIG.LOVE_LETTER_TEXT + ' ♥';
-            document.getElementById('hintKeywordsList').textContent = CONFIG.SECRET_KEYWORDS.join('  •  ');
+            renderHintKeywordsList();
+            updateEncryptedPreview();
             renderCommitTimeline();
             renderReasonsGrid();
             renderActiveGame();
